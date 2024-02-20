@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrismaApp</title>
+    <link rel="stylesheet" href="/static/css/header.css">
+    {% block head %} {% endblock %}
+</head>
+<body>
+    <header>
+        <div class="app-title">
+            <strong>CrismaApp</strong>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Crismandos</a></li>
+                <li><a href="/encontros">Encontros</a></li>
+                <li><a href="/domingos">Domingos</a></li>
+                <li><a onclick="openAndClose()">Sair</a></li>
+                <li><a href="http://{{machine_ip}}:5000/"> {{ssid}} => {{machine_ip}}:5000 </a></li>
+            </ul>
+        </nav>
+    </header>
+    <script>
+        function openAndClose() {
+            fetch("/sair", {
+                method: "GET"
+            })
+            .then((response) => {
+                window.close()
+            })
+        }
+    </script>
+    {% block content %}{% endblock %}
+</body>
+</html>

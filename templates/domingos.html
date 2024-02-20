@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="static/css/mainpage.css">
+{% endblock %}
+
+{% block content %}
+
+<main>
+    <h1>Domingos</h1>
+    <a href="/domingo/novo">Registrar domingo</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Frequência</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for domingo in domingos %}
+                <tr>
+                    <td>{{ domingo.data }}</td>
+                    <td>
+                        <select>
+                            {% for registro in frequencia %}
+                                {% if registro.domingo.id == domingo.id %}
+                                    <option> <strong>{{ registro.crismando.nome }}</strong></option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td><a href="/domingo/del/{{ domingo.id }}">Deletar</a>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</main>
+
+{% endblock %}

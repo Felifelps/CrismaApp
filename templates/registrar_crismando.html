@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="/static/css/mainpage.css">
+    <link rel="stylesheet" href="/static/css/form.css">
+{% endblock %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        
+        <h1>Registrar Crismando</h1>
+
+        <label for="nome">Nome completo:</label>
+        <input type="text" id="nome" name="nome" required>
+
+        <label for="data">Data de nascimento:</label>
+        <input type="date" id="data" name="data" required>
+
+        <label for="tel">Telefone:</label>
+        <input type="tel" id="tel" name="tel" required>
+
+        <button type="submit">Registrar Crismando</button>
+    </form>
+</div>
+{% endblock %}
