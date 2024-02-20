@@ -2,45 +2,13 @@ import datetime
 import os
 import time
 import threading
-import socket
-import subprocess
 
 from flask import Flask, request, render_template, redirect
 
-from models import Crismando, Encontro, FrequenciaEncontro, db, Domingo, FrequenciaDomingo
-
-data = subprocess.run(
-    [
-        'netsh', 
-        'wlan', 
-        'show', 
-        'interfaces'
-    ],
-    capture_output=True,
-    text=True,
-    check=True
-).stdout
-
-ssid_line = [line for line in data.splitlines() if 'SSID' in line][0]
-ssid = ssid_line.split(':')[-1].strip()
-
-app = Flask(
-    'Crisma', 
-    template_folder=os.path.join('_internal', 'templates'),
-    static_folder=os.path.join('_internal', 'static')
-)
-
-app.config['SSID'] = ssid
-app.config['MACHINE_IP'] = socket.gethostbyname(socket.gethostname())
+from .models import Crismando, Encontro, FrequenciaEncontro, Domingo, FrequenciaDomingo
 
 
-@app.context_processor
-def contexto_global():
-    return {
-        'machine_ip': app.config['MACHINE_IP'],
-        'ssid': app.config['SSID']
-    }
-
+app = Flask('Crisma')
 
 @app.route('/')
 def mainpage():

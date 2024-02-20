@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "crismaapp"
+version = "0.1.0"
+description = "An simple organizational app for crisma"
+authors = ["Felifelps <felipefelipe23456@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flask = "^3.0.2"
+peewee = "^3.17.1"
+waitress = "^3.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
