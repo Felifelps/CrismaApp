@@ -12,20 +12,21 @@ app = Flask('Crisma')
 
 @app.route('/')
 def mainpage():
-    try: 
-        a = render_template(
-        'mainpage.html',
-        crismandos=list(sorted(Crismando.select(), key=lambda crismando: crismando.nome)),
-        frequencia_encontro=FrequenciaEncontro.select(),
-        frequencia_domingo=FrequenciaDomingo.select(),
-    )
-    except Exception as e: 
-        input(e)
+    data = {}
+    total_encontros = len(Encontro.select())
+    total_domingos = len(Domingo.select())
+    for crismando in sorted(Crismando.select(), key=lambda crismando: crismando.nome):
+        e = FrequenciaEncontro.filter(crismando=crismando)
+        d = FrequenciaDomingo.filter(crismando=crismando)
+        data[crismando] = {
+            "encontros": e,
+            "domingos": d,
+            "faltas_encontros": total_encontros - len(e),
+            "faltas_domingos": total_domingos - len(d)
+        }
     return render_template(
         'mainpage.html',
-        crismandos=list(sorted(Crismando.select(), key=lambda crismando: crismando.nome)),
-        frequencia_encontro=FrequenciaEncontro.select(),
-        frequencia_domingo=FrequenciaDomingo.select(),
+        data=data
     )
 
 
@@ -65,10 +66,12 @@ def deletar_crismando(id):
 
 @app.route('/encontros')
 def encontros():
+    data = {}
+    for encontro in Encontro.select():
+        data[encontro] = FrequenciaEncontro.filter(encontro=encontro)
     return render_template(
         'encontros.html',
-        encontros=Encontro.select(),
-        frequencia=FrequenciaEncontro.select()
+        data=data
     )
 
 
@@ -116,10 +119,12 @@ def deletar_encontro(id):
 
 @app.route('/domingos')
 def domingos():
+    data = {}
+    for domingo in Domingo.select():
+        data[domingo] = FrequenciaDomingo.filter(domingo=domingo)
     return render_template(
         'domingos.html',
-        domingos=Domingo.select(),
-        frequencia=FrequenciaDomingo.select()
+        data=data
     )
 
 

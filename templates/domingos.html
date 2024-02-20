@@ -18,17 +18,16 @@
                 </tr>
             </thead>
             <tbody>
-                {% for domingo in domingos %}
+                {% for domingo, frequencia in data.items() %}
                     <tr>
                         <td>{{ domingo.data }}</td>
                         <td>
                             <select>
                                 {% for registro in frequencia %}
-                                    {% if registro.domingo.id == domingo.id %}
-                                        <option> <strong>{{ registro.crismando.nome }}</strong></option>
-                                    {% endif %}
+                                    <option> <strong>{{ registro.crismando.nome }}</strong></option>
                                 {% endfor %}
                             </select>
+                            Presentes: {{ frequencia|length }}
                         </td>
                         <td><a href="/domingo/del/{{ domingo.id }}">Deletar</a>
                     </tr>
