@@ -35,7 +35,7 @@
                             Faltas: {{ dados.faltas_encontros }}
                             <select>
                                 {% for registro in dados.encontros %}
-                                    <option> {{registro.encontro.id}}. {{ registro.encontro.data }}</option>
+                                    <option> {{ registro.encontro.data }}</option>
                                 {% endfor %}
                             </select>
                         </td>
@@ -43,9 +43,7 @@
                             Faltas: {{ dados.faltas_domingos }}
                             <select>
                                 {% for registro in dados.domingos %}
-                                    {% if registro.crismando.id == crismando.id %}
-                                        <option> {{ registro.domingo.data }}</option>
-                                    {% endif %}
+                                    <option> {{ registro.domingo.data }}</option>
                                 {% endfor %}
                             </select>
                         </td>
