@@ -9,47 +9,49 @@
 <main>
     <h1>Crismandos</h1>
     <a href="/crismando/novo">Registrar crismando</a>
-    <table>
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Telefone</th>
-                <th>Data Nascimento</th>
-                <th>Idade</th>
-                <th>Encontros</th>
-                <th>Domingos</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for crismando in crismandos %}
+    <div class="table-container">
+        <table style="overflow-x: auto;">
+            <thead>
                 <tr>
-                    <td>{{ crismando.nome }}</td>
-                    <td>{{ crismando.telefone }}</td>
-                    <td>{{ crismando.data_nasc }}</td>
-                    <td>{{ crismando.idade }}</td>
-                    <td>
-                        <select>
-                            {% for registro in frequencia_encontro %}
-                                {% if registro.crismando.id == crismando.id %}
-                                    <option> {{registro.encontro.id}}. {{ registro.encontro.data }}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                    </td>
-                    <td>
-                        <select>
-                            {% for registro in frequencia_domingo %}
-                                {% if registro.crismando.id == crismando.id %}
-                                    <option> {{ registro.domingo.data }}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                    </td>
-                    <td><a href="/crismando/del/{{ crismando.id }}">Deletar</a>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>Data Nascimento</th>
+                    <th>Idade</th>
+                    <th>Encontros</th>
+                    <th>Domingos</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for crismando in crismandos %}
+                    <tr>
+                        <td>{{ crismando.nome }}</td>
+                        <td>{{ crismando.telefone }}</td>
+                        <td>{{ crismando.data_nasc }}</td>
+                        <td>{{ crismando.idade }}</td>
+                        <td>
+                            <select>
+                                {% for registro in frequencia_encontro %}
+                                    {% if registro.crismando.id == crismando.id %}
+                                        <option> {{registro.encontro.id}}. {{ registro.encontro.data }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select>
+                                {% for registro in frequencia_domingo %}
+                                    {% if registro.crismando.id == crismando.id %}
+                                        <option> {{ registro.domingo.data }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><a href="/crismando/del/{{ crismando.id }}">Deletar</a>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </main>
 
 {% endblock %}

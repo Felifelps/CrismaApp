@@ -9,33 +9,35 @@
 <main>
     <h1>Encontros</h1>
     <a href="/encontro/novo">Registrar encontro</a>
-    <table>
-        <thead>
-            <tr>
-                <th>Tema</th>
-                <th>Data</th>
-                <th>Frequência</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for encontro in encontros %}
+    <div class="table-container">
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ encontro.tema }}</td>
-                    <td>{{ encontro.data }}</td>
-                    <td>
-                        <select>
-                            {% for registro in frequencia %}
-                                {% if registro.encontro.id == encontro.id %}
-                                    <option> <strong>{{ registro.crismando.nome }}</strong></option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                    </td>
-                    <td><a href="/encontro/del/{{ encontro.id }}">Deletar</a>
+                    <th>Tema</th>
+                    <th>Data</th>
+                    <th>Frequência</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for encontro in encontros %}
+                    <tr>
+                        <td>{{ encontro.tema }}</td>
+                        <td>{{ encontro.data }}</td>
+                        <td>
+                            <select>
+                                {% for registro in frequencia %}
+                                    {% if registro.encontro.id == encontro.id %}
+                                        <option> <strong>{{ registro.crismando.nome }}</strong></option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><a href="/encontro/del/{{ encontro.id }}">Deletar</a>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </main>
 
 {% endblock %}
