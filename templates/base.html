@@ -17,21 +17,9 @@
                 <li><a href="/">Crismandos</a></li>
                 <li><a href="/encontros">Encontros</a></li>
                 <li><a href="/domingos">Domingos</a></li>
-                <li><a onclick="openAndClose()">Sair</a></li>
-                <li><a href="http://{{machine_ip}}:5000/"> {{ssid}} => {{machine_ip}}:5000 </a></li>
             </ul>
         </nav>
     </header>
-    <script>
-        function openAndClose() {
-            fetch("/sair", {
-                method: "GET"
-            })
-            .then((response) => {
-                window.close()
-            })
-        }
-    </script>
     {% block content %}{% endblock %}
 </body>
 </html>
