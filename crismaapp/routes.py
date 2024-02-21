@@ -146,8 +146,6 @@ def deletar_encontro(id):
 
 @app.route('/domingos')
 def domingos():
-    if not session.get('logged'):
-        return redirect('/login')
     data = {}
     for domingo in Domingo.select():
         data[domingo] = FrequenciaDomingo.filter(domingo=domingo)
