@@ -13,36 +13,37 @@
         <table style="overflow-x: auto;">
             <thead>
                 <tr>
-                    <th>Nome</th>
-                    <th>Telefone</th>
-                    <th>Data Nascimento</th>
-                    <th>Idade</th>
-                    <th>Encontros</th>
-                    <th>Domingos</th>
+                    <th rowspan="2">Nome</th>
+                    <th rowspan="2">Telefone</th>
+                    <th rowspan="2">Data Nascimento</th>
+                    <th rowspan="2">Idade</th>
+                    <th colspan="2"> <center> Frequência </center></th>
+                </tr>
+                <tr>
+                    <th> Encontros </th>
+                    <th> Domingos </th>
                 </tr>
             </thead>
             <tbody>
-                {% for crismando in crismandos %}
+                {% for crismando, dados in data.items() %}
                     <tr>
                         <td>{{ crismando.nome }}</td>
                         <td>{{ crismando.telefone }}</td>
                         <td>{{ crismando.data_nasc }}</td>
                         <td>{{ crismando.idade }}</td>
                         <td>
+                            Faltas: {{ dados.faltas_encontros }}
                             <select>
-                                {% for registro in frequencia_encontro %}
-                                    {% if registro.crismando.id == crismando.id %}
-                                        <option> {{registro.encontro.id}}. {{ registro.encontro.data }}</option>
-                                    {% endif %}
+                                {% for registro in dados.encontros %}
+                                    <option> {{ registro.encontro.data }}</option>
                                 {% endfor %}
                             </select>
                         </td>
                         <td>
+                            Faltas: {{ dados.faltas_domingos }}
                             <select>
-                                {% for registro in frequencia_domingo %}
-                                    {% if registro.crismando.id == crismando.id %}
-                                        <option> {{ registro.domingo.data }}</option>
-                                    {% endif %}
+                                {% for registro in dados.domingos %}
+                                    <option> {{ registro.domingo.data }}</option>
                                 {% endfor %}
                             </select>
                         </td>

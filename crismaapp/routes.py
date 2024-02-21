@@ -1,36 +1,55 @@
 import datetime
-import os
-import time
-import threading
 
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, session, flash
 
 from .models import Crismando, Encontro, FrequenciaEncontro, Domingo, FrequenciaDomingo
+from .utils import check_admin_password, SECRET_KEY
 
+import secrets 
 
 app = Flask('Crisma')
+app.secret_key = SECRET_KEY
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    session['logged'] = False
+    if request.method == 'POST':
+        password = request.form['password']
+
+        if check_admin_password(password):
+            session['logged'] = True
+            return redirect('/')
+        
+        flash('Senha inválida')
+
+    return render_template('login.html')
 
 @app.route('/')
 def mainpage():
-    try: 
-        a = render_template(
-        'mainpage.html',
-        crismandos=list(sorted(Crismando.select(), key=lambda crismando: crismando.nome)),
-        frequencia_encontro=FrequenciaEncontro.select(),
-        frequencia_domingo=FrequenciaDomingo.select(),
-    )
-    except Exception as e: 
-        input(e)
+    if not session.get('logged'):
+        return redirect('/login')
+    data = {}
+    total_encontros = len(Encontro.select())
+    total_domingos = len(Domingo.select())
+    for crismando in sorted(Crismando.select(), key=lambda crismando: crismando.nome):
+        e = FrequenciaEncontro.filter(crismando=crismando)
+        d = FrequenciaDomingo.filter(crismando=crismando)
+        data[crismando] = {
+            "encontros": e,
+            "domingos": d,
+            "faltas_encontros": total_encontros - len(e),
+            "faltas_domingos": total_domingos - len(d)
+        }
     return render_template(
         'mainpage.html',
-        crismandos=list(sorted(Crismando.select(), key=lambda crismando: crismando.nome)),
-        frequencia_encontro=FrequenciaEncontro.select(),
-        frequencia_domingo=FrequenciaDomingo.select(),
+        data=data
     )
 
 
 @app.route('/crismando/novo', methods=['POST', 'GET'])
 def registrar_crismando():
+    if not session.get('logged'):
+        return redirect('/login')
     if request.method == 'POST':
         data = request.form.to_dict()
 
@@ -52,6 +71,8 @@ def registrar_crismando():
 
 @app.route('/crismando/del/<int:id>')
 def deletar_crismando(id):
+    if not session.get('logged'):
+        return redirect('/login')
     try:
         crismando = Crismando.get_by_id(id)
         for f in FrequenciaEncontro.filter(crismando=crismando):
@@ -59,22 +80,29 @@ def deletar_crismando(id):
         for f in FrequenciaDomingo.filter(crismando=crismando):
             f.delete_instance()
         crismando.delete_instance()
-    finally:
-        return redirect('/')
+    except:
+        pass
+    
+    return redirect('/')
 
 
 @app.route('/encontros')
 def encontros():
+    if not session.get('logged'):
+        return redirect('/login')
+    data = {}
+    for encontro in Encontro.select():
+        data[encontro] = FrequenciaEncontro.filter(encontro=encontro)
     return render_template(
         'encontros.html',
-        encontros=Encontro.select(),
-        frequencia=FrequenciaEncontro.select()
+        data=data
     )
 
 
 @app.route('/encontro/novo', methods=['POST', 'GET'])
 def registrar_encontro():
-
+    if not session.get('logged'):
+        return redirect('/login')
     if request.method == 'POST':
         data = request.form.to_dict()
 
@@ -104,6 +132,8 @@ def registrar_encontro():
 
 @app.route('/encontro/del/<int:id>')
 def deletar_encontro(id):
+    if not session.get('logged'):
+        return redirect('/login')
     try:
         encontro = Encontro.get_by_id(id)
         for f in FrequenciaEncontro.filter(encontro=encontro):
@@ -116,16 +146,21 @@ def deletar_encontro(id):
 
 @app.route('/domingos')
 def domingos():
+    if not session.get('logged'):
+        return redirect('/login')
+    data = {}
+    for domingo in Domingo.select():
+        data[domingo] = FrequenciaDomingo.filter(domingo=domingo)
     return render_template(
         'domingos.html',
-        domingos=Domingo.select(),
-        frequencia=FrequenciaDomingo.select()
+        data=data
     )
 
 
 @app.route('/domingo/novo', methods=['POST', 'GET'])
 def registrar_domingo():
-
+    if not session.get('logged'):
+        return redirect('/login')
     if request.method == 'POST':
         data = request.form.to_dict()
 
@@ -154,6 +189,8 @@ def registrar_domingo():
 
 @app.route('/domingo/del/<int:id>')
 def deletar_domingo(id):
+    if not session.get('logged'):
+        return redirect('/login')
     try:
         domingo = Domingo.get_by_id(id)
         for f in FrequenciaDomingo.filter(domingo=domingo):
@@ -161,14 +198,6 @@ def deletar_domingo(id):
         domingo.delete_instance()
     finally:
         return redirect('/domingos')
-
-
-@app.route('/sair')
-def sair():
-    threading.Thread(
-        target=lambda: time.sleep(3) == os.system('taskkill /F /T /IM app.exe')
-    ).start()
-    return 'Servidor desligado!'
 
 @app.errorhandler(Exception)
 def error(error):

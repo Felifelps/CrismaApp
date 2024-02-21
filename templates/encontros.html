@@ -19,16 +19,15 @@
                 </tr>
             </thead>
             <tbody>
-                {% for encontro in encontros %}
+                {% for encontro, frequencia in data.items() %}
                     <tr>
                         <td>{{ encontro.tema }}</td>
                         <td>{{ encontro.data }}</td>
                         <td>
+                            Presentes: {{ frequencia|length }}
                             <select>
                                 {% for registro in frequencia %}
-                                    {% if registro.encontro.id == encontro.id %}
-                                        <option> <strong>{{ registro.crismando.nome }}</strong></option>
-                                    {% endif %}
+                                    <option> <strong>{{ registro.crismando.nome }}</strong></option>
                                 {% endfor %}
                             </select>
                         </td>
