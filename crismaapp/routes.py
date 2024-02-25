@@ -200,6 +200,8 @@ def deletar_domingo(id):
 
 @app.route('/dados')
 def dados():
+    if not session.get('logged'):
+        return redirect('/login')
     return send_file('data.db', as_attachment=True)
 
 @app.errorhandler(Exception)
