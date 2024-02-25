@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="/static/css/mainpage.css">
+    <link rel="stylesheet" href="/static/css/form.css">
+{% endblock %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        
+        <h1>Registrar Encontro</h1>
+        <label for="tema">Tema:</label>
+        <input type="text" id="tema" name="tema" required>
+
+        <label for="data">Data:</label>
+        <input type="date" id="data" name="data" required>
+
+        <label for="crismandos">Selecione os Crismandos que participaram do encontro:</label>
+        <ul>
+        {% for crismando in crismandos %}
+            <label for="{{crismando.id}}">
+                <input type="checkbox" id="{{crismando.id}}" name="crismandos[]" value="{{crismando.id}}"> {{crismando.nome}}
+            </label>
+        {% endfor %}
+        </ul>
+
+        <button type="submit">Registrar Encontro</button>
+    </form>
+</div>
+{% endblock %}

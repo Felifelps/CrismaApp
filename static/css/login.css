@@ -1,0 +1,18 @@
+
+.flash {
+    background-color: red;
+    color: white;
+}
+
+#input-group {
+    display: flex;
+}
+
+#input-group input {
+    width: 95%;
+}
+
+#input-group span {
+    margin: 5px 10px;
+    cursor: pointer;
+}

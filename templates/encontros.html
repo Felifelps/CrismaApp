@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="static/css/mainpage.css">
+{% endblock %}
+
+{% block content %}
+
+<main>
+    <h1>Encontros</h1>
+    <a href="/encontro/novo">Registrar encontro</a>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Tema</th>
+                    <th>Data</th>
+                    <th>Frequência</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for encontro, frequencia in data.items() %}
+                    <tr>
+                        <td>{{ encontro.tema }}</td>
+                        <td>{{ encontro.data }}</td>
+                        <td>
+                            Presentes: {{ frequencia|length }}
+                            <select>
+                                {% for registro in frequencia %}
+                                    <option> <strong>{{ registro.crismando.nome }}</strong></option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><a href="/encontro/del/{{ encontro.id }}">Deletar</a>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+
+{% endblock %}
