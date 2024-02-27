@@ -26,22 +26,27 @@ def login():
 def mainpage():
     if not session.get('logged'):
         return redirect('/login')
-    data = {}
-    total_encontros = len(Encontro.select())
-    total_domingos = len(Domingo.select())
-    for crismando in sorted(Crismando.select(), key=lambda crismando: crismando.nome):
-        e = FrequenciaEncontro.filter(crismando=crismando)
-        d = FrequenciaDomingo.filter(crismando=crismando)
-        data[crismando] = {
-            "encontros": e,
-            "domingos": d,
-            "faltas_encontros": total_encontros - len(e),
-            "faltas_domingos": total_domingos - len(d)
-        }
-    return render_template(
-        'mainpage.html',
-        data=data
-    )
+    try:
+        data = {}
+        total_encontros = len(Encontro.select())
+        total_domingos = len(Domingo.select())
+        for crismando in sorted(Crismando.select(), key=lambda crismando: crismando.nome):
+            e = FrequenciaEncontro.filter(crismando=crismando)
+            d = FrequenciaDomingo.filter(crismando=crismando)
+            data[crismando] = {
+                "encontros": e,
+                "domingos": d,
+                "faltas_encontros": total_encontros - len(e),
+                "faltas_domingos": total_domingos - len(d)
+            }
+
+        t = render_template(
+            'mainpage.html',
+            data=data
+        )
+    except (Exception, TypeError) as e:
+        print(e)
+    return t
 
 
 @app.route('/crismando/novo', methods=['POST', 'GET'])

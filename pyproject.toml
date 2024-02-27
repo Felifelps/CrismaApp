@@ -12,6 +12,7 @@ peewee = "^3.17.1"
 waitress = "^3.0.0"
 python-dotenv = "^1.0.1"
 bcrypt = "^4.1.2"
+psycopg2 = "^2.9.9"
 
 
 [build-system]
