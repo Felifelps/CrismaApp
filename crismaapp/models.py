@@ -1,11 +1,8 @@
-from peewee import PostgresqlDatabase, SqliteDatabase, CharField, Model, DateField, ForeignKeyField
+from peewee import PostgresqlDatabase, CharField, Model, DateField, ForeignKeyField
 
 import datetime
 
 from .utils import DATABASE_HOST, DATABASE_PORT, DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD
-
-#db = SqliteDatabase('data.db')
-
 
 db = PostgresqlDatabase(
     DATABASE_NAME,

@@ -1,6 +1,6 @@
 import datetime
 
-from flask import Flask, request, render_template, redirect, session, flash, send_file
+from flask import Flask, request, render_template, redirect, session, flash
 
 from .models import Crismando, Encontro, FrequenciaEncontro, Domingo, FrequenciaDomingo
 from .utils import check_admin_password, SECRET_KEY
@@ -201,13 +201,6 @@ def deletar_domingo(id):
         domingo.delete_instance()
     finally:
         return redirect('/domingos')
-    
-
-@app.route('/dados')
-def dados():
-    if not session.get('logged'):
-        return redirect('/login')
-    return send_file('data.db', as_attachment=True)
 
 @app.errorhandler(Exception)
 def error(error):
