@@ -42,11 +42,16 @@ th {
 }
 
 .delete-btn {
+    width: 100%;
     background-color: #ff5252;
     color: white;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
+}
+
+.delete-btn:hover {
+    background-color: #c84242;
 }
 
 .separated {

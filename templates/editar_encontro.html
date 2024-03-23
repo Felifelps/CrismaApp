@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="/static/css/mainpage.css">
+    <link rel="stylesheet" href="/static/css/form.css">
+{% endblock %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        
+        <h1>Editar Encontro</h1>
+        <label for="tema">Tema:</label>
+        <input type="text" id="tema" name="tema" value="{{ encontro.tema }}" required>
+
+        <label for="data">Data:</label>
+        <input type="date" id="data" name="data" value="{{ encontro.data }}" required>
+
+        <label for="crismandos">Frequência:</label>
+        <ul>
+        {% for crismando in crismandos %}
+            <label for="{{crismando.id}}">
+                <input type="checkbox" id="{{crismando.id}}" name="crismandos[]" value="{{crismando.id}}" 
+                {% if crismando in frequencia %} checked {% endif %}> {{crismando.nome}}
+            </label>
+        {% endfor %}
+        </ul>
+
+        <button type="submit">Salvar</button>
+        <a href="/encontro/del/{{ encontro.id }}">Deletar</a>
+    </form>
+</div>
+{% endblock %}

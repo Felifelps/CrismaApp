@@ -54,22 +54,50 @@ def registrar_crismando():
     if not session.get('logged'):
         return redirect('/login')
     if request.method == 'POST':
-        data = request.form.to_dict()
+        try:
+            data = request.form.to_dict()
 
-        data_nasc = datetime.datetime.strptime(
-            data.get('data'),
-            '%Y-%m-%d'
-        ).strftime('%d/%m/%y')
+            data_nasc = datetime.datetime.strptime(
+                data.get('data'),
+                '%Y-%m-%d'
+            ).strftime('%d/%m/%Y')
 
-        Crismando.create(
-            nome=data.get('nome'),
-            data_nasc=data_nasc,
-            telefone=str(data.get('tel'))
-        )
+            Crismando.create(
+                nome=data.get('nome'),
+                data_nasc=data_nasc,
+                telefone=str(data.get('tel'))
+            )
+        except Exception as e:
+            print(e)
 
         return redirect('/')
 
     return render_template('registrar_crismando.html')
+
+@app.route('/crismando/edit/<int:id>', methods=['POST', 'GET'])
+def editar_crismando(id):
+    if not session.get('logged'):
+        return redirect('/login')
+    crismando = Crismando.get_by_id(id)
+    if not crismando:
+        return redirect('/')
+    if request.method == 'POST':
+        data = request.form.to_dict()
+
+        crismando.nome = data.get('nome')
+        crismando.data_nasc = datetime.datetime.strptime(
+            data.pop('data'),
+            '%Y-%m-%d'
+        ).strftime('%d/%m/%y')
+        crismando.telefone = data.get('tel')
+        crismando.save()
+
+        return redirect('/')
+
+    return render_template(
+        'editar_crismando.html',
+        crismando=crismando
+    )
 
 
 @app.route('/crismando/del/<int:id>')
@@ -132,6 +160,44 @@ def registrar_encontro():
         crismandos=list(sorted(Crismando.select(), key=lambda crismando: crismando.nome))
     )
 
+@app.route('/encontro/edit/<int:id>', methods=['POST', 'GET'])
+def editar_encontro(id):
+    if not session.get('logged'):
+        return redirect('/login')
+    encontro = Encontro.get_by_id(id)
+    if not encontro:
+        return redirect('/encontros')
+    if request.method == 'POST':
+        data = request.form.to_dict()
+
+        encontro.update(
+            tema=data.get('tema'),
+            data=datetime.datetime.strptime(
+                data.get('data'),
+                '%Y-%m-%d'
+            ).strftime('%d/%m/%Y')
+        )
+
+        crismandos = request.form.getlist('crismandos[]')
+
+        for f in FrequenciaEncontro.filter(encontro=encontro):
+            f.delete_instance()
+
+        for crismando_id in crismandos:
+            FrequenciaEncontro.create(
+                crismando=Crismando.get_by_id(int(crismando_id)),
+                encontro=encontro
+            )
+
+        return redirect('/encontros')
+
+    return render_template(
+        'editar_encontro.html',
+        encontro=encontro,
+        crismandos=list(sorted(Crismando.select(), key=lambda crismando: crismando.nome)),
+        frequencia=list(map(lambda f: f.crismando, FrequenciaEncontro.filter(encontro=encontro)))
+    )
+
 
 @app.route('/encontro/del/<int:id>')
 def deletar_encontro(id):
@@ -187,6 +253,43 @@ def registrar_domingo():
     return render_template(
         'registrar_domingo.html',
         crismandos=list(sorted(Crismando.select(), key=lambda crismando: crismando.nome))
+    )
+
+@app.route('/domingo/edit/<int:id>', methods=['POST', 'GET'])
+def editar_domingo(id):
+    if not session.get('logged'):
+        return redirect('/login')
+    domingo = Domingo.get_by_id(id)
+    if not domingo:
+        return redirect('/domingos')
+    if request.method == 'POST':
+        data = request.form.to_dict()
+
+        domingo.update(
+            data=datetime.datetime.strptime(
+                data.get('data'),
+                '%Y-%m-%d'
+            ).strftime('%d/%m/%Y')
+        )
+
+        crismandos = request.form.getlist('crismandos[]')
+
+        for f in FrequenciaDomingo.filter(domingo=domingo):
+            f.delete_instance()
+
+        for crismando_id in crismandos:
+            FrequenciaDomingo.create(
+                crismando=Crismando.get_by_id(int(crismando_id)),
+                domingo=domingo
+            )
+
+        return redirect('/domingos')
+
+    return render_template(
+        'editar_domingo.html',
+        domingo=domingo,
+        crismandos=list(sorted(Crismando.select(), key=lambda crismando: crismando.nome)),
+        frequencia=list(map(lambda f: f.crismando, FrequenciaDomingo.filter(domingo=domingo)))
     )
 
 
