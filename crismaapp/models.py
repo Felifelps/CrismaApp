@@ -16,7 +16,12 @@ db = PostgresqlDatabase(
 class Crismando(Model):
     nome = CharField(unique=True)
     telefone = CharField()
-    data_nasc = DateField(formats=['%d/%m/%y'], null=True)
+    data_nasc = DateField(formats=['%d/%m/%Y'], null=True)
+
+    def get_data_nasc(self):
+        if self.data_nasc == None:
+            return 'none'
+        return f'{self.data_nasc: %d/%m/%Y}'
 
     @property
     def idade(self):

@@ -22,7 +22,7 @@
                 {% for encontro, frequencia in data.items() %}
                     <tr>
                         <td>{{ encontro.tema }}</td>
-                        <td>{{ encontro.data }}</td>
+                        <td>{{ encontro.data.strftime('%d/%m/%Y') }}</td>
                         <td>
                             Presentes: {{ frequencia|length }}
                             <select>

@@ -20,7 +20,7 @@
             <tbody>
                 {% for domingo, frequencia in data.items() %}
                     <tr>
-                        <td>{{ domingo.data }}</td>
+                        <td>{{ domingo.data.strftime('%d/%m/%Y') }}</td>
                         <td>
                             <select>
                                 {% for registro in frequencia %}

@@ -32,13 +32,13 @@
                     <tr>
                         <td>{{ crismando.nome }}</td>
                         <td>{{ crismando.telefone }}</td>
-                        <td>{{ crismando.data_nasc }}</td>
+                        <td>{{ crismando.get_data_nasc() }}</td>
                         <td>{{ crismando.idade }}</td>
                         <td>
                             Faltas: {{ dados.faltas_encontros }}
                             <select>
                                 {% for registro in dados.encontros %}
-                                    <option> {{ registro.encontro.data }}</option>
+                                    <option> {{ registro.encontro.data.strftime('%d/%m/%Y') }}</option>
                                 {% endfor %}
                             </select>
                         </td>
@@ -46,7 +46,7 @@
                             Faltas: {{ dados.faltas_domingos }}
                             <select>
                                 {% for registro in dados.domingos %}
-                                    <option> {{ registro.domingo.data }}</option>
+                                    <option> {{ registro.domingo.data.strftime('%d/%m/%Y') }}</option>
                                 {% endfor %}
                             </select>
                         </td>
