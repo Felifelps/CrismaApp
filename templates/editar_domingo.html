@@ -8,7 +8,7 @@
 {% block content %}
     <form method="post" enctype="multipart/form-data">
         
-        <h1>Editar Domingo</h1>
+        <h1>Editar Domingo <i class="fa-solid fa-trash" onclick="checkForDelete()"></i></h1>
 
         <label for="data">Data:</label>
         <input type="date" id="data" name="data" value="{{ domingo.data }}" required>
@@ -24,7 +24,6 @@
         </ul>
 
         <button type="submit">Salvar</button>
-        <a href="/domingo/del/{{ domingo.id }}">Deletar</a>
     </form>
 </div>
 {% endblock %}

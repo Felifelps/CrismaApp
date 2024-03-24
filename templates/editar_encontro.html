@@ -8,7 +8,7 @@
 {% block content %}
     <form method="post" enctype="multipart/form-data">
         
-        <h1>Editar Encontro</h1>
+        <h1>Editar Encontro <i class="fa-solid fa-trash" onclick="checkForDelete()"></i></h1>
         <label for="tema">Tema:</label>
         <input type="text" id="tema" name="tema" value="{{ encontro.tema }}" required>
 
@@ -26,7 +26,13 @@
         </ul>
 
         <button type="submit">Salvar</button>
-        <a href="/encontro/del/{{ encontro.id }}">Deletar</a>
     </form>
+    <script>
+        function checkForDelete() {
+            if (window.confirm('Deseja deletar esse encontro?')) {
+                window.open("/encontro/del/{{ encontro.id }}");
+            }
+        }
+    </script>
 </div>
 {% endblock %}

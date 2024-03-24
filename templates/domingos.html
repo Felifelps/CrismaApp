@@ -7,7 +7,7 @@
 {% block content %}
 
 <main>
-    <h1>Domingos</h1>
+    <h1>Domingos <a href="/domingo/novo"><i class="fa-solid fa-plus"></i></a></h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -15,7 +15,6 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <a href="/domingo/novo">Registrar domingo</a>
     <div class="table-container">
         <table>
             <thead>
@@ -36,12 +35,19 @@
                             </select>
                             Presentes: {{ frequencia|length }}
                         </td>
-                        <td><a href="/domingo/edit/{{ domingo.id }}">Editar</a>
+                        <td><a href="/domingo/edit/{{ domingo.id }}"><span id="icon" class="fa-solid fa-pen-to-square"></span></a>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+    <script>
+        function checkForDelete() {
+            if (window.confirm('Deseja deletar esse domingo?')) {
+                window.open("/domingo/del/{{ domingo.id }}");
+            }
+        }
+    </script>
 </main>
 
 {% endblock %}

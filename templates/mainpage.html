@@ -7,7 +7,7 @@
 {% block content %}
 
 <main>
-    <h1>Crismandos</h1>
+    <h1>Crismandos <a href="/crismando/novo"><i class="fa-solid fa-plus"></i></a></h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -15,10 +15,7 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <div class="separated">
-        <a href="/crismando/novo">Registrar crismando</a>
-        <text>Quantidade: {{ data|length}}</text>
-    </div>
+    <text>Quantidade: {{ data|length}}</text>
     <div class="table-container">
         <table style="overflow-x: auto;">
             <thead>
@@ -38,7 +35,7 @@
                 {% for crismando, dados in data.items() %}
                     <tr>
                         <td>{{ crismando.nome }}</td>
-                        <td>{{ crismando.telefone }}</td>
+                        <td><a href="https://wa.me/55{{ crismando.telefone.replace(' ', '') }}" target="_blank">{{ crismando.telefone }}</a></td>
                         <td>{{ crismando.get_data_nasc() }}</td>
                         <td>{{ crismando.idade }}</td>
                         <td>
@@ -57,7 +54,7 @@
                                 {% endfor %}
                             </select>
                         </td>
-                        <td><a href="/crismando/edit/{{ crismando.id }}">Editar</a>
+                        <td><a href="/crismando/edit/{{ crismando.id }}"><span id="icon" class="fa-solid fa-pen-to-square"></span></a>
                     </tr>
                 {% endfor %}
             </tbody>
