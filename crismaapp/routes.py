@@ -17,7 +17,7 @@ def login():
         if check_admin_password(password):
             session['logged'] = True
             return redirect('/')
-        
+
         flash('Senha inválida')
 
     return render_template('login.html')
@@ -27,6 +27,7 @@ def mainpage():
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
+
     data = {}
     total_encontros = len(Encontro.select())
     total_domingos = len(Domingo.select())
@@ -53,7 +54,6 @@ def registrar_crismando():
         flash('Faça login', 'red')
         return redirect('/login')
     if request.method == 'POST':
-        
         data = request.form.to_dict()
 
         data_nasc = datetime.datetime.strptime(
@@ -74,11 +74,12 @@ def registrar_crismando():
     return render_template('registrar_crismando.html')
 
 @app.route('/crismando/edit/<int:id>', methods=['POST', 'GET'])
-def editar_crismando(id):
+def editar_crismando(id_crismando):
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
-    crismando = Crismando.get_by_id(id)
+
+    crismando = Crismando.get_or_none(id=id_crismando)
     if not crismando:
         flash('Crismando não encontrado', 'red')
         return redirect('/')
@@ -110,7 +111,7 @@ def editar_crismando(id):
                 domingo=Domingo.get_by_id(int(domingo_id)),
                 crismando=crismando
             )
-        
+
         flash('Crismando atualizado com sucesso', 'green')
 
         return redirect('/')
@@ -120,26 +121,30 @@ def editar_crismando(id):
         crismando=crismando,
         encontros=Encontro.select(),
         domingos=Domingo.select(),
-        frequencia_encontro=map(lambda x: x.encontro, FrequenciaEncontro.filter(crismando=crismando)),
-        frequencia_domingo=map(lambda x: x.domingo, FrequenciaDomingo.filter(crismando=crismando)),
+        frequencia_encontro=map(lambda x: x.encontro,
+                                FrequenciaEncontro.filter(crismando=crismando)),
+        frequencia_domingo=map(lambda x: x.domingo,
+                                FrequenciaDomingo.filter(crismando=crismando)),
     )
 
 
 @app.route('/crismando/del/<int:id>')
-def deletar_crismando(id):
+def deletar_crismando(id_crismando):
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
 
-    crismando = Crismando.get_by_id(id)
+    crismando = Crismando.get_or_none(id=id_crismando)
     if not crismando:
         flash('Crismando não encontrado', 'red')
         return redirect('/')
 
     for f in FrequenciaEncontro.filter(crismando=crismando):
         f.delete_instance()
+
     for f in FrequenciaDomingo.filter(crismando=crismando):
         f.delete_instance()
+
     crismando.delete_instance()
 
     flash('Crismando excluido com sucesso', 'green')
@@ -152,9 +157,11 @@ def encontros():
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
+
     data = {}
     for encontro in Encontro.select():
         data[encontro] = FrequenciaEncontro.filter(encontro=encontro)
+
     return render_template(
         'encontros.html',
         data=data
@@ -166,6 +173,7 @@ def registrar_encontro():
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
+
     if request.method == 'POST':
         data = request.form.to_dict()
 
@@ -194,13 +202,14 @@ def registrar_encontro():
         crismandos=list(sorted(Crismando.select(), key=lambda crismando: crismando.nome))
     )
 
+
 @app.route('/encontro/edit/<int:id>', methods=['POST', 'GET'])
-def editar_encontro(id):
+def editar_encontro(id_encontro):
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
 
-    encontro = Encontro.get_by_id(id)
+    encontro = Encontro.get_or_none(id=id_encontro)
     if not encontro:
         flash('Encontro não encontrado', 'red')
         return redirect('/encontros')
@@ -240,12 +249,12 @@ def editar_encontro(id):
 
 
 @app.route('/encontro/del/<int:id>')
-def deletar_encontro(id):
+def deletar_encontro(id_encontro):
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
 
-    encontro = Encontro.get_by_id(id)
+    encontro = Encontro.get_or_none(id=id_encontro)
     if not encontro:
         flash('Encontro não encontrado', 'red')
         return redirect('/encontros')
@@ -257,7 +266,6 @@ def deletar_encontro(id):
     flash('Encontro deletado com sucesso', 'green')
 
     return redirect('/encontros')
-    
 
 
 @app.route('/domingos')
@@ -265,9 +273,11 @@ def domingos():
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
+
     data = {}
     for domingo in Domingo.select():
         data[domingo] = FrequenciaDomingo.filter(domingo=domingo)
+
     return render_template(
         'domingos.html',
         data=data
@@ -307,13 +317,14 @@ def registrar_domingo():
         crismandos=list(sorted(Crismando.select(), key=lambda crismando: crismando.nome))
     )
 
+
 @app.route('/domingo/edit/<int:id>', methods=['POST', 'GET'])
-def editar_domingo(id):
+def editar_domingo(id_domingo):
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
 
-    domingo = Domingo.get_by_id(id)
+    domingo = Domingo.get_or_none(id=id_domingo)
     if not domingo:
         flash('Domingo não encontrado', 'red')
         return redirect('/domingos')
@@ -352,14 +363,14 @@ def editar_domingo(id):
 
 
 @app.route('/domingo/del/<int:id>')
-def deletar_domingo(id):
+def deletar_domingo(id_domingo):
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
 
-    domingo = Domingo.get_by_id(id)
+    domingo = Domingo.get_or_none(id=id_domingo)
     if not domingo:
-        flash('domingo não encontrado', 'red')
+        flash('Domingo não encontrado', 'red')
         return redirect('/domingos')
 
     for f in FrequenciaDomingo.filter(domingo=domingo):
@@ -369,6 +380,7 @@ def deletar_domingo(id):
     flash('Domingo deletado com sucesso', 'green')
 
     return redirect('/domingos')
+
 
 @app.errorhandler(Exception)
 def error(error):

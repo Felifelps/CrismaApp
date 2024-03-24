@@ -58,3 +58,16 @@ th {
     display: flex;
     justify-content: space-between;
 }
+
+.flash {
+    color: white;
+    padding: 5px;
+}
+
+.red {
+    background-color: #ff5252;
+}
+
+.green {
+    background-color: #4CAF50;
+}
