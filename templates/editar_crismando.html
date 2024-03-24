@@ -42,7 +42,7 @@
     <script>
         function checkForDelete() {
             if (window.confirm('Deseja deletar esse crismando?')) {
-                window.open("/crismando/del/{{ crismando.id }}");
+                window.location.replace("/crismando/del/{{ crismando.id }}");
             }
         }
     </script>

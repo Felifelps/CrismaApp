@@ -30,7 +30,7 @@
     <script>
         function checkForDelete() {
             if (window.confirm('Deseja deletar esse encontro?')) {
-                window.open("/encontro/del/{{ encontro.id }}");
+                window.location.replace("/encontro/del/{{ encontro.id }}");
             }
         }
     </script>

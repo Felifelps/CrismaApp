@@ -25,5 +25,12 @@
 
         <button type="submit">Salvar</button>
     </form>
+    <script>
+        function checkForDelete() {
+            if (window.confirm('Deseja deletar esse domingo?')) {
+                window.location.replace("/domingo/del/{{ domingo.id }}");
+            }
+        }
+    </script>
 </div>
 {% endblock %}
