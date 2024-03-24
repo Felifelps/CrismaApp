@@ -74,12 +74,13 @@ def registrar_crismando():
     return render_template('registrar_crismando.html')
 
 @app.route('/crismando/edit/<int:id>', methods=['POST', 'GET'])
-def editar_crismando(id_crismando):
+def editar_crismando(id):
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
 
-    crismando = Crismando.get_or_none(id=id_crismando)
+    crismando = Crismando.get_or_none(id=id)
+
     if not crismando:
         flash('Crismando não encontrado', 'red')
         return redirect('/')
@@ -129,12 +130,12 @@ def editar_crismando(id_crismando):
 
 
 @app.route('/crismando/del/<int:id>')
-def deletar_crismando(id_crismando):
+def deletar_crismando(id):
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
 
-    crismando = Crismando.get_or_none(id=id_crismando)
+    crismando = Crismando.get_or_none(id=id)
     if not crismando:
         flash('Crismando não encontrado', 'red')
         return redirect('/')
@@ -204,12 +205,12 @@ def registrar_encontro():
 
 
 @app.route('/encontro/edit/<int:id>', methods=['POST', 'GET'])
-def editar_encontro(id_encontro):
+def editar_encontro(id):
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
 
-    encontro = Encontro.get_or_none(id=id_encontro)
+    encontro = Encontro.get_or_none(id=id)
     if not encontro:
         flash('Encontro não encontrado', 'red')
         return redirect('/encontros')
@@ -249,12 +250,12 @@ def editar_encontro(id_encontro):
 
 
 @app.route('/encontro/del/<int:id>')
-def deletar_encontro(id_encontro):
+def deletar_encontro(id):
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
 
-    encontro = Encontro.get_or_none(id=id_encontro)
+    encontro = Encontro.get_or_none(id=id)
     if not encontro:
         flash('Encontro não encontrado', 'red')
         return redirect('/encontros')
@@ -319,12 +320,12 @@ def registrar_domingo():
 
 
 @app.route('/domingo/edit/<int:id>', methods=['POST', 'GET'])
-def editar_domingo(id_domingo):
+def editar_domingo(id):
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
 
-    domingo = Domingo.get_or_none(id=id_domingo)
+    domingo = Domingo.get_or_none(id=id)
     if not domingo:
         flash('Domingo não encontrado', 'red')
         return redirect('/domingos')
@@ -363,12 +364,12 @@ def editar_domingo(id_domingo):
 
 
 @app.route('/domingo/del/<int:id>')
-def deletar_domingo(id_domingo):
+def deletar_domingo(id):
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
 
-    domingo = Domingo.get_or_none(id=id_domingo)
+    domingo = Domingo.get_or_none(id=id)
     if not domingo:
         flash('Domingo não encontrado', 'red')
         return redirect('/domingos')
