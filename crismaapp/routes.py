@@ -25,50 +25,49 @@ def login():
 @app.route('/')
 def mainpage():
     if not session.get('logged'):
+        flash('Faça login', 'red')
         return redirect('/login')
-    try:
-        data = {}
-        total_encontros = len(Encontro.select())
-        total_domingos = len(Domingo.select())
-        for crismando in sorted(Crismando.select(), key=lambda crismando: crismando.nome):
-            e = FrequenciaEncontro.filter(crismando=crismando)
-            d = FrequenciaDomingo.filter(crismando=crismando)
-            data[crismando] = {
-                "encontros": e,
-                "domingos": d,
-                "faltas_encontros": total_encontros - len(e),
-                "faltas_domingos": total_domingos - len(d)
+    data = {}
+    total_encontros = len(Encontro.select())
+    total_domingos = len(Domingo.select())
+    for crismando in sorted(Crismando.select(), key=lambda crismando: crismando.nome):
+        e = FrequenciaEncontro.filter(crismando=crismando)
+        d = FrequenciaDomingo.filter(crismando=crismando)
+        data[crismando] = {
+            "encontros": e,
+            "domingos": d,
+            "faltas_encontros": total_encontros - len(e),
+            "faltas_domingos": total_domingos - len(d)
             }
 
         t = render_template(
             'mainpage.html',
             data=data
         )
-    except (Exception, TypeError) as e:
-        print(e)
     return t
 
 
 @app.route('/crismando/novo', methods=['POST', 'GET'])
 def registrar_crismando():
     if not session.get('logged'):
+        flash('Faça login', 'red')
         return redirect('/login')
     if request.method == 'POST':
-        try:
-            data = request.form.to_dict()
+        
+        data = request.form.to_dict()
 
-            data_nasc = datetime.datetime.strptime(
-                data.get('data'),
-                '%Y-%m-%d'
-            ).strftime('%d/%m/%Y')
+        data_nasc = datetime.datetime.strptime(
+            data.get('data'),
+            '%Y-%m-%d'
+        ).strftime('%d/%m/%Y')
 
-            Crismando.create(
-                nome=data.get('nome'),
-                data_nasc=data_nasc,
-                telefone=str(data.get('tel'))
-            )
-        except Exception as e:
-            print(e)
+        Crismando.create(
+            nome=data.get('nome'),
+            data_nasc=data_nasc,
+            telefone=str(data.get('tel'))
+        )
+
+        flash('Crismando criado com sucesso', 'green')
 
         return redirect('/')
 
@@ -77,44 +76,44 @@ def registrar_crismando():
 @app.route('/crismando/edit/<int:id>', methods=['POST', 'GET'])
 def editar_crismando(id):
     if not session.get('logged'):
+        flash('Faça login', 'red')
         return redirect('/login')
     crismando = Crismando.get_by_id(id)
     if not crismando:
+        flash('Crismando não encontrado', 'red')
         return redirect('/')
+
     if request.method == 'POST':
         data = request.form.to_dict()
+        crismando.nome = data.get('nome')
+        crismando.data_nasc = datetime.datetime.strptime(
+            data.pop('data'),
+            '%Y-%m-%d'
+        ).strftime('%d/%m/%Y')
+        crismando.telefone = data.get('tel')
+        crismando.save()
 
-        try:
+        for f in FrequenciaEncontro.filter(crismando=crismando):
+            f.delete_instance()
 
-            crismando.nome = data.get('nome')
-            crismando.data_nasc = datetime.datetime.strptime(
-                data.pop('data'),
-                '%Y-%m-%d'
-            ).strftime('%d/%m/%Y')
-            crismando.telefone = data.get('tel')
-            crismando.save()
+        for encontro_id in request.form.getlist('encontros[]'):
+            FrequenciaEncontro.create(
+                encontro=Encontro.get_by_id(int(encontro_id)),
+                crismando=crismando
+            )
 
-            for f in FrequenciaEncontro.filter(crismando=crismando):
-                f.delete_instance()
+        for f in FrequenciaDomingo.filter(crismando=crismando):
+            f.delete_instance()
 
-            for encontro_id in request.form.getlist('encontros[]'):
-                FrequenciaEncontro.create(
-                    encontro=Encontro.get_by_id(int(encontro_id)),
-                    crismando=crismando
-                )
+        for domingo_id in request.form.getlist('domingos[]'):
+            FrequenciaDomingo.create(
+                domingo=Domingo.get_by_id(int(domingo_id)),
+                crismando=crismando
+            )
+        
+        flash('Crismando atualizado com sucesso', 'green')
 
-            for f in FrequenciaDomingo.filter(crismando=crismando):
-                f.delete_instance()
-
-            for domingo_id in request.form.getlist('domingos[]'):
-                FrequenciaDomingo.create(
-                    domingo=Domingo.get_by_id(int(domingo_id)),
-                    crismando=crismando
-                )
-
-            return redirect('/')
-        except Exception as e:
-            return str(e)
+        return redirect('/')
 
     return render_template(
         'editar_crismando.html',
@@ -129,11 +128,12 @@ def editar_crismando(id):
 @app.route('/crismando/del/<int:id>')
 def deletar_crismando(id):
     if not session.get('logged'):
+        flash('Faça login', 'red')
         return redirect('/login')
 
     crismando = Crismando.get_by_id(id)
-
     if not crismando:
+        flash('Crismando não encontrado', 'red')
         return redirect('/')
 
     for f in FrequenciaEncontro.filter(crismando=crismando):
@@ -142,12 +142,15 @@ def deletar_crismando(id):
         f.delete_instance()
     crismando.delete_instance()
 
+    flash('Crismando excluido com sucesso', 'green')
+
     return redirect('/')
 
 
 @app.route('/encontros')
 def encontros():
     if not session.get('logged'):
+        flash('Faça login', 'red')
         return redirect('/login')
     data = {}
     for encontro in Encontro.select():
@@ -161,6 +164,7 @@ def encontros():
 @app.route('/encontro/novo', methods=['POST', 'GET'])
 def registrar_encontro():
     if not session.get('logged'):
+        flash('Faça login', 'red')
         return redirect('/login')
     if request.method == 'POST':
         data = request.form.to_dict()
@@ -181,6 +185,8 @@ def registrar_encontro():
                 encontro=encontro
             )
 
+        flash('Encontro criado com sucesso', 'green')
+
         return redirect('/encontros')
 
     return render_template(
@@ -191,10 +197,14 @@ def registrar_encontro():
 @app.route('/encontro/edit/<int:id>', methods=['POST', 'GET'])
 def editar_encontro(id):
     if not session.get('logged'):
+        flash('Faça login', 'red')
         return redirect('/login')
+
     encontro = Encontro.get_by_id(id)
     if not encontro:
+        flash('Encontro não encontrado', 'red')
         return redirect('/encontros')
+
     if request.method == 'POST':
         data = request.form.to_dict()
 
@@ -217,6 +227,8 @@ def editar_encontro(id):
                 encontro=encontro
             )
 
+        flash('Encontro atualizado com sucesso', 'green')
+
         return redirect('/encontros')
 
     return render_template(
@@ -230,20 +242,28 @@ def editar_encontro(id):
 @app.route('/encontro/del/<int:id>')
 def deletar_encontro(id):
     if not session.get('logged'):
+        flash('Faça login', 'red')
         return redirect('/login')
-    try:
-        encontro = Encontro.get_by_id(id)
-        for f in FrequenciaEncontro.filter(encontro=encontro):
-            f.delete_instance()
-        encontro.delete_instance()
-    finally:
+
+    encontro = Encontro.get_by_id(id)
+    if not encontro:
+        flash('Encontro não encontrado', 'red')
         return redirect('/encontros')
+
+    for f in FrequenciaEncontro.filter(encontro=encontro):
+        f.delete_instance()
+    encontro.delete_instance()
+
+    flash('Encontro deletado com sucesso', 'green')
+
+    return redirect('/encontros')
     
 
 
 @app.route('/domingos')
 def domingos():
     if not session.get('logged'):
+        flash('Faça login', 'red')
         return redirect('/login')
     data = {}
     for domingo in Domingo.select():
@@ -257,7 +277,9 @@ def domingos():
 @app.route('/domingo/novo', methods=['POST', 'GET'])
 def registrar_domingo():
     if not session.get('logged'):
+        flash('Faça login', 'red')
         return redirect('/login')
+
     if request.method == 'POST':
         data = request.form.to_dict()
 
@@ -276,6 +298,8 @@ def registrar_domingo():
                 domingo=domingo
             )
 
+        flash('Domingo criado sucesso', 'green')
+
         return redirect('/domingos')
 
     return render_template(
@@ -286,10 +310,14 @@ def registrar_domingo():
 @app.route('/domingo/edit/<int:id>', methods=['POST', 'GET'])
 def editar_domingo(id):
     if not session.get('logged'):
+        flash('Faça login', 'red')
         return redirect('/login')
+
     domingo = Domingo.get_by_id(id)
     if not domingo:
+        flash('Domingo não encontrado', 'red')
         return redirect('/domingos')
+
     if request.method == 'POST':
         data = request.form.to_dict()
 
@@ -311,6 +339,8 @@ def editar_domingo(id):
                 domingo=domingo
             )
 
+        flash('Domingo atualizado com sucesso', 'green')
+
         return redirect('/domingos')
 
     return render_template(
@@ -324,14 +354,21 @@ def editar_domingo(id):
 @app.route('/domingo/del/<int:id>')
 def deletar_domingo(id):
     if not session.get('logged'):
+        flash('Faça login', 'red')
         return redirect('/login')
-    try:
-        domingo = Domingo.get_by_id(id)
-        for f in FrequenciaDomingo.filter(domingo=domingo):
-            f.delete_instance()
-        domingo.delete_instance()
-    finally:
+
+    domingo = Domingo.get_by_id(id)
+    if not domingo:
+        flash('domingo não encontrado', 'red')
         return redirect('/domingos')
+
+    for f in FrequenciaDomingo.filter(domingo=domingo):
+        f.delete_instance()
+    domingo.delete_instance()
+
+    flash('Domingo deletado com sucesso', 'green')
+
+    return redirect('/domingos')
 
 @app.errorhandler(Exception)
 def error(error):
