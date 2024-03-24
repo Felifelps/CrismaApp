@@ -84,19 +84,45 @@ def editar_crismando(id):
     if request.method == 'POST':
         data = request.form.to_dict()
 
-        crismando.nome = data.get('nome')
-        crismando.data_nasc = datetime.datetime.strptime(
-            data.pop('data'),
-            '%Y-%m-%d'
-        ).strftime('%d/%m/%y')
-        crismando.telefone = data.get('tel')
-        crismando.save()
+        try:
 
-        return redirect('/')
+            crismando.nome = data.get('nome')
+            crismando.data_nasc = datetime.datetime.strptime(
+                data.pop('data'),
+                '%Y-%m-%d'
+            ).strftime('%d/%m/%Y')
+            crismando.telefone = data.get('tel')
+            crismando.save()
+
+            for f in FrequenciaEncontro.filter(crismando=crismando):
+                f.delete_instance()
+
+            for encontro_id in request.form.getlist('encontros[]'):
+                FrequenciaEncontro.create(
+                    encontro=Encontro.get_by_id(int(encontro_id)),
+                    crismando=crismando
+                )
+
+            for f in FrequenciaDomingo.filter(crismando=crismando):
+                f.delete_instance()
+
+            for domingo_id in request.form.getlist('domingos[]'):
+                FrequenciaDomingo.create(
+                    domingo=Domingo.get_by_id(int(domingo_id)),
+                    crismando=crismando
+                )
+
+            return redirect('/')
+        except Exception as e:
+            return str(e)
 
     return render_template(
         'editar_crismando.html',
-        crismando=crismando
+        crismando=crismando,
+        encontros=Encontro.select(),
+        domingos=Domingo.select(),
+        frequencia_encontro=map(lambda x: x.encontro, FrequenciaEncontro.filter(crismando=crismando)),
+        frequencia_domingo=map(lambda x: x.domingo, FrequenciaDomingo.filter(crismando=crismando)),
     )
 
 
@@ -104,16 +130,18 @@ def editar_crismando(id):
 def deletar_crismando(id):
     if not session.get('logged'):
         return redirect('/login')
-    try:
-        crismando = Crismando.get_by_id(id)
-        for f in FrequenciaEncontro.filter(crismando=crismando):
-            f.delete_instance()
-        for f in FrequenciaDomingo.filter(crismando=crismando):
-            f.delete_instance()
-        crismando.delete_instance()
-    except:
-        pass
-    
+
+    crismando = Crismando.get_by_id(id)
+
+    if not crismando:
+        return redirect('/')
+
+    for f in FrequenciaEncontro.filter(crismando=crismando):
+        f.delete_instance()
+    for f in FrequenciaDomingo.filter(crismando=crismando):
+        f.delete_instance()
+    crismando.delete_instance()
+
     return redirect('/')
 
 

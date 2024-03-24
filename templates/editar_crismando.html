@@ -19,6 +19,23 @@
         <label for="tel">Telefone:</label>
         <input type="tel" id="tel" name="tel" value="{{ crismando.telefone }}" required>
 
+        <label> Encontros: </label>
+        {% for encontro in encontros %}
+            <label for="{{encontro.id}}">
+                <input type="checkbox" id="{{encontro.id}}" name="encontros[]" value="{{encontro.id}}" 
+                {% if encontro in frequencia_encontro %} checked {% endif %}> {{encontro.tema}}
+            </label>
+        {% endfor %}
+
+        <label> Domingos: </label>
+
+        {% for domingo in domingos %}
+            <label for="{{domingo.id}}">
+                <input type="checkbox" id="{{domingo.id}}" name="domingos[]" value="{{domingo.id}}" 
+                {% if domingo in frequencia_domingo %} checked {% endif %}> {{domingo.data.strftime('%d/%m/%Y')}}
+            </label>
+        {% endfor %}
+
         <button type="submit">Salvar Alterações</button>
         <a href="/crismando/del/{{ crismando.id }}">Deletar</a>
     </form>
