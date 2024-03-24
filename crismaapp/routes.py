@@ -122,10 +122,10 @@ def editar_crismando(id):
         crismando=crismando,
         encontros=Encontro.select(),
         domingos=Domingo.select(),
-        frequencia_encontro=map(lambda x: x.encontro,
-                                FrequenciaEncontro.filter(crismando=crismando)),
-        frequencia_domingo=map(lambda x: x.domingo,
-                                FrequenciaDomingo.filter(crismando=crismando)),
+        frequencia_encontro=list(map(lambda x: x.encontro.id,
+                                FrequenciaEncontro.filter(crismando=crismando))),
+        frequencia_domingo=list(map(lambda x: x.domingo.id,
+                                FrequenciaDomingo.filter(crismando=crismando))),
     )
 
 
