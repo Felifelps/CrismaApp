@@ -5,6 +5,8 @@ from flask import Flask, request, render_template, redirect, session, flash
 from .models import Crismando, Encontro, FrequenciaEncontro, Domingo, FrequenciaDomingo
 from .utils import check_admin_password, SECRET_KEY
 
+import peewee
+
 app = Flask('Crisma')
 app.secret_key = SECRET_KEY
 
@@ -27,28 +29,25 @@ def mainpage():
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
-    
-    try:
-        data = {}
-        total_encontros = len(Encontro.select())
-        total_domingos = len(Domingo.select())
-        for crismando in sorted(Crismando.select(), key=lambda crismando: crismando.nome):
-            e = FrequenciaEncontro.filter(crismando=crismando)
-            d = FrequenciaDomingo.filter(crismando=crismando)
-            data[crismando] = {
-                "encontros": list(e),
-                "domingos": list(d),
-                "faltas_encontros": total_encontros - len(e),
-                "faltas_domingos": total_domingos - len(d)
-            }
 
-            t = render_template(
-                'mainpage.html',
-                data=data
-            )
-        return t
-    except Exception as e:
-        return str(e)
+    data = {}
+    total_encontros = len(Encontro.select())
+    total_domingos = len(Domingo.select())
+    for crismando in sorted(Crismando.select(), key=lambda crismando: crismando.nome):
+        e = FrequenciaEncontro.filter(crismando=crismando)
+        d = FrequenciaDomingo.filter(crismando=crismando)
+        data[crismando] = {
+            "encontros": list(e),
+            "domingos": list(d),
+            "faltas_encontros": total_encontros - len(e),
+            "faltas_domingos": total_domingos - len(d)
+        }
+
+        t = render_template(
+            'mainpage.html',
+            data=data
+        )
+    return t
 
 
 @app.route('/crismando/novo', methods=['POST', 'GET'])
@@ -194,7 +193,7 @@ def registrar_encontro():
             FrequenciaEncontro.create(
                 crismando=Crismando.get_by_id(int(crismando_id)),
                 encontro=encontro
-            )
+        )
 
         flash('Encontro criado com sucesso', 'green')
 
