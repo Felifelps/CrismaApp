@@ -1,6 +1,5 @@
-from peewee import PostgresqlDatabase, CharField, Model, DateField, ForeignKeyField
-
 import datetime
+from peewee import PostgresqlDatabase, CharField, Model, DateField, ForeignKeyField
 
 from .utils import DATABASE_HOST, DATABASE_PORT, DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD
 
@@ -12,56 +11,53 @@ db = PostgresqlDatabase(
     port=DATABASE_PORT
 )
 
+class BaseModel(Model):
+    class Meta:
+        database = db
 
-class Crismando(Model):
+
+class Crismando(BaseModel):
     nome = CharField(unique=True)
     telefone = CharField()
-    data_nasc = DateField(formats=['%d/%m/%Y'], null=True)
+    data_nasc = DateField(null=True)
 
     def get_data_nasc(self):
-        if self.data_nasc == None:
+        if self.data_nasc is None:
             return 'none'
-        return f'{self.data_nasc: %d/%m/%Y}'
+        return datetime.datetime.strptime(
+            str(self.data_nasc), '%Y-%m-%d'
+        ).strftime('%d/%m/%Y')
 
     @property
     def idade(self):
-        if self.data_nasc == None:
+        if self.data_nasc is None:
             return 'none'
         hoje = datetime.date.today()
-        return (hoje - self.data_nasc).days//365
+        date = self.data_nasc
+        if isinstance(date, str):
+            date = datetime.datetime.strptime(
+                self.data_nasc,
+                "%d/%m/%Y"
+            ).date()
+        return (hoje - date).days//365
 
-    class Meta:
-        database = db
 
-
-class Encontro(Model):
+class Encontro(BaseModel):
     tema = CharField()
-    data = DateField(formats=['%d/%m/%y'])
-
-    class Meta:
-        database = db
+    data = DateField()
 
 
-class FrequenciaEncontro(Model):
+class FrequenciaEncontro(BaseModel):
     crismando = ForeignKeyField(Crismando)
     encontro = ForeignKeyField(Encontro)
 
-    class Meta:
-        database = db
-
-class Domingo(Model):
-    data = DateField(formats=['%d/%m/%y'])
-
-    class Meta:
-        database = db
+class Domingo(BaseModel):
+    data = DateField()
 
 
-class FrequenciaDomingo(Model):
+class FrequenciaDomingo(BaseModel):
     crismando = ForeignKeyField(Crismando)
     domingo = ForeignKeyField(Domingo)
-
-    class Meta:
-        database = db
 
 # Conecte-se ao banco de dados
 db.connect()

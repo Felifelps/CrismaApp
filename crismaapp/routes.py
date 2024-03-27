@@ -19,33 +19,36 @@ def login():
             return redirect('/')
 
         flash('Senha inválida')
-
     return render_template('login.html')
+
 
 @app.route('/')
 def mainpage():
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
-
-    data = {}
-    total_encontros = len(Encontro.select())
-    total_domingos = len(Domingo.select())
-    for crismando in sorted(Crismando.select(), key=lambda crismando: crismando.nome):
-        e = FrequenciaEncontro.filter(crismando=crismando)
-        d = FrequenciaDomingo.filter(crismando=crismando)
-        data[crismando] = {
-            "encontros": e,
-            "domingos": d,
-            "faltas_encontros": total_encontros - len(e),
-            "faltas_domingos": total_domingos - len(d)
+    
+    try:
+        data = {}
+        total_encontros = len(Encontro.select())
+        total_domingos = len(Domingo.select())
+        for crismando in sorted(Crismando.select(), key=lambda crismando: crismando.nome):
+            e = FrequenciaEncontro.filter(crismando=crismando)
+            d = FrequenciaDomingo.filter(crismando=crismando)
+            data[crismando] = {
+                "encontros": list(e),
+                "domingos": list(d),
+                "faltas_encontros": total_encontros - len(e),
+                "faltas_domingos": total_domingos - len(d)
             }
 
-        t = render_template(
-            'mainpage.html',
-            data=data
-        )
-    return t
+            t = render_template(
+                'mainpage.html',
+                data=data
+            )
+        return t
+    except Exception as e:
+        return str(e)
 
 
 @app.route('/crismando/novo', methods=['POST', 'GET'])
@@ -73,6 +76,7 @@ def registrar_crismando():
 
     return render_template('registrar_crismando.html')
 
+
 @app.route('/crismando/edit/<int:id>', methods=['POST', 'GET'])
 def editar_crismando(id):
     if not session.get('logged'):
@@ -88,10 +92,9 @@ def editar_crismando(id):
     if request.method == 'POST':
         data = request.form.to_dict()
         crismando.nome = data.get('nome')
-        crismando.data_nasc = datetime.datetime.strptime(
-            data.pop('data'),
-            '%Y-%m-%d'
-        ).strftime('%d/%m/%Y')
+        crismando.data_nasc = datetime.date.fromisoformat(
+            data.get('data')
+        )
         crismando.telefone = data.get('tel')
         crismando.save()
 
@@ -180,10 +183,9 @@ def registrar_encontro():
 
         encontro = Encontro.create(
             tema=data.get('tema'),
-            data=datetime.datetime.strptime(
-                data.get('data'),
-                '%Y-%m-%d'
-            ).strftime('%d/%m/%y')
+            data=datetime.date.fromisoformat(
+                data.get('data')
+            )
         )
 
         crismandos = request.form.getlist('crismandos[]')
@@ -218,13 +220,11 @@ def editar_encontro(id):
     if request.method == 'POST':
         data = request.form.to_dict()
 
-        encontro.update(
-            tema=data.get('tema'),
-            data=datetime.datetime.strptime(
-                data.get('data'),
-                '%Y-%m-%d'
-            ).strftime('%d/%m/%Y')
+        encontro.tema = data.get('tema')
+        encontro.data = datetime.date.fromisoformat(
+            data.get('data')
         )
+        encontro.save()
 
         crismandos = request.form.getlist('crismandos[]')
 
@@ -295,10 +295,9 @@ def registrar_domingo():
         data = request.form.to_dict()
 
         domingo = Domingo.create(
-            data=datetime.datetime.strptime(
-                data.get('data'),
-                '%Y-%m-%d'
-            ).strftime('%d/%m/%y')
+            data=datetime.date.fromisoformat(
+                data.get('data')
+            )
         )
 
         crismandos = request.form.getlist('crismandos[]')
@@ -333,12 +332,10 @@ def editar_domingo(id):
     if request.method == 'POST':
         data = request.form.to_dict()
 
-        domingo.update(
-            data=datetime.datetime.strptime(
-                data.get('data'),
-                '%Y-%m-%d'
-            ).strftime('%d/%m/%Y')
+        domingo.data = datetime.date.fromisoformat(
+            data.get('data')
         )
+        domingo.save()
 
         crismandos = request.form.getlist('crismandos[]')
 
