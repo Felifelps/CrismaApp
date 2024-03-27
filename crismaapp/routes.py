@@ -5,8 +5,6 @@ from flask import Flask, request, render_template, redirect, session, flash
 from .models import Crismando, Encontro, FrequenciaEncontro, Domingo, FrequenciaDomingo
 from .utils import check_admin_password, SECRET_KEY
 
-import peewee
-
 app = Flask('Crisma')
 app.secret_key = SECRET_KEY
 
@@ -43,11 +41,10 @@ def mainpage():
             "faltas_domingos": total_domingos - len(d)
         }
 
-        t = render_template(
-            'mainpage.html',
-            data=data
-        )
-    return t
+    return render_template(
+        'mainpage.html',
+        data=data
+    )
 
 
 @app.route('/crismando/novo', methods=['POST', 'GET'])
@@ -58,14 +55,11 @@ def registrar_crismando():
     if request.method == 'POST':
         data = request.form.to_dict()
 
-        data_nasc = datetime.datetime.strptime(
-            data.get('data'),
-            '%Y-%m-%d'
-        ).strftime('%d/%m/%Y')
-
         Crismando.create(
             nome=data.get('nome'),
-            data_nasc=data_nasc,
+            data_nasc=datetime.date.fromisoformat(
+                data.get('data')
+            ),
             telefone=str(data.get('tel'))
         )
 
