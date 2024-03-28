@@ -52,6 +52,7 @@ def registrar_crismando():
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
+
     if request.method == 'POST':
         data = request.form.to_dict()
 

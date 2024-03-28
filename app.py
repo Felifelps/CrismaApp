@@ -9,7 +9,7 @@ def auto_request():
     while True:
         print('REQUESTING')
         requests.get('https://crismafronteiro.onrender.com', timeout=300)
-        time.sleep(60)
+        time.sleep(300)
 
 threading.Thread(target=auto_request, daemon=True).start()
 
