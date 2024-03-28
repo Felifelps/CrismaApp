@@ -117,12 +117,12 @@ def editar_crismando(id):
     return render_template(
         'editar_crismando.html',
         crismando=crismando,
-        encontros=Encontro.select(),
-        domingos=Domingo.select(),
+        encontros=Encontro.select().order_by(Encontro.data),
+        domingos=Domingo.select().order_by(Domingo.data),
         frequencia_encontro=list(map(lambda x: x.encontro,
                                 FrequenciaEncontro.filter(crismando=crismando))),
         frequencia_domingo=list(map(lambda x: x.domingo,
-                                FrequenciaDomingo.filter(crismando=crismando))),
+                                FrequenciaDomingo.filter(crismando=crismando)))
     )
 
 
@@ -157,7 +157,7 @@ def encontros():
         return redirect('/login')
 
     data = {}
-    for encontro in Encontro.select():
+    for encontro in Encontro.select().order_by(Encontro.data):
         data[encontro] = FrequenciaEncontro.filter(encontro=encontro)
 
     return render_template(
@@ -270,7 +270,7 @@ def domingos():
         return redirect('/login')
 
     data = {}
-    for domingo in Domingo.select():
+    for domingo in Domingo.select().order_by(Domingo.data):
         data[domingo] = FrequenciaDomingo.filter(domingo=domingo)
 
     return render_template(
