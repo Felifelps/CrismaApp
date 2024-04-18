@@ -1,4 +1,3 @@
-name: "crismafronteiro"
 version: '3.8'
 services:
   server:
@@ -38,7 +37,7 @@ services:
 
 secrets:
   myenv:
-    file: ./.env
+    file: ./secrets.env
 
 volumes:
   db-data:
