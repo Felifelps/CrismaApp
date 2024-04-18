@@ -35,8 +35,6 @@ def mainpage():
         e = FrequenciaEncontro.filter(crismando=crismando)
         d = FrequenciaDomingo.filter(crismando=crismando)
         data[crismando] = {
-            "encontros": list(e),
-            "domingos": list(d),
             "faltas_encontros": total_encontros - len(e),
             "faltas_domingos": total_domingos - len(d)
         }
@@ -57,6 +55,7 @@ def registrar_crismando():
         data = request.form.to_dict()
 
         Crismando.create(
+            id=max(Crismando.select(), key=lambda c: c.id).id + 1,
             nome=data.get('nome'),
             data_nasc=datetime.date.fromisoformat(
                 data.get('data')
@@ -83,6 +82,9 @@ def editar_crismando(id):
         flash('Crismando não encontrado', 'red')
         return redirect('/')
 
+    enc = Encontro.select().order_by(Encontro.data)
+    dom = Domingo.select().order_by(Domingo.data)
+
     if request.method == 'POST':
         data = request.form.to_dict()
         crismando.nome = data.get('nome')
@@ -92,37 +94,63 @@ def editar_crismando(id):
         crismando.telefone = data.get('tel')
         crismando.save()
 
-        for f in FrequenciaEncontro.filter(crismando=crismando):
-            f.delete_instance()
+        FrequenciaEncontro.delete().where(
+            FrequenciaEncontro.crismando==crismando
+        ).execute()
 
-        for encontro_id in request.form.getlist('encontros[]'):
-            FrequenciaEncontro.create(
-                encontro=Encontro.get_by_id(int(encontro_id)),
-                crismando=crismando
-            )
+        for encontro in enc:
+            value = int(data.get(f'e-{encontro.id}', False))
+            if value:
+                FrequenciaEncontro.create(
+                    encontro=encontro,
+                    crismando=crismando,
+                    justificado=value == 1
+                )
+        
+        FrequenciaDomingo.delete().where(
+            FrequenciaDomingo.crismando==crismando
+        ).execute()
 
-        for f in FrequenciaDomingo.filter(crismando=crismando):
-            f.delete_instance()
-
-        for domingo_id in request.form.getlist('domingos[]'):
-            FrequenciaDomingo.create(
-                domingo=Domingo.get_by_id(int(domingo_id)),
-                crismando=crismando
-            )
+        for domingo in dom:
+            value = int(data.get(f'd-{domingo.id}', False))
+            if value:
+                FrequenciaDomingo.create(
+                    domingo=domingo,
+                    crismando=crismando,
+                    justificado=value == 1
+                )
 
         flash('Crismando atualizado com sucesso', 'green')
 
         return redirect('/')
 
+    fe = {e.encontro: e.justificado for e in FrequenciaEncontro.filter(
+    crismando=crismando)}
+    n_enc_just = list(fe.values()).count(True)
+
+    fd = {d.domingo: d.justificado for d in FrequenciaDomingo.filter(
+        crismando=crismando)}
+    n_dom_just = list(fd.values()).count(True)
+
     return render_template(
         'editar_crismando.html',
         crismando=crismando,
-        encontros=Encontro.select().order_by(Encontro.data),
-        domingos=Domingo.select().order_by(Domingo.data),
-        frequencia_encontro=list(map(lambda x: x.encontro,
-                                FrequenciaEncontro.filter(crismando=crismando))),
-        frequencia_domingo=list(map(lambda x: x.domingo,
-                                FrequenciaDomingo.filter(crismando=crismando)))
+        encontros=enc,
+        domingos=dom,
+        frequencia_encontro=fe,
+        frequencia_domingo=fd,
+        data=[
+            # Encontros
+            len(fe) - n_enc_just, # Presenças
+            len(enc) - len(fe) + n_enc_just, # Faltas
+            n_enc_just, # Justificados
+            len(enc) - len(fe), # Faltas totais
+            # Domingos
+            len(fd) - n_dom_just, # Presenças
+            len(dom) - len(fd) + n_dom_just, # Faltas
+            n_dom_just, # Justificados
+            len(dom) - len(fd), # Faltas totais
+        ]
     )
 
 
@@ -172,23 +200,30 @@ def registrar_encontro():
         flash('Faça login', 'red')
         return redirect('/login')
 
+    crismandos = list(sorted(
+        Crismando.select(), 
+        key=lambda crismando: crismando.nome
+    ))
+
     if request.method == 'POST':
         data = request.form.to_dict()
 
         encontro = Encontro.create(
+            id=max(Encontro.select(), key=lambda c: c.id).id + 1,
             tema=data.get('tema'),
             data=datetime.date.fromisoformat(
                 data.get('data')
             )
         )
 
-        crismandos = request.form.getlist('crismandos[]')
-
-        for crismando_id in crismandos:
-            FrequenciaEncontro.create(
-                crismando=Crismando.get_by_id(int(crismando_id)),
-                encontro=encontro
-        )
+        for crismando in crismandos:
+            value = int(data.get(f'{crismando.id}', False))
+            if value:
+                FrequenciaEncontro.create(
+                    encontro=encontro,
+                    crismando=crismando,
+                    justificado=value == 1
+                )
 
         flash('Encontro criado com sucesso', 'green')
 
@@ -196,7 +231,7 @@ def registrar_encontro():
 
     return render_template(
         'registrar_encontro.html',
-        crismandos=list(sorted(Crismando.select(), key=lambda crismando: crismando.nome))
+        crismandos=crismandos
     )
 
 
@@ -211,6 +246,11 @@ def editar_encontro(id):
         flash('Encontro não encontrado', 'red')
         return redirect('/encontros')
 
+    crismandos = list(sorted(
+        Crismando.select(),
+        key=lambda crismando: crismando.nome
+    ))
+
     if request.method == 'POST':
         data = request.form.to_dict()
 
@@ -220,16 +260,18 @@ def editar_encontro(id):
         )
         encontro.save()
 
-        crismandos = request.form.getlist('crismandos[]')
+        FrequenciaEncontro.delete().where(
+            FrequenciaEncontro.encontro==encontro
+        ).execute()
 
-        for f in FrequenciaEncontro.filter(encontro=encontro):
-            f.delete_instance()
-
-        for crismando_id in crismandos:
-            FrequenciaEncontro.create(
-                crismando=Crismando.get_by_id(int(crismando_id)),
-                encontro=encontro
-            )
+        for crismando in crismandos:
+            value = int(data.get(f'{crismando.id}', False))
+            if value:
+                FrequenciaEncontro.create(
+                    encontro=encontro,
+                    crismando=crismando,
+                    justificado=value == 1
+                )
 
         flash('Encontro atualizado com sucesso', 'green')
 
@@ -238,8 +280,8 @@ def editar_encontro(id):
     return render_template(
         'editar_encontro.html',
         encontro=encontro,
-        crismandos=list(sorted(Crismando.select(), key=lambda crismando: crismando.nome)),
-        frequencia=list(map(lambda f: f.crismando, FrequenciaEncontro.filter(encontro=encontro)))
+        crismandos=crismandos,
+        frequencia={f.crismando: f.justificado for f in FrequenciaEncontro.filter(encontro=encontro)}
     )
 
 
@@ -285,22 +327,29 @@ def registrar_domingo():
         flash('Faça login', 'red')
         return redirect('/login')
 
+    crismandos = list(sorted(
+        Crismando.select(), 
+        key=lambda crismando: crismando.nome
+    ))
+
     if request.method == 'POST':
         data = request.form.to_dict()
 
         domingo = Domingo.create(
+            id=max(Domingo.select(), key=lambda c: c.id).id + 1,
             data=datetime.date.fromisoformat(
                 data.get('data')
             )
         )
 
-        crismandos = request.form.getlist('crismandos[]')
-
-        for crismando_id in crismandos:
-            FrequenciaDomingo.create(
-                crismando=Crismando.get_by_id(int(crismando_id)),
-                domingo=domingo
-            )
+        for crismando in crismandos:
+            value = int(data.get(f'{crismando.id}', False))
+            if value:
+                FrequenciaDomingo.create(
+                    domingo=domingo,
+                    crismando=crismando,
+                    justificado=value == 1
+                )
 
         flash('Domingo criado sucesso', 'green')
 
@@ -308,7 +357,7 @@ def registrar_domingo():
 
     return render_template(
         'registrar_domingo.html',
-        crismandos=list(sorted(Crismando.select(), key=lambda crismando: crismando.nome))
+        crismandos=crismandos
     )
 
 
@@ -317,6 +366,11 @@ def editar_domingo(id):
     if not session.get('logged'):
         flash('Faça login', 'red')
         return redirect('/login')
+
+    crismandos = list(sorted(
+        Crismando.select(),
+        key=lambda crismando: crismando.nome
+    ))
 
     domingo = Domingo.get_or_none(id=id)
     if not domingo:
@@ -331,16 +385,18 @@ def editar_domingo(id):
         )
         domingo.save()
 
-        crismandos = request.form.getlist('crismandos[]')
+        FrequenciaDomingo.delete().where(
+            FrequenciaDomingo.domingo==domingo
+        ).execute()
 
-        for f in FrequenciaDomingo.filter(domingo=domingo):
-            f.delete_instance()
-
-        for crismando_id in crismandos:
-            FrequenciaDomingo.create(
-                crismando=Crismando.get_by_id(int(crismando_id)),
-                domingo=domingo
-            )
+        for crismando in crismandos:
+            value = int(data.get(f'{crismando.id}', False))
+            if value:
+                FrequenciaDomingo.create(
+                    domingo=domingo,
+                    crismando=crismando,
+                    justificado=value == 1
+                )
 
         flash('Domingo atualizado com sucesso', 'green')
 
@@ -349,8 +405,8 @@ def editar_domingo(id):
     return render_template(
         'editar_domingo.html',
         domingo=domingo,
-        crismandos=list(sorted(Crismando.select(), key=lambda crismando: crismando.nome)),
-        frequencia=list(map(lambda f: f.crismando, FrequenciaDomingo.filter(domingo=domingo)))
+        crismandos=crismandos,
+        frequencia={f.crismando: f.justificado for f in FrequenciaDomingo.filter(domingo=domingo)}
     )
 
 

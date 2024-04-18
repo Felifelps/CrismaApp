@@ -17,14 +17,14 @@
     {% endwith %}
     <text>Quantidade: {{ data|length}}</text>
     <div class="table-container">
-        <table style="overflow-x: auto;">
+        <table>
             <thead>
                 <tr>
                     <th rowspan="2">Nome</th>
                     <th rowspan="2">Telefone</th>
                     <th rowspan="2">Data Nascimento</th>
                     <th rowspan="2">Idade</th>
-                    <th colspan="2"> <center> Frequência </center></th>
+                    <th colspan="2"> <center> Faltas Totais </center></th>
                 </tr>
                 <tr>
                     <th> Encontros </th>
@@ -38,22 +38,8 @@
                         <td><a href="https://wa.me/55{{ crismando.telefone.replace(' ', '') }}" target="_blank">{{ crismando.telefone }}</a></td>
                         <td>{{ crismando.get_data_nasc() }}</td>
                         <td>{{ crismando.idade }}</td>
-                        <td>
-                            Faltas: {{ dados.faltas_encontros }}
-                            <select>
-                                {% for registro in dados.encontros %}
-                                    <option> {{ registro.encontro.data.strftime('%d/%m/%Y') }}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td>
-                            Faltas: {{ dados.faltas_domingos }}
-                            <select>
-                                {% for registro in dados.domingos %}
-                                    <option> {{ registro.domingo.data.strftime('%d/%m/%Y') }}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
+                        <td> {{ dados.faltas_encontros }} </td>
+                        <td> {{ dados.faltas_domingos }} </td>
                         <td><a href="/crismando/edit/{{ crismando.id }}"><span id="icon" class="fa-solid fa-pen-to-square"></span></a>
                     </tr>
                 {% endfor %}

@@ -13,15 +13,37 @@
         <label for="data">Data:</label>
         <input type="date" id="data" name="data" value="{{ domingo.data }}" required>
 
-        <label for="crismandos">Frequência:</label>
-        <ul>
-        {% for crismando in crismandos %}
-            <label for="{{crismando.id}}">
-                <input type="checkbox" id="{{crismando.id}}" name="crismandos[]" value="{{crismando.id}}" 
-                {% if crismando in frequencia %} checked {% endif %}> {{crismando.nome}}
-            </label>
-        {% endfor %}
-        </ul>
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th> Crismando </th>
+                    <th title="Faltou"> F </th>
+                    <th title="Justificou a falta"> J </th>
+                    <th title="Presente"> P </th>
+                </tr>
+                
+                {% for crismando in crismandos %}
+                <tr>
+                    <td> <a href="/crismando/edit/{{crismando.id}}">{{crismando.nome}}</a></td>
+                    {% with test=frequencia.get(crismando, None) %}
+                    <td>
+                        <input type="radio" name="{{crismando.id}}" value="0"
+                        {% if test == None %} checked {% endif %}> 
+                    </td>
+                    <td>
+                        <input type="radio" name="{{crismando.id}}" value="1"
+                        {% if test == True %} checked {% endif %}>
+                    </td>
+                    <td>
+                        <input type="radio" name="{{crismando.id}}" value="2"
+                        {% if test == False %} checked {% endif %}>
+                    </td>
+                {% endwith %}
+                    
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
 
         <button type="submit">Salvar</button>
     </form>

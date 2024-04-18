@@ -18,23 +18,78 @@
 
         <label for="tel">Telefone:</label>
         <input type="tel" id="tel" name="tel" value="{{ crismando.telefone }}" required>
+        
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th> Encontro </th>
+                    <th title="Faltas"> F </th>
+                    <th title="Faltas justificadas"> J </th>
+                    <th title="Presenças"> P </th>
+                </tr>
+                {% for encontro in encontros %}
+                    <tr>
+                        <td> <a href="/encontro/edit/{{encontro.id}}"> {{encontro.tema}} </a> </td>
+                        {% with test=frequencia_encontro.get(encontro, None) %}
+                        <td>
+                            <input type="radio" name="e-{{encontro.id}}" value="0"
+                            {% if test == None %} checked {% endif %}>
+                        </td>
+                        <td>
+                            <input type="radio" name="e-{{encontro.id}}" value="1"
+                            {% if test == True %} checked {% endif %}>
+                        </td>
+                        <td>
+                            <input type="radio" name="e-{{encontro.id}}" value="2"
+                            {% if test == False %} checked {% endif %}>
+                        </td>
+                        {% endwith %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
 
-        <label> Encontros: </label>
-        {% for encontro in encontros %}
-            <label for="{{encontro.id}}">
-                <input type="checkbox" id="{{encontro.id}}" name="encontros[]" value="{{encontro.id}}" 
-                {% if encontro in frequencia_encontro %} checked {% endif %}> {{encontro.tema}}
-            </label>
-        {% endfor %}
+        Presenças: {{ data.0 }} <br>
+        Faltas: {{ data.1 }} <br>
+        Faltas justificadas: {{ data.2 }} <br>
+        Faltas Totais: {{ data.3 }}/{{ encontros|length }}
 
-        <label> Domingos: </label>
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th> Domingo </th>
+                    <th title="Faltas"> F </th>
+                    <th title="Faltas justificadas"> J </th>
+                    <th title="Presenças"> P </th>
+                </tr>
+                {% for domingo in domingos %}
+                    <tr>
+                        <td> <a href="/domingo/edit/{{domingo.id}}"> {{domingo.data}} </a> </td>
+                        {% with test=frequencia_domingo.get(domingo, None) %}
+                        <td>
+                            <input type="radio" name="d-{{domingo.id}}" value="0"
+                            {% if test == None %} checked {% endif %}>
+                        </td>
+                        <td>
+                            <input type="radio" name="d-{{domingo.id}}" value="1"
+                            {% if test == True %} checked {% endif %}>
+                        </td>
+                        <td>
+                            <input type="radio" name="d-{{domingo.id}}" value="2"
+                            {% if test == False %} checked {% endif %}>
+                        </td>
+                        {% endwith %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
 
-        {% for domingo in domingos %}
-            <label for="{{domingo.id}}">
-                <input type="checkbox" id="{{domingo.id}}" name="domingos[]" value="{{domingo.id}}" 
-                {% if domingo in frequencia_domingo %} checked {% endif %}> {{domingo.data.strftime('%d/%m/%Y')}}
-            </label>
-        {% endfor %}
+        Presenças: {{ data.4 }} <br>
+        Faltas: {{ data.5 }} <br>
+        Faltas justificadas: {{ data.6 }} <br>
+        Faltas Totais: {{ data.7 }}/{{ domingos|length }} <br>
+
+        <br>
 
         <button type="submit">Salvar Alterações</button>
         
@@ -46,5 +101,4 @@
             }
         }
     </script>
-</div>
 {% endblock %}

@@ -1,7 +1,13 @@
 import datetime
-from peewee import PostgresqlDatabase, CharField, Model, DateField, ForeignKeyField
+from peewee import PostgresqlDatabase, CharField, Model, DateField, ForeignKeyField, BooleanField
 
-from .utils import DATABASE_HOST, DATABASE_PORT, DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD
+from .utils import (
+    DATABASE_HOST,
+    DATABASE_PORT,
+    DATABASE_NAME,
+    DATABASE_USER,
+    DATABASE_PASSWORD
+)
 
 db = PostgresqlDatabase(
     DATABASE_NAME,
@@ -50,6 +56,8 @@ class Encontro(BaseModel):
 class FrequenciaEncontro(BaseModel):
     crismando = ForeignKeyField(Crismando)
     encontro = ForeignKeyField(Encontro)
+    justificado = BooleanField(default=False)
+
 
 class Domingo(BaseModel):
     data = DateField()
@@ -58,15 +66,16 @@ class Domingo(BaseModel):
 class FrequenciaDomingo(BaseModel):
     crismando = ForeignKeyField(Crismando)
     domingo = ForeignKeyField(Domingo)
+    justificado = BooleanField(default=False)
 
-# Conecte-se ao banco de dados
+models = [
+    Crismando,
+    Encontro,
+    Domingo,
+    FrequenciaEncontro,
+    FrequenciaDomingo
+]
+
 db.connect()
 
-# Crie tabelas no banco de dados
-db.create_tables([
-        Crismando,
-        FrequenciaEncontro,
-        Encontro,
-        Domingo,
-        FrequenciaDomingo
-    ], safe=True)
+db.create_tables(models, safe=True)

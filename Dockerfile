@@ -48,4 +48,4 @@ COPY . .
 EXPOSE 8080
 
 # Run the application.
-CMD python app.py
+CMD waitress-serve app:app

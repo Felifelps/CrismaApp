@@ -15,14 +15,35 @@
         <label for="data">Data:</label>
         <input type="date" id="data" name="data" required>
 
-        <label for="crismandos">Selecione os Crismandos que participaram do encontro:</label>
-        <ul>
-        {% for crismando in crismandos %}
-            <label for="{{crismando.id}}">
-                <input type="checkbox" id="{{crismando.id}}" name="crismandos[]" value="{{crismando.id}}"> {{crismando.nome}}
-            </label>
-        {% endfor %}
-        </ul>
+        Selecione os Crismandos que estavam no encontro: 
+
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th> Crismando </th>
+                    <th title="Faltou"> F </th>
+                    <th title="Justificou a falta"> J </th>
+                    <th title="Presente"> P </th>
+                </tr>
+                
+                {% for crismando in crismandos %}
+                <tr>
+                    <td>
+                        <a href="/crismando/edit/{{crismando.id}}">{{crismando.nome}}</a>
+                    </td>
+                    <td>
+                        <input type="radio" name="{{crismando.id}}" value="0" checked>
+                    </td>
+                    <td>
+                        <input type="radio" name="{{crismando.id}}" value="1">
+                    </td>
+                    <td>
+                        <input type="radio" name="{{crismando.id}}" value="2"> 
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
 
         <button type="submit">Registrar Encontro</button>
     </form>

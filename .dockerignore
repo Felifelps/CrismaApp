@@ -34,3 +34,4 @@ README.md
 venv
 .vscode
 __pychache__
+!/.env

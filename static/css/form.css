@@ -1,5 +1,5 @@
 form {
-    max-width: 60%;
+    max-width: 70%;
     margin: 20px auto;
     background-color: #fff;
     padding: 20px;
@@ -39,4 +39,3 @@ input[type="checkbox"] {
     width: 1.25em;
     height: 1.25em;
 }
-
