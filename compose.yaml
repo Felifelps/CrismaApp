@@ -9,12 +9,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    environment:
-      - DATABASE_PASSWORD=Nnm3bziyDfQVbjyo
-      - DATABASE_USER=postgres
-      - DATABASE_HOST=db
-      - DATABASE_PORT=5432
-      - DATABASE_NAME=default
     secrets:
       - myenv
 
@@ -26,6 +20,7 @@ services:
       - db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=default
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
     expose:
       - 5432
     healthcheck:
