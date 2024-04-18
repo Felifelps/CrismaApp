@@ -1,4 +1,5 @@
 version: '3.8'
+name: "crismafronteiro"
 services:
   server:
     image: felilfeps/crismafronteiro:latest
