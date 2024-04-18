@@ -37,7 +37,8 @@ def set_up_second_database():
             model._meta.database = db
 
         return second_db
-    except peewee.OperationalError:
+    except (peewee.OperationalError,
+            peewee.InterfaceError):
         return None
 
 def save_data(second_db):
