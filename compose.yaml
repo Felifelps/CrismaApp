@@ -11,6 +11,8 @@ services:
         condition: service_healthy
     secrets:
       - myenv
+    #volumes:
+    #- ./.:/app
 
   db:
     image: postgres

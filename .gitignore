@@ -5,3 +5,4 @@ __pychache__
 data.db
 *.csv
 save.bat
+secrets.env

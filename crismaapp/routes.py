@@ -1,9 +1,10 @@
 import datetime
 
-from flask import Flask, request, render_template, redirect, session, flash
+from flask import Flask, request, render_template, redirect, session, flash, send_file
+import pandas as pd
 
 from .models import Crismando, Encontro, FrequenciaEncontro, Domingo, FrequenciaDomingo
-from .utils import check_admin_password, SECRET_KEY
+from .utils import check_admin_password, SECRET_KEY, model_to_dict
 
 app = Flask('Crisma')
 app.secret_key = SECRET_KEY
@@ -102,6 +103,7 @@ def editar_crismando(id):
             value = int(data.get(f'e-{encontro.id}', False))
             if value:
                 FrequenciaEncontro.create(
+                    id=max(FrequenciaEncontro.select(), key=lambda c: c.id).id + 1,
                     encontro=encontro,
                     crismando=crismando,
                     justificado=value == 1
@@ -115,6 +117,7 @@ def editar_crismando(id):
             value = int(data.get(f'd-{domingo.id}', False))
             if value:
                 FrequenciaDomingo.create(
+                    id=max(FrequenciaDomingo.select(), key=lambda c: c.id).id + 1,
                     domingo=domingo,
                     crismando=crismando,
                     justificado=value == 1
@@ -153,6 +156,42 @@ def editar_crismando(id):
         ]
     )
 
+@app.route('/dados/geral')
+def dados_geral():
+
+    enc = Encontro.select().order_by(Encontro.data)
+    dom = Domingo.select().order_by(Domingo.data)
+
+    pattern = ['Nome', 'PE', 'FE', 'JE', 'ET', 'PD', 'FD', 'JD', 'DT']
+    data = {p: [] for p in pattern}
+    for crismando in Crismando.select():
+        fe = {e.encontro: e.justificado for e in FrequenciaEncontro.filter(
+        crismando=crismando)}
+        n_enc_just = list(fe.values()).count(True)
+
+        fd = {d.domingo: d.justificado for d in FrequenciaDomingo.filter(
+            crismando=crismando)}
+        n_dom_just = list(fd.values()).count(True)
+
+        for i, j in zip(pattern, [
+            crismando.nome,
+            # Encontros
+            len(fe) - n_enc_just, # Presenças
+            len(enc) - len(fe) + n_enc_just, # Faltas
+            n_enc_just, # Justificados
+            len(enc) - len(fe), # Faltas totais
+            # Domingos
+            len(fd) - n_dom_just, # Presenças
+            len(dom) - len(fd) + n_dom_just, # Faltas
+            n_dom_just, # Justificados
+            len(dom) - len(fd), # Faltas totais
+        ]):
+            data[i].append(j)
+
+    df = pd.DataFrame(data=data)
+    df.to_excel('dados.xlsx', index=True)
+    return send_file('dados.xlsx', as_attachment=False)
+    
 
 @app.route('/crismando/del/<int:id>')
 def deletar_crismando(id):
@@ -220,6 +259,7 @@ def registrar_encontro():
             value = int(data.get(f'{crismando.id}', False))
             if value:
                 FrequenciaEncontro.create(
+                    id=max(FrequenciaEncontro.select(), key=lambda c: c.id).id + 1,
                     encontro=encontro,
                     crismando=crismando,
                     justificado=value == 1
@@ -268,6 +308,7 @@ def editar_encontro(id):
             value = int(data.get(f'{crismando.id}', False))
             if value:
                 FrequenciaEncontro.create(
+                    id=max(FrequenciaEncontro.select(), key=lambda c: c.id).id + 1,
                     encontro=encontro,
                     crismando=crismando,
                     justificado=value == 1
@@ -346,6 +387,7 @@ def registrar_domingo():
             value = int(data.get(f'{crismando.id}', False))
             if value:
                 FrequenciaDomingo.create(
+                    id=max(FrequenciaDomingo.select(), key=lambda c: c.id).id + 1,
                     domingo=domingo,
                     crismando=crismando,
                     justificado=value == 1
@@ -393,6 +435,7 @@ def editar_domingo(id):
             value = int(data.get(f'{crismando.id}', False))
             if value:
                 FrequenciaDomingo.create(
+                    id=max(FrequenciaDomingo.select(), key=lambda c: c.id).id + 1,
                     domingo=domingo,
                     crismando=crismando,
                     justificado=value == 1
