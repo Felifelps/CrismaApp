@@ -47,6 +47,25 @@ class Crismando(BaseModel):
             ).date()
         return (hoje - date).days//365
 
+    def get_frequency_data(self, enc, dom, fe, fd):
+        n_enc_just = list(fe.values()).count(True)
+
+        n_dom_just = list(fd.values()).count(True)
+
+        return [
+            # Encontros
+            len(fe) - n_enc_just, # Presenças
+            len(enc) - len(fe), # Faltas
+            n_enc_just, # Justificados
+            len(enc) - len(fe), # Faltas totais
+            # Domingos
+            len(fd) - n_dom_just, # Presenças
+            len(dom) - len(fd), # Faltas
+            n_dom_just, # Justificados
+            len(dom) - len(fd), # Faltas totais
+        ]
+
+
 
 class Encontro(BaseModel):
     tema = CharField()

@@ -6,19 +6,13 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post" enctype="multipart/form-data">
-        
-        <h1>Editar Crismando <i class="fa-solid fa-trash" onclick="checkForDelete()"></i></h1>
+    <main>
+        <h1>Frequência</h1>
 
-        <label for="nome">Nome completo:</label>
-        <input type="text" id="nome" name="nome" value="{{ crismando.nome }}" required>
+        Crismando: {{ crismando.nome }}
 
-        <label for="data">Data de nascimento:</label>
-        <input type="date" id="data" name="data" value="{{ crismando.data_nasc }}" required>
+        <br>
 
-        <label for="tel">Telefone:</label>
-        <input type="tel" id="tel" name="tel" value="{{ crismando.telefone }}" required>
-        
         <div class="table-container">
             <table>
                 <tr>
@@ -29,25 +23,24 @@
                 </tr>
                 {% for encontro in encontros %}
                     <tr>
-                        <td> <a href="/encontro/edit/{{encontro.id}}"> {{encontro.tema}} </a> </td>
+                        <td> <a href="/adm/encontro/edit/{{encontro.id}}"> {{encontro.tema}} </a> </td>
                         {% with test=frequencia_encontro.get(encontro, None) %}
                         <td>
-                            <input type="radio" name="e-{{encontro.id}}" value="0"
-                            {% if test == None %} checked {% endif %}>
+                            <i class="{% if test == None %} fas fa-circle {% else %} far fa-circle {% endif %}"></i>
                         </td>
                         <td>
-                            <input type="radio" name="e-{{encontro.id}}" value="1"
-                            {% if test == True %} checked {% endif %}>
+                            <i class="{% if test == True %} fas fa-circle {% else %} far fa-circle {% endif %}"></i>
                         </td>
                         <td>
-                            <input type="radio" name="e-{{encontro.id}}" value="2"
-                            {% if test == False %} checked {% endif %}>
+                            <i class="{% if test == False %} fas fa-circle {% else %} far fa-circle {% endif %}"></i>
                         </td>
                         {% endwith %}
                     </tr>
                 {% endfor %}
             </table>
         </div>
+
+        <br>
 
         Presenças: {{ data.0 }} <br>
         Faltas: {{ data.1 }} <br>
@@ -64,19 +57,16 @@
                 </tr>
                 {% for domingo in domingos %}
                     <tr>
-                        <td> <a href="/domingo/edit/{{domingo.id}}"> {{domingo.data}} </a> </td>
+                        <td> <a href="/adm/domingo/edit/{{domingo.id}}"> {{domingo.data}} </a> </td>
                         {% with test=frequencia_domingo.get(domingo, None) %}
                         <td>
-                            <input type="radio" name="d-{{domingo.id}}" value="0"
-                            {% if test == None %} checked {% endif %}>
+                            <i class="{% if test == None %} fas fa-circle {% else %} far fa-circle {% endif %}"></i>
                         </td>
                         <td>
-                            <input type="radio" name="d-{{domingo.id}}" value="1"
-                            {% if test == True %} checked {% endif %}>
+                            <i class="{% if test == True %} fas fa-circle {% else %} far fa-circle {% endif %}"></i>
                         </td>
                         <td>
-                            <input type="radio" name="d-{{domingo.id}}" value="2"
-                            {% if test == False %} checked {% endif %}>
+                            <i class="{% if test == False %} fas fa-circle {% else %} far fa-circle {% endif %}"></i>
                         </td>
                         {% endwith %}
                     </tr>
@@ -84,21 +74,12 @@
             </table>
         </div>
 
+        <br>
+
         Presenças: {{ data.4 }} <br>
         Faltas: {{ data.5 }} <br>
         Faltas justificadas: {{ data.6 }} <br>
         Faltas Totais: {{ data.7 }}/{{ domingos|length }} <br>
-
-        <br>
-
-        <button type="submit">Salvar Alterações</button>
         
-    </form>
-    <script>
-        function checkForDelete() {
-            if (window.confirm('Deseja deletar esse crismando?')) {
-                window.location.replace("/crismando/del/{{ crismando.id }}");
-            }
-        }
-    </script>
+    </main>
 {% endblock %}

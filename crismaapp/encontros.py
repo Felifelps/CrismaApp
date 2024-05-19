@@ -5,7 +5,7 @@ from flask import request, render_template, redirect, session, flash
 from .app import app
 from .models import Crismando, FrequenciaEncontro, Encontro
 
-@app.route('/encontros')
+@app.route('/adm/encontros')
 def encontros():
     logged = session.get('logged')
     if not logged:
@@ -18,12 +18,12 @@ def encontros():
         data[encontro] = FrequenciaEncontro.filter(encontro=encontro)
 
     return render_template(
-        'encontros.html',
+        '/adm/encontros.html',
         data=data
     )
 
 
-@app.route('/encontro/novo', methods=['POST', 'GET'])
+@app.route('/adm/encontro/novo', methods=['POST', 'GET'])
 def registrar_encontro():
     logged = session.get('logged')
     if not logged:
@@ -58,15 +58,15 @@ def registrar_encontro():
 
         flash('Encontro criado com sucesso', 'green')
 
-        return redirect('/encontros')
+        return redirect('/adm/encontros')
 
     return render_template(
-        'registrar_encontro.html',
+        '/adm/registrar_encontro.html',
         crismandos=crismandos
     )
 
 
-@app.route('/encontro/edit/<int:encontro_id>', methods=['POST', 'GET'])
+@app.route('/adm/encontro/edit/<int:encontro_id>', methods=['POST', 'GET'])
 def editar_encontro(encontro_id):
     logged = session.get('logged')
     if not logged:
@@ -76,7 +76,7 @@ def editar_encontro(encontro_id):
     encontro = Encontro.get_or_none(id=encontro_id)
     if not encontro:
         flash('Encontro não encontrado', 'red')
-        return redirect('/encontros')
+        return redirect('/adm/encontros')
 
     crismandos = list(sorted(
         Crismando.select(),
@@ -108,17 +108,17 @@ def editar_encontro(encontro_id):
 
         flash('Encontro atualizado com sucesso', 'green')
 
-        return redirect('/encontros')
+        return redirect('/adm/encontros')
 
     return render_template(
-        'editar_encontro.html',
+        '/adm/editar_encontro.html',
         encontro=encontro,
         crismandos=crismandos,
         frequencia={f.crismando: f.justificado for f in FrequenciaEncontro.filter(encontro=encontro)}
     )
 
 
-@app.route('/encontro/del/<int:encontro_id>')
+@app.route('/adm/encontro/del/<int:encontro_id>')
 def deletar_encontro(encontro_id):
     logged = session.get('logged')
     if not logged:
@@ -128,7 +128,7 @@ def deletar_encontro(encontro_id):
     encontro = Encontro.get_or_none(id=encontro_id)
     if not encontro:
         flash('Encontro não encontrado', 'red')
-        return redirect('/encontros')
+        return redirect('/adm/encontros')
 
     for f in FrequenciaEncontro.filter(encontro=encontro):
         f.delete_instance()
@@ -136,4 +136,4 @@ def deletar_encontro(encontro_id):
 
     flash('Encontro deletado com sucesso', 'green')
 
-    return redirect('/encontros')
+    return redirect('/adm/encontros')

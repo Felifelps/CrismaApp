@@ -6,7 +6,7 @@ from .app import app
 from .models import Crismando, FrequenciaDomingo, Domingo
 
 
-@app.route('/domingos')
+@app.route('/adm/domingos')
 def domingos():
     logged = session.get('logged')
     if not logged:
@@ -19,12 +19,12 @@ def domingos():
         data[domingo] = FrequenciaDomingo.filter(domingo=domingo)
 
     return render_template(
-        'domingos.html',
+        '/adm/domingos.html',
         data=data
     )
 
 
-@app.route('/domingo/novo', methods=['POST', 'GET'])
+@app.route('/adm/domingo/novo', methods=['POST', 'GET'])
 def registrar_domingo():
     logged = session.get('logged')
     if not logged:
@@ -32,7 +32,7 @@ def registrar_domingo():
         return redirect('/login')
 
     crismandos = list(sorted(
-        Crismando.select(), 
+        Crismando.select(),
         key=lambda crismando: crismando.nome
     ))
 
@@ -58,15 +58,15 @@ def registrar_domingo():
 
         flash('Domingo criado sucesso', 'green')
 
-        return redirect('/domingos')
+        return redirect('/adm/domingos')
 
     return render_template(
-        'registrar_domingo.html',
+        '/adm/registrar_domingo.html',
         crismandos=crismandos
     )
 
 
-@app.route('/domingo/edit/<int:domingo_id>>', methods=['POST', 'GET'])
+@app.route('/adm/domingo/edit/<int:domingo_id>', methods=['POST', 'GET'])
 def editar_domingo(domingo_id):
     logged = session.get('logged')
     if not logged:
@@ -81,7 +81,7 @@ def editar_domingo(domingo_id):
     domingo = Domingo.get_or_none(id=domingo_id)
     if not domingo:
         flash('Domingo não encontrado', 'red')
-        return redirect('/domingos')
+        return redirect('/adm/domingos')
 
     if request.method == 'POST':
         data = request.form.to_dict()
@@ -107,17 +107,17 @@ def editar_domingo(domingo_id):
 
         flash('Domingo atualizado com sucesso', 'green')
 
-        return redirect('/domingos')
+        return redirect('/adm/domingos')
 
     return render_template(
-        'editar_domingo.html',
+        '/adm/editar_domingo.html',
         domingo=domingo,
         crismandos=crismandos,
         frequencia={f.crismando: f.justificado for f in FrequenciaDomingo.filter(domingo=domingo)}
     )
 
 
-@app.route('/domingo/del/<int:domingo_id>')
+@app.route('/adm/domingo/del/<int:domingo_id>')
 def deletar_domingo(domingo_id):
     logged = session.get('logged')
     if not logged:
@@ -127,7 +127,7 @@ def deletar_domingo(domingo_id):
     domingo = Domingo.get_or_none(id=domingo_id)
     if not domingo:
         flash('Domingo não encontrado', 'red')
-        return redirect('/domingos')
+        return redirect('/adm/domingos')
 
     for f in FrequenciaDomingo.filter(domingo=domingo):
         f.delete_instance()
@@ -135,4 +135,4 @@ def deletar_domingo(domingo_id):
 
     flash('Domingo deletado com sucesso', 'green')
 
-    return redirect('/domingos')
+    return redirect('/adm/domingos')

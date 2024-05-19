@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'adm_base.html' %}
 
 {% block head %}
     <link rel="stylesheet" href="static/css/mainpage.css">
@@ -7,7 +7,7 @@
 {% block content %}
 
 <main>
-    <h1>Crismandos <a href="/crismando/novo"><i class="fa-solid fa-plus"></i></a></h1>
+    <h1>Crismandos <a href="/adm/crismando/novo"><i class="fa-solid fa-plus"></i></a></h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -40,7 +40,7 @@
                         <td>{{ crismando.idade }}</td>
                         <td> {{ dados.faltas_encontros }} </td>
                         <td> {{ dados.faltas_domingos }} </td>
-                        <td><a href="/crismando/edit/{{ crismando.id }}"><span id="icon" class="fa-solid fa-pen-to-square"></span></a>
+                        <td><a href="/adm/crismando/edit/{{ crismando.id }}"><span id="icon" class="fa-solid fa-pen-to-square"></span></a>
                     </tr>
                 {% endfor %}
             </tbody>

@@ -5,8 +5,8 @@ from flask import request, render_template, redirect, session, flash
 from .app import app
 from .models import Crismando, FrequenciaDomingo, FrequenciaEncontro, Encontro, Domingo
 
-@app.route('/')
-def mainpage():
+@app.route('/adm')
+def adm():
     logged = session.get('logged')
     if not logged:
         flash('Faça login', 'red')
@@ -24,12 +24,12 @@ def mainpage():
         }
 
     return render_template(
-        'mainpage.html',
+        '/adm/adm.html',
         data=data
     )
 
 
-@app.route('/crismando/novo', methods=['POST', 'GET'])
+@app.route('/adm/crismando/novo', methods=['POST', 'GET'])
 def registrar_crismando():
     logged = session.get('logged')
     if not logged:
@@ -50,15 +50,18 @@ def registrar_crismando():
 
         flash('Crismando criado com sucesso', 'green')
 
-        return redirect('/')
+        return redirect('/adm')
 
-    return render_template('registrar_crismando.html')
+    return render_template(
+        '/adm/registrar_crismando.html'
+    )
 
-
-@app.route('/crismando/edit/<int:crismando_id>', methods=['POST', 'GET'])
+@app.route('/frequency/<int:crismando_id>')
+@app.route('/adm/crismando/edit/<int:crismando_id>', methods=['POST', 'GET'])
 def editar_crismando(crismando_id):
     logged = session.get('logged')
-    if not logged:
+    editable = 'frequency' in request.url
+    if not editable and not logged:
         flash('Faça login', 'red')
         return redirect('/login')
 
@@ -66,7 +69,7 @@ def editar_crismando(crismando_id):
 
     if not crismando:
         flash('Crismando não encontrado', 'red')
-        return redirect('/')
+        return redirect('/adm')
 
     enc = Encontro.select().order_by(Encontro.data)
     dom = Domingo.select().order_by(Domingo.data)
@@ -110,38 +113,27 @@ def editar_crismando(crismando_id):
 
         flash('Crismando atualizado com sucesso', 'green')
 
-        return redirect('/')
+        return redirect('/adm')
 
     fe = {e.encontro: e.justificado for e in FrequenciaEncontro.filter(
     crismando=crismando)}
-    n_enc_just = list(fe.values()).count(True)
 
     fd = {d.domingo: d.justificado for d in FrequenciaDomingo.filter(
         crismando=crismando)}
-    n_dom_just = list(fd.values()).count(True)
 
     return render_template(
-        'editar_crismando.html',
+        '/adm/editar_crismando.html',
         crismando=crismando,
         encontros=enc,
         domingos=dom,
         frequencia_encontro=fe,
         frequencia_domingo=fd,
-        data=[
-            # Encontros
-            len(fe) - n_enc_just, # Presenças
-            len(enc) - len(fe) + n_enc_just, # Faltas
-            n_enc_just, # Justificados
-            len(enc) - len(fe), # Faltas totais
-            # Domingos
-            len(fd) - n_dom_just, # Presenças
-            len(dom) - len(fd) + n_dom_just, # Faltas
-            n_dom_just, # Justificados
-            len(dom) - len(fd), # Faltas totais
-        ]
+        data=crismando.get_frequency_data(enc, dom, fe, fd),
+        editable=editable
     )
 
-@app.route('/crismando/del/<int:crismando_id>')
+
+@app.route('/adm/crismando/del/<int:crismando_id>')
 def deletar_crismando(crismando_id):
     logged = session.get('logged')
     if not logged:
@@ -151,7 +143,7 @@ def deletar_crismando(crismando_id):
     crismando = Crismando.get_or_none(id=crismando_id)
     if not crismando:
         flash('Crismando não encontrado', 'red')
-        return redirect('/')
+        return redirect('/adm')
 
     for f in FrequenciaEncontro.filter(crismando=crismando):
         f.delete_instance()
@@ -163,4 +155,4 @@ def deletar_crismando(crismando_id):
 
     flash('Crismando excluido com sucesso', 'green')
 
-    return redirect('/')
+    return redirect('/adm')

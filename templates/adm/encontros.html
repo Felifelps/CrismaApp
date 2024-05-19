@@ -1,13 +1,13 @@
-{% extends 'base.html' %}
+{% extends 'adm_base.html' %}
 
 {% block head %}
-    <link rel="stylesheet" href="static/css/mainpage.css">
+    <link rel="stylesheet" href="/static/css/mainpage.css">
 {% endblock %}
 
 {% block content %}
 
 <main>
-    <h1>Domingos <a href="/domingo/novo"><i class="fa-solid fa-plus"></i></a></h1>
+    <h1>Encontros <a href="/adm/encontro/novo"><i class="fa-solid fa-plus"></i></a></h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -19,23 +19,25 @@
         <table>
             <thead>
                 <tr>
+                    <th>Tema</th>
                     <th>Data</th>
                     <th>Frequência</th>
                 </tr>
             </thead>
             <tbody>
-                {% for domingo, frequencia in data.items() %}
+                {% for encontro, frequencia in data.items() %}
                     <tr>
-                        <td>{{ domingo.data.strftime('%d/%m/%Y') }}</td>
+                        <td>{{ encontro.tema }}</td>
+                        <td>{{ encontro.data.strftime('%d/%m/%Y') }}</td>
                         <td>
+                            Presentes: {{ frequencia|length }}
                             <select>
                                 {% for registro in frequencia %}
                                     <option> <strong>{{ registro.crismando.nome }}</strong></option>
                                 {% endfor %}
                             </select>
-                            Presentes: {{ frequencia|length }}
                         </td>
-                        <td><a href="/domingo/edit/{{ domingo.id }}"><span id="icon" class="fa-solid fa-pen-to-square"></span></a>
+                        <td><a href="/adm/encontro/edit/{{ encontro.id }}"><span id="icon" class="fa-solid fa-pen-to-square"></span></a></td>
                     </tr>
                 {% endfor %}
             </tbody>
