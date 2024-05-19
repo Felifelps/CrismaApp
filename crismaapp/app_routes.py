@@ -23,7 +23,7 @@ def ver_frequencia():
             data_nasc=data
         )
         if crismando and crismando.nome.lower() == nome:
-            session['from_frequency_form'] = True
+            session['from_frequency_form'] = 3
             return redirect(f'/frequency/{crismando.id}')
 
         flash('Nome ou data de nascimento inválidos')
@@ -33,10 +33,11 @@ def ver_frequencia():
 
 @app.route('/frequency/<int:crismando_id>')
 def frequencia(crismando_id):
-    if not session.get('from_frequency_form'):
+    from_form = session.get('from_frequency_form')
+    if not from_form:
         return redirect('/')
 
-    session['from_frequency_form'] = False
+    session['from_frequency_form'] = from_form - 1
 
     crismando = Crismando.get_or_none(id=crismando_id)
 
