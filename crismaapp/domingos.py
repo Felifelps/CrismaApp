@@ -2,7 +2,7 @@ import datetime
 
 from flask import request, render_template, redirect, session, flash
 
-from .app import app
+from .app_routes import app
 from .models import Crismando, FrequenciaDomingo, Domingo
 
 
