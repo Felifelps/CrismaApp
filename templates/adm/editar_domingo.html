@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'adm_base.html' %}
 
 {% block head %}
     <link rel="stylesheet" href="/static/css/mainpage.css">
@@ -8,12 +8,10 @@
 {% block content %}
     <form method="post" enctype="multipart/form-data">
         
-        <h1>Editar Encontro <i class="fa-solid fa-trash" onclick="checkForDelete()"></i></h1>
-        <label for="tema">Tema:</label>
-        <input type="text" id="tema" name="tema" value="{{ encontro.tema }}" required>
+        <h1>Editar Domingo <i class="fa-solid fa-trash" onclick="checkForDelete()"></i></h1>
 
         <label for="data">Data:</label>
-        <input type="date" id="data" name="data" value="{{ encontro.data }}" required>
+        <input type="date" id="data" name="data" value="{{ domingo.data }}" required>
 
         <div class="table-container">
             <table>
@@ -26,7 +24,7 @@
                 
                 {% for crismando in crismandos %}
                 <tr>
-                    <td> <a href="/crismando/edit/{{crismando.id}}">{{crismando.nome}}</a></td>
+                    <td> <a href="/adm/crismando/edit/{{crismando.id}}">{{crismando.nome}}</a></td>
                     {% with test=frequencia.get(crismando, None) %}
                     <td>
                         <input type="radio" name="{{crismando.id}}" value="0"
@@ -51,8 +49,8 @@
     </form>
     <script>
         function checkForDelete() {
-            if (window.confirm('Deseja deletar esse encontro?')) {
-                window.location.replace("/encontro/del/{{ encontro.id }}");
+            if (window.confirm('Deseja deletar esse domingo?')) {
+                window.location.replace("/adm/domingo/del/{{ domingo.id }}");
             }
         }
     </script>

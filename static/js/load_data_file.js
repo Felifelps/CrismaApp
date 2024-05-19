@@ -15,7 +15,6 @@ function get_data() {
             document.body.appendChild(a);
             a.click();
 
-            // Limpar o elemento <a> após o download
             setTimeout(() => {
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);

@@ -1,0 +1,104 @@
+{% extends 'adm_base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="/static/css/mainpage.css">
+    <link rel="stylesheet" href="/static/css/form.css">
+{% endblock %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        
+        <h1>Editar Crismando <i class="fa-solid fa-trash" onclick="checkForDelete()"></i></h1>
+
+        <label for="nome">Nome completo:</label>
+        <input type="text" id="nome" name="nome" value="{{ crismando.nome }}" required>
+
+        <label for="data">Data de nascimento:</label>
+        <input type="date" id="data" name="data" value="{{ crismando.data_nasc }}" required>
+
+        <label for="tel">Telefone:</label>
+        <input type="tel" id="tel" name="tel" value="{{ crismando.telefone }}" required>
+        
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th> Encontro </th>
+                    <th title="Faltas"> F </th>
+                    <th title="Faltas justificadas"> J </th>
+                    <th title="Presenças"> P </th>
+                </tr>
+                {% for encontro in encontros %}
+                    <tr>
+                        <td> <a href="/adm/encontro/edit/{{encontro.id}}"> {{encontro.tema}} </a> </td>
+                        {% with test=frequencia_encontro.get(encontro, None) %}
+                        <td>
+                            <input type="radio" name="e-{{encontro.id}}" value="0"
+                            {% if test == None %} checked {% endif %}>
+                        </td>
+                        <td>
+                            <input type="radio" name="e-{{encontro.id}}" value="1"
+                            {% if test == True %} checked {% endif %}>
+                        </td>
+                        <td>
+                            <input type="radio" name="e-{{encontro.id}}" value="2"
+                            {% if test == False %} checked {% endif %}>
+                        </td>
+                        {% endwith %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        Presenças: {{ data.0 }} <br>
+        Faltas: {{ data.1 }} <br>
+        Faltas justificadas: {{ data.2 }} <br>
+        Faltas Totais: {{ data.3 }}/{{ encontros|length }}
+
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th> Domingo </th>
+                    <th title="Faltas"> F </th>
+                    <th title="Faltas justificadas"> J </th>
+                    <th title="Presenças"> P </th>
+                </tr>
+                {% for domingo in domingos %}
+                    <tr>
+                        <td> <a href="/adm/domingo/edit/{{domingo.id}}"> {{domingo.data}} </a> </td>
+                        {% with test=frequencia_domingo.get(domingo, None) %}
+                        <td>
+                            <input type="radio" name="d-{{domingo.id}}" value="0"
+                            {% if test == None %} checked {% endif %}>
+                        </td>
+                        <td>
+                            <input type="radio" name="d-{{domingo.id}}" value="1"
+                            {% if test == True %} checked {% endif %}>
+                        </td>
+                        <td>
+                            <input type="radio" name="d-{{domingo.id}}" value="2"
+                            {% if test == False %} checked {% endif %}>
+                        </td>
+                        {% endwith %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        Presenças: {{ data.4 }} <br>
+        Faltas: {{ data.5 }} <br>
+        Faltas justificadas: {{ data.6 }} <br>
+        Faltas Totais: {{ data.7 }}/{{ domingos|length }} <br>
+
+        <br>
+
+        <button type="submit">Salvar Alterações</button>
+        
+    </form>
+    <script>
+        function checkForDelete() {
+            if (window.confirm('Deseja deletar esse crismando?')) {
+                window.location.replace("/adm/crismando/del/{{ crismando.id }}");
+            }
+        }
+    </script>
+{% endblock %}

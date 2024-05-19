@@ -13,12 +13,6 @@ DATABASE_HOST = os.environ.get('DATABASE_HOST')
 DATABASE_PORT = os.environ.get('DATABASE_PORT')
 DATABASE_NAME = os.environ.get('DATABASE_NAME')
 
-ONLINE_DATABASE_PASSWORD = os.environ.get('ONLINE_DATABASE_PASSWORD')
-ONLINE_DATABASE_USER = os.environ.get('ONLINE_DATABASE_USER')
-ONLINE_DATABASE_HOST = os.environ.get('ONLINE_DATABASE_HOST')
-ONLINE_DATABASE_PORT = os.environ.get('ONLINE_DATABASE_PORT')
-ONLINE_DATABASE_NAME = os.environ.get('ONLINE_DATABASE_NAME')
-
 def check_admin_password(password: str) -> bool:
     """Check if the given password matches the admin password."""
     return checkpw(

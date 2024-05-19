@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="/static/css/mainpage.css">
+    <link rel="stylesheet" href="/static/css/form.css">
+    <link rel="stylesheet" href="/static/css/login.css">
+    <script src="https://kit.fontawesome.com/ad50c3f97d.js" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        
+        <h1>Ver frequência</h1>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <p class="flash red">{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <label for="name">Nome Completo:</label>
+        <input type="text" id="name" name="name" placeholder="Digite seu nome completo" required>
+
+        <label for="data">Data de nascimento:</label>
+        <input type="date" id="data" name="data" required>
+
+        <button type="submit">Entrar</button>
+    </form>
+</div>
+<script src="/static/js/login.js"></script>
+{% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'adm_base.html' %}
 
 {% block head %}
     <link rel="stylesheet" href="/static/css/mainpage.css">
@@ -8,14 +8,12 @@
 {% block content %}
     <form method="post" enctype="multipart/form-data">
         
-        <h1>Registrar Encontro</h1>
-        <label for="tema">Tema:</label>
-        <input type="text" id="tema" name="tema" required>
+        <h1>Registrar Domingo</h1>
 
         <label for="data">Data:</label>
         <input type="date" id="data" name="data" required>
 
-        Selecione os Crismandos que estavam no encontro: 
+        Selecione os Crismandos que estavam no domingo: 
 
         <div class="table-container">
             <table>
@@ -45,7 +43,7 @@
             </table>
         </div>
 
-        <button type="submit">Registrar Encontro</button>
+        <button type="submit">Registrar Domingo</button>
     </form>
 </div>
 {% endblock %}

@@ -2,7 +2,7 @@ version: '3.8'
 name: "crismafronteiro"
 services:
   server:
-    image: felilfeps/crismafronteiro:latest
+    image: felilfeps/crismafronteiro:dev
     restart: always
     ports:
       - 0.0.0.0:8080:8080
@@ -11,8 +11,8 @@ services:
         condition: service_healthy
     secrets:
       - myenv
-    #volumes:
-    #- ./.:/app
+    volumes:
+    - ./.:/app
 
   db:
     image: postgres
