@@ -119,6 +119,7 @@ def dados_geral():
     return send_file('dados.xlsx', as_attachment=False)
 
 
-@app.errorhandler(Exception)
-def error(e):
-    return e, 500
+@app.errorhandler(404)
+def not_found(e):
+    flash('Essa página não existe')
+    return redirect('/')
