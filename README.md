@@ -46,13 +46,13 @@ Para instalar esse projeto você precisa ter o [Docker Desktop](https://docs.doc
     docker compose up -d
     ```
 
-    > [!NOTE]
-    > Quando trocar de senha, rode `docker compose up -d --build` após a alteração para que a nova senha seja salva
+> [!NOTE]
+> Quando trocar de senha, rode `docker compose up -d --build` após a alteração para que a nova senha seja salva
 
 4. Acesse [esse link](http://localhost:8080)
 
-    > [!NOTE]
-    > Caso não apareça, recarregue na página algumas vezes
+> [!NOTE]
+> Caso não apareça, recarregue na página algumas vezes
 
 5. Caso queira desligar o servidor use:
 
