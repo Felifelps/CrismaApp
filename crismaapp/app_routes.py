@@ -121,6 +121,6 @@ def dados_geral():
 
 
 @app.errorhandler(404)
-def not_found(e):
+def not_found(_):
     flash('Essa página não existe')
     return redirect('/')
