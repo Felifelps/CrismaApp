@@ -2,7 +2,8 @@ version: '3.8'
 name: "crismafronteiro"
 services:
   server:
-    image: felilfeps/crismafronteiro:dev
+    build:
+      context: .
     restart: always
     ports:
       - 0.0.0.0:8080:8080
@@ -11,8 +12,12 @@ services:
         condition: service_healthy
     secrets:
       - myenv
-    volumes:
-    - ./.:/app
+    environment:
+      - DATABASE_PASSWORD=Nnm3bziyDfQVbjyo
+      - DATABASE_USER=postgres
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=default
 
   db:
     image: postgres
@@ -22,7 +27,7 @@ services:
       - db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=default
-      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_PASSWORD=Nnm3bziyDfQVbjyo
     expose:
       - 5432
     healthcheck:
