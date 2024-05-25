@@ -10,7 +10,7 @@ def background_task():
     while EXTERNAL_DOMAIN:
         print('REQUESTING')
         requests.get(
-            EXTERNAL_DOMAIN, 
+            EXTERNAL_DOMAIN,
             timeout=300
         )
         time.sleep(300)

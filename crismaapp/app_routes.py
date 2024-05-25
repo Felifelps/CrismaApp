@@ -16,17 +16,12 @@ def ver_frequencia():
 
     if request.method == 'POST':
         nome = request.form['name'].strip().lower()
-        data = datetime.date.fromisoformat(
-            request.form['data']
-        )
-        crismando = Crismando.get_or_none(
-            data_nasc=data
-        )
-        if crismando and crismando.nome.lower() == nome:
-            session['from_frequency_form'] = 3
-            return redirect(f'/frequency/{crismando.id}')
+        for crismando in Crismando.select():
+            if crismando.nome.lower() == nome:
+                session['from_frequency_form'] = 3
+                return redirect(f'/frequency/{crismando.id}')
 
-        flash('Nome ou data de nascimento inválidos')
+        flash('Nome inválido')
 
     return render_template('frequencia_form.html')
 
