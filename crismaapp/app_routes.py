@@ -53,9 +53,7 @@ def frequencia(crismando_id):
         'frequencia.html',
         crismando=crismando,
         encontros=enc,
-        domingos=dom,
         frequencia_encontro=fe,
-        frequencia_domingo=fd,
         data=crismando.get_frequency_data(enc, dom, fe, fd)
     )
 
