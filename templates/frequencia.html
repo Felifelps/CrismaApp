@@ -47,39 +47,5 @@
         Faltas justificadas: {{ data.2 }} <br>
         Faltas Totais: {{ data.3 }}/{{ encontros|length }}
 
-        <div class="table-container">
-            <table>
-                <tr>
-                    <th> Domingo </th>
-                    <th title="Faltas"> F </th>
-                    <th title="Faltas justificadas"> J </th>
-                    <th title="Presenças"> P </th>
-                </tr>
-                {% for domingo in domingos %}
-                    <tr>
-                        <td> {{domingo.data}} </a> </td>
-                        {% with test=frequencia_domingo.get(domingo, None) %}
-                        <td>
-                            <i class="{% if test == None %} fas fa-circle {% else %} far fa-circle {% endif %}"></i>
-                        </td>
-                        <td>
-                            <i class="{% if test == True %} fas fa-circle {% else %} far fa-circle {% endif %}"></i>
-                        </td>
-                        <td>
-                            <i class="{% if test == False %} fas fa-circle {% else %} far fa-circle {% endif %}"></i>
-                        </td>
-                        {% endwith %}
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
-
-        <br>
-
-        Presenças: {{ data.4 }} <br>
-        Faltas: {{ data.5 }} <br>
-        Faltas justificadas: {{ data.6 }} <br>
-        Faltas Totais: {{ data.7 }}/{{ domingos|length }} <br>
-        
     </main>
 {% endblock %}
