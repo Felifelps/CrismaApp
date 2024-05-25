@@ -7,7 +7,7 @@ body {
 
 main {
     max-width: 800px;
-    margin: 20px auto;
+    margin: 45px auto;
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
@@ -78,7 +78,9 @@ th {
     background-color: #333;
     color: white;
     text-align: center;
-    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    padding: 5px 0;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -100,13 +102,4 @@ th {
 .footer-container a .fa-instagram,
 .footer-container a .fa-github {
     font-size: 28px;
-}
-
-.fixed-footer {
-    position: fixed;
-    bottom: 0;
-}
-
-.relative-footer {
-    position: relative;
 }
