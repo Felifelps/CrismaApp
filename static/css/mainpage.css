@@ -79,8 +79,6 @@ th {
     color: white;
     text-align: center;
     padding: 10px 0;
-    position: absolute;
-    bottom: 0;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -99,16 +97,16 @@ th {
     color: #9a9a9a;
 }
 
-.footer-container a .fa-instagram {
-    font-size: 28px;
-}
-
+.footer-container a .fa-instagram,
 .footer-container a .fa-github {
     font-size: 28px;
 }
 
-@media screen and (max-height: 99vh) {
-    .footer-container {
-        position: relative;
-    }
+.fixed-footer {
+    position: fixed;
+    bottom: 0;
+}
+
+.relative-footer {
+    position: relative;
 }
