@@ -73,3 +73,42 @@ th {
 .green {
     background-color: #4CAF50;
 }
+
+.footer-container {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.footer-container a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: white;
+    transition: color 0.3s ease;
+}
+
+.footer-container a:hover {
+    color: #9a9a9a;
+}
+
+.footer-container a .fa-instagram {
+    font-size: 28px;
+}
+
+.footer-container a .fa-github {
+    font-size: 28px;
+}
+
+@media screen and (max-height: 99vh) {
+    .footer-container {
+        position: relative;
+    }
+}

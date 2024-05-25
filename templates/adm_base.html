@@ -1,29 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CrismaApp</title>
-    <link rel="stylesheet" href="/static/css/header.css">
-    {% block head %} {% endblock %}
-    <script src="https://kit.fontawesome.com/ad50c3f97d.js" crossorigin="anonymous"></script>
-    <script src="/static/js/load_data_file.js"></script>
-</head>
-<body>
-    <header>
-        <div class="app-title">
-            <strong>CrismaApp</strong>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="/adm">Crismandos</a></li>
-                <li><a href="/adm/encontros">Encontros</a></li>
-                <li><a href="/adm/domingos">Domingos</a></li>
-                <li><a href="#" onclick="get_data();event.preventDefault()">Baixar frequência</a></li>
-                <li><a href="/logout">Sair</a></li>
-            </ul>
-        </nav>
-    </header>
-    {% block content %}{% endblock %}
-</body>
-</html>
+{% extends 'base.html' %}
+{% block header %}
+<li><a href="/adm">Crismandos</a></li>
+<li><a href="/adm/encontros">Encontros</a></li>
+<li><a href="/adm/domingos">Domingos</a></li>
+<li><a href="#" onclick="get_data();event.preventDefault()">Baixar frequência</a></li>
+<li><a href="/logout">Sair</a></li>
+{% endblock %}
