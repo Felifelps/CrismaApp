@@ -54,7 +54,7 @@ Para instalar esse projeto você precisa ter o [Docker Desktop](https://docs.doc
         docker compose down
         ```
 
-    - `python app.py`
+    - ou rode `python app.py`
 
 4. Acesse [esse link](http://localhost:8080)
 
