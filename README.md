@@ -40,22 +40,26 @@ Para instalar esse projeto você precisa ter o [Docker Desktop](https://docs.doc
     python generate_env.py <sua-senha>
     ```
 
-3. Rode o comando:
+3. Para rodar o servidor, use:
 
-    ```
-    docker compose up -d
-    ```
+    - Docker compose:
+
+        ```
+        docker compose up -d
+        ```
+
+        Caso queira desligar o servidor use:
+
+        ```
+        docker compose down
+        ```
+
+    - `python app.py`
 
 4. Acesse [esse link](http://localhost:8080)
 
 > [!NOTE]
 > Caso não apareça, recarregue na página algumas vezes
-
-5. Caso queira desligar o servidor use:
-
-    ```
-    docker compose down
-    ```
 
 ## Contribuição
 
