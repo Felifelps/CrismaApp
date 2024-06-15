@@ -14,12 +14,6 @@ main {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
 table {
     width: 100%;
     height: 100%;

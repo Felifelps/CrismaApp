@@ -1,21 +1,31 @@
 import datetime
-from peewee import PostgresqlDatabase, CharField, Model, DateField, ForeignKeyField, BooleanField
+from peewee import CharField, Model, DateField, ForeignKeyField, BooleanField
 
-from .utils import (
-    DATABASE_HOST,
-    DATABASE_PORT,
-    DATABASE_NAME,
-    DATABASE_USER,
-    DATABASE_PASSWORD
-)
+from .utils import ONLINE_DB
 
-db = PostgresqlDatabase(
-    DATABASE_NAME,
-    user=DATABASE_USER,
-    password=DATABASE_PASSWORD,
-    host=DATABASE_HOST,
-    port=DATABASE_PORT
-)
+if ONLINE_DB:
+    from peewee import PostgresqlDatabase
+
+    from .utils import (
+        DATABASE_HOST,
+        DATABASE_PORT,
+        DATABASE_NAME,
+        DATABASE_USER,
+        DATABASE_PASSWORD
+    )
+
+    db = PostgresqlDatabase(
+        DATABASE_NAME,
+        user=DATABASE_USER,
+        password=DATABASE_PASSWORD,
+        host=DATABASE_HOST,
+        port=DATABASE_PORT
+    )
+else:
+    from peewee import SqliteDatabase
+
+    db = SqliteDatabase('database.db')
+
 
 class BaseModel(Model):
     class Meta:
