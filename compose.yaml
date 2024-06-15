@@ -18,6 +18,7 @@ services:
       - DATABASE_HOST=db
       - DATABASE_PORT=5432
       - DATABASE_NAME=default
+      - ONLINE_DB=1
     volumes:
       - ./.:/app
 
