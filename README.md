@@ -1,66 +1,62 @@
 # CrismaApp
 
-O CrismaApp é um projeto pessoal voltado para a organização e controle da frequência dos crismandos do ano de 2024.
+CrismaApp is an organizational web app designed to manage the attendance of the Confirmation Group.
 
-## Funcionalidades
+## Funcionalidades (Functionalities)
 
-- Busca de frequência a partir do nome e data de nascimento do crismando;
-- Área de administração restrita;
-- Cadastro, atualização e exclusão de crismandos;
-- Controle da frequência dos domingos e encontros;
-- Geração de tabela excel com todos os dados.
+- Search frequency by name
+- Administration area protected with password
+- CRUD operations for confirmation candidates
+- CRUD operations for meeting frequencies
+- Generation of Excel tables
 
-## Tecnologias usadas
+## Technologies
 
-- Python;
-- Framework Flask;
-- Bcrypt, para criptografia;
-- Peewee, como *Object Relational Mapping*;
-- Dotenv;
-- waitress como servidor WSGI;
-- pandas para a geração do arquivo.
+- Python
+- Flask
+- Bcrypt
+- Peewee
+- Dotenv
+- waitress
+- pandas
 
-## Instalação
+## Installation
 
-### Requerimentos
+To install this project:
 
-Para instalar esse projeto você precisa ter o [Docker Desktop](https://docs.docker.com/get-docker/) e o Git instalados em sua máquina.
+1. Clone this project:
 
-### Passo a Passo
-
-1. Clone o projeto:
-
-    ```
+    ```shell
     git clone https://github.com/Felifelps/CrismaApp CrismaApp
     ```
 
-2. Entre na pasta do projeto e rode o seguinte comando para gerar sua senha:
+2. In the project directory, generate your password with:
 
+    ```shell
+    python generate_env.py
     ```
-    python generate_env.py <sua-senha>
-    ```
 
-3. Para rodar o servidor, use:
+3. To run the server:
 
-    - Docker compose:
+    - Using Docker Compose:
 
-        ```
-        docker compose up -d
+        ```shell
+        docker-compose up -d
         ```
 
-        Caso queira desligar o servidor use:
+        To stop the server, run:
 
+        ```shell
+        docker-compose down
         ```
-        docker compose down
-        ```
 
-    - ou rode `python app.py`
+    - or run `python app.py`
 
-4. Acesse [esse link](http://localhost:8080)
+4. Access [this link](http://localhost:8080)
 
 > [!NOTE]
-> Caso não apareça, recarregue na página algumas vezes
+> Reload the page if necessary.
 
-## Contribuição
+## Contribution
 
-Fique à vontade para fazer Forks e várias Pull Requests. Estou aberto a sugestões e melhorias.
+Fork this repository, make your changes, and submit a pull request. I'll review it as soon as possible.
