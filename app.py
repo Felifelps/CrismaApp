@@ -1,4 +1,5 @@
-from crismaapp import app, background
+import background
+from crismaapp import app
 
 background.worker.start()
 

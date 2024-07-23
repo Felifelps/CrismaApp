@@ -9,12 +9,14 @@ from .domingos import domingos
 from .encontros import encontros
 from .frequency import frequency
 from .auth import auth
+from .api import api
 
 app.register_blueprint(crismandos, url_prefix='/crismandos')
 app.register_blueprint(encontros, url_prefix='/encontros')
 app.register_blueprint(domingos, url_prefix='/domingos')
 app.register_blueprint(frequency, url_prefix='/frequency')
 app.register_blueprint(auth, url_prefix='/auth')
+app.register_blueprint(api, url_prefix='/api')
 
 @app.route('/')
 def main():
