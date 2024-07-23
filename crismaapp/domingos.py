@@ -1,13 +1,13 @@
 import datetime
 
-from flask import request, render_template, redirect, session, flash
+from flask import request, render_template, redirect, session, flash, Blueprint
 
-from .app_routes import app
-from .models import Crismando, FrequenciaDomingo, Domingo
+from models import Crismando, FrequenciaDomingo, Domingo
 
+domingos = Blueprint('domingos', __name__)
 
-@app.route('/adm/domingos')
-def domingos():
+@domingos.route('/')
+def listar_domingos():
     logged = session.get('logged')
     if not logged:
         flash('Faça login', 'red')
@@ -24,7 +24,7 @@ def domingos():
     )
 
 
-@app.route('/adm/domingo/novo', methods=['POST', 'GET'])
+@domingos.route('/new', methods=['POST', 'GET'])
 def registrar_domingo():
     logged = session.get('logged')
     if not logged:
@@ -58,7 +58,7 @@ def registrar_domingo():
 
         flash('Domingo criado sucesso', 'green')
 
-        return redirect('/adm/domingos')
+        return redirect('/')
 
     return render_template(
         '/adm/registrar_domingo.html',
@@ -66,7 +66,7 @@ def registrar_domingo():
     )
 
 
-@app.route('/adm/domingo/edit/<int:domingo_id>', methods=['POST', 'GET'])
+@domingos.route('/edit/<int:domingo_id>', methods=['POST', 'GET'])
 def editar_domingo(domingo_id):
     logged = session.get('logged')
     if not logged:
@@ -81,7 +81,7 @@ def editar_domingo(domingo_id):
     domingo = Domingo.get_or_none(id=domingo_id)
     if not domingo:
         flash('Domingo não encontrado', 'red')
-        return redirect('/adm/domingos')
+        return redirect('/')
 
     if request.method == 'POST':
         data = request.form.to_dict()
@@ -107,7 +107,7 @@ def editar_domingo(domingo_id):
 
         flash('Domingo atualizado com sucesso', 'green')
 
-        return redirect('/adm/domingos')
+        return redirect('/')
 
     return render_template(
         '/adm/editar_domingo.html',
@@ -117,7 +117,7 @@ def editar_domingo(domingo_id):
     )
 
 
-@app.route('/adm/domingo/del/<int:domingo_id>')
+@domingos.route('/del/<int:domingo_id>')
 def deletar_domingo(domingo_id):
     logged = session.get('logged')
     if not logged:
@@ -127,7 +127,7 @@ def deletar_domingo(domingo_id):
     domingo = Domingo.get_or_none(id=domingo_id)
     if not domingo:
         flash('Domingo não encontrado', 'red')
-        return redirect('/adm/domingos')
+        return redirect('/')
 
     for f in FrequenciaDomingo.filter(domingo=domingo):
         f.delete_instance()
@@ -135,4 +135,4 @@ def deletar_domingo(domingo_id):
 
     flash('Domingo deletado com sucesso', 'green')
 
-    return redirect('/adm/domingos')
+    return redirect('/')

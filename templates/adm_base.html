@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <li><a href="/adm">Crismandos</a></li>
-    <li><a href="/adm/encontros">Encontros</a></li>
-    <li><a href="/adm/domingos">Domingos</a></li>
-    <li><a href="#" onclick="get_data();event.preventDefault()">Baixar frequência</a></li>
-    <li><a href="/logout">Sair</a></li>
+    <li><a href="{{ url_for('crismandos.listar_crismandos') }}">Crismandos</a></li>
+    <li><a href="{{ url_for('encontros.listar_encontros') }}">Encontros</a></li>
+    <li><a href="{{ url_for('domingos.listar_domingos') }}">Domingos</a></li>
+    <li><a href="{{ url_for('frequency.general') }}">Baixar frequência</a></li>
+    <li><a href="{{ url_for('auth.logout') }}">Sair</a></li>
 {% endblock %}
 
 {% block footclass %} relative-footer {% endblock %}

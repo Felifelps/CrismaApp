@@ -1,7 +1,7 @@
 import datetime
 from peewee import CharField, Model, DateField, ForeignKeyField, BooleanField
 
-from .utils import ONLINE_DB
+from utils import ONLINE_DB
 
 if ONLINE_DB:
     from peewee import PostgresqlDatabase

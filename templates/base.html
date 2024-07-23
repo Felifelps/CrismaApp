@@ -17,7 +17,8 @@
         <nav>
             <ul>
                 {% block header %}
-                <li><a href="/">Minha Frequência</a></li>
+                <li><a href="{{ url_for('auth.login') }}">Admin</a></li>
+                <li><a href="{{ url_for('frequency.ver_frequencia') }}">Minha Frequência</a></li>
                 {% endblock %}
             </ul>
         </nav>

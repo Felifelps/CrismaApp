@@ -1,12 +1,13 @@
 import datetime
 
-from flask import request, render_template, redirect, session, flash
+from flask import request, render_template, redirect, session, flash, Blueprint
 
-from .app_routes import app
-from .models import Crismando, FrequenciaEncontro, Encontro
+from models import Crismando, FrequenciaEncontro, Encontro
 
-@app.route('/adm/encontros')
-def encontros():
+encontros = Blueprint('encontros', __name__)
+
+@encontros.route('/')
+def listar_encontros():
     logged = session.get('logged')
     if not logged:
         flash('Faça login', 'red')
@@ -23,7 +24,7 @@ def encontros():
     )
 
 
-@app.route('/adm/encontro/novo', methods=['POST', 'GET'])
+@encontros.route('/new', methods=['POST', 'GET'])
 def registrar_encontro():
     logged = session.get('logged')
     if not logged:
@@ -58,7 +59,7 @@ def registrar_encontro():
 
         flash('Encontro criado com sucesso', 'green')
 
-        return redirect('/adm/encontros')
+        return redirect('/')
 
     return render_template(
         '/adm/registrar_encontro.html',
@@ -66,7 +67,7 @@ def registrar_encontro():
     )
 
 
-@app.route('/adm/encontro/edit/<int:encontro_id>', methods=['POST', 'GET'])
+@encontros.route('/edit/<int:encontro_id>', methods=['POST', 'GET'])
 def editar_encontro(encontro_id):
     logged = session.get('logged')
     if not logged:
@@ -76,7 +77,7 @@ def editar_encontro(encontro_id):
     encontro = Encontro.get_or_none(id=encontro_id)
     if not encontro:
         flash('Encontro não encontrado', 'red')
-        return redirect('/adm/encontros')
+        return redirect('/')
 
     crismandos = list(sorted(
         Crismando.select(),
@@ -108,7 +109,7 @@ def editar_encontro(encontro_id):
 
         flash('Encontro atualizado com sucesso', 'green')
 
-        return redirect('/adm/encontros')
+        return redirect('/')
 
     return render_template(
         '/adm/editar_encontro.html',
@@ -118,7 +119,7 @@ def editar_encontro(encontro_id):
     )
 
 
-@app.route('/adm/encontro/del/<int:encontro_id>')
+@encontros.route('/del/<int:encontro_id>')
 def deletar_encontro(encontro_id):
     logged = session.get('logged')
     if not logged:
@@ -128,7 +129,7 @@ def deletar_encontro(encontro_id):
     encontro = Encontro.get_or_none(id=encontro_id)
     if not encontro:
         flash('Encontro não encontrado', 'red')
-        return redirect('/adm/encontros')
+        return redirect('/')
 
     for f in FrequenciaEncontro.filter(encontro=encontro):
         f.delete_instance()
@@ -136,4 +137,4 @@ def deletar_encontro(encontro_id):
 
     flash('Encontro deletado com sucesso', 'green')
 
-    return redirect('/adm/encontros')
+    return redirect('/')

@@ -1,12 +1,13 @@
 import datetime
 
-from flask import request, render_template, redirect, session, flash
+from flask import request, render_template, redirect, session, flash, Blueprint
 
-from .app_routes import app
-from .models import Crismando, FrequenciaDomingo, FrequenciaEncontro, Encontro, Domingo
+from models import Crismando, FrequenciaDomingo, FrequenciaEncontro, Encontro, Domingo
 
-@app.route('/adm')
-def adm():
+crismandos = Blueprint('crismandos', __name__)
+
+@crismandos.route('/')
+def listar_crismandos():
     logged = session.get('logged')
     if not logged:
         flash('Faça login', 'red')
@@ -24,12 +25,12 @@ def adm():
         }
 
     return render_template(
-        '/adm/adm.html',
+        '/adm/crismandos.html',
         data=data
     )
 
 
-@app.route('/adm/crismando/novo', methods=['POST', 'GET'])
+@crismandos.route('/new', methods=['POST', 'GET'])
 def registrar_crismando():
     logged = session.get('logged')
     if not logged:
@@ -56,8 +57,8 @@ def registrar_crismando():
         '/adm/registrar_crismando.html'
     )
 
-@app.route('/frequency/<int:crismando_id>')
-@app.route('/adm/crismando/edit/<int:crismando_id>', methods=['POST', 'GET'])
+@crismandos.route('/frequency/<int:crismando_id>')
+@crismandos.route('/edit/<int:crismando_id>', methods=['POST', 'GET'])
 def editar_crismando(crismando_id):
     logged = session.get('logged')
     editable = 'frequency' in request.url
@@ -133,7 +134,7 @@ def editar_crismando(crismando_id):
     )
 
 
-@app.route('/adm/crismando/del/<int:crismando_id>')
+@crismandos.route('/del/<int:crismando_id>')
 def deletar_crismando(crismando_id):
     logged = session.get('logged')
     if not logged:

@@ -1,18 +1,15 @@
-import datetime
-
 import pandas as pd
-from flask import Flask, request, render_template, redirect, session, flash, send_file
 
-from .models import Crismando, FrequenciaDomingo, FrequenciaEncontro, Encontro, Domingo
-from .utils import SECRET_KEY, check_admin_password
+from flask import request, render_template, send_file, redirect, session, flash, Blueprint
 
-app = Flask('Crisma')
-app.secret_key = SECRET_KEY
+from models import Crismando, FrequenciaDomingo, FrequenciaEncontro, Encontro, Domingo
 
-@app.route('/', methods=['POST', 'GET'])
+frequency = Blueprint('frequency', __name__)
+
+@frequency.route('/', methods=['POST', 'GET'])
 def ver_frequencia():
     if session.get('logged'):
-        return redirect('/adm')
+        return redirect('/crismandos/')
 
     if request.method == 'POST':
         nome = request.form['name'].strip().lower()
@@ -26,7 +23,7 @@ def ver_frequencia():
     return render_template('frequencia_form.html')
 
 
-@app.route('/frequency/<int:crismando_id>')
+@frequency.route('/<int:crismando_id>')
 def frequencia(crismando_id):
     from_form = session.get('from_frequency_form')
     if not from_form:
@@ -57,28 +54,8 @@ def frequencia(crismando_id):
         data=crismando.get_frequency_data(enc, dom, fe, fd)
     )
 
-
-@app.route('/login', methods=['POST', 'GET'])
-def login():
-    if request.method == 'POST':
-        password = request.form['password']
-
-        if check_admin_password(password):
-            session['logged'] = True
-            return redirect('/adm')
-
-        flash('Senha inválida')
-    return render_template('login.html')
-
-
-@app.route('/logout')
-def logout():
-    session['logged'] = False
-    return redirect('/')
-
-
-@app.route('/adm/dados/geral')
-def dados_geral():
+@frequency.route('/general')
+def general():
     enc = Encontro.select().order_by(Encontro.data)
     dom = Domingo.select().order_by(Domingo.data)
 
@@ -112,8 +89,3 @@ def dados_geral():
     df.to_excel('dados.xlsx', index=True)
     return send_file('dados.xlsx', as_attachment=False)
 
-
-@app.errorhandler(404)
-def not_found(_):
-    flash('Essa página não existe')
-    return redirect('/')
