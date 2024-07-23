@@ -61,9 +61,9 @@ def get_edit_delete(crismando_id):
             **model_to_dict(crismando)
         )
     
+    # DELETE = delete
     if request.method == 'DELETE':
         crismando.delete_instance()
         return jsonify(
             message='Deleted successfully!'
         )
-    # DELETE = delete
