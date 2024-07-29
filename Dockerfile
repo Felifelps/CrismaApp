@@ -30,4 +30,4 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 EXPOSE 8080
 
 # Run the application.
-CMD python app.py
+CMD gunicorn -w 4 app:app
