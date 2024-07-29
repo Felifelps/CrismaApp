@@ -108,3 +108,5 @@ models = [
 db.connect()
 
 db.create_tables(models, safe=True)
+
+db.close()
