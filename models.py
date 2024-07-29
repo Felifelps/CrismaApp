@@ -6,7 +6,7 @@ from utils import ONLINE_DB
 if ONLINE_DB:
     from peewee import PostgresqlDatabase
 
-    from .utils import (
+    from utils import (
         DATABASE_HOST,
         DATABASE_PORT,
         DATABASE_NAME,
