@@ -1,8 +1,5 @@
-import background, os
+import background
 from crismaapp import app
-
-os.system('ls')
-print(os.listdir())
 
 background.worker.start()
 
