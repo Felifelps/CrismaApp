@@ -26,8 +26,9 @@ def before_request():
 
 
 @app.after_request
-def after_request():
+def after_request(response):
     db.close()
+    return response
 
 @app.route('/')
 def main():
