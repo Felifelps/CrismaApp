@@ -3,9 +3,8 @@ from flask import Blueprint
 
 from models import Crismando
 from crismaapp.api.v1.blueprint_crud import blueprint_model_crud
+from crismaapp.api.v1.blueprint_data import blueprint_data
 from crismaapp.api.v1.blueprint_frequency import blueprint_frequency
-
-print(Crismando.frequenciaencontro_set.field.name)
 
 DATE_PATTERN = '%Y-%m-%d'
 
@@ -32,7 +31,6 @@ blueprint_model_crud(
     }
 )
 
-blueprint_frequency(
-    Crismando,
-    crismandos
-)
+blueprint_frequency(Crismando, crismandos)
+
+blueprint_data(Crismando, crismandos)

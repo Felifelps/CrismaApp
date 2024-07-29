@@ -16,14 +16,12 @@ def blueprint_model_crud(model, blueprint, validations=[], field_formatters={}):
                 {obj.id: model_to_dict(obj) for obj in model.select()}
             )
         # POST = create
-        result = check_data_fields(request, model_fields)
+        result, data = check_data_fields(request, model_fields)
 
-        if not result[0]:
+        if not result:
             return jsonify(
-                message=f'Missing {result[1]}'
+                message=f'Missing {data}'
             ), 400
-
-        data = result[1]
 
         for validation in validations:
             is_valid, message = validation(data)
@@ -61,7 +59,6 @@ def blueprint_model_crud(model, blueprint, validations=[], field_formatters={}):
                 value = data.get(field)
                 if value is not None:
                     formatter = field_formatters.get(field)
-                    print(formatter(value) if formatter else value)
                     setattr(
                         obj,
                         field,

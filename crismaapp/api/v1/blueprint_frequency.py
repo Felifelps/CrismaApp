@@ -1,12 +1,10 @@
 from flask import request, jsonify
-from peewee import IntegrityError
+from peewee import Model
 
 from crismaapp.api.utils import check_data_fields
-from utils import model_to_dict, get_model_class_fields
+from utils import model_to_dict, get_model_class_fields, create_obj_from_dict, unset_field_name
 
-def blueprint_frequency(model, blueprint, validations=[], field_formatters={}):
-    # Receive data
-    # Must return a boolean with the validation return and a message for when its False
+def blueprint_frequency(model, blueprint):
     model_fields = tuple(get_model_class_fields(
         model,
         set_fields=True,
@@ -16,7 +14,7 @@ def blueprint_frequency(model, blueprint, validations=[], field_formatters={}):
     ref_models = {attr: getattr(model, attr).rel_model for attr in model_fields}
     obj_reference_names = {attr: getattr(model, attr).field.name for attr in model_fields}
 
-    @blueprint.route('/<int:pk>/frequency', methods=['GET', 'PUT', 'PATCH'])
+    @blueprint.route('/<int:pk>/freq', methods=['GET', 'PUT', 'PATCH'])
     def get_update_frequency(pk):
         obj = model.get_or_none(id=pk)
         if not obj:
@@ -26,7 +24,7 @@ def blueprint_frequency(model, blueprint, validations=[], field_formatters={}):
             try:
                 data = {}
                 for attr in model_fields:
-                    data[attr.replace('_set', '')] = [model_to_dict(frequency) for frequency in getattr(obj, attr)]
+                    data[unset_field_name(attr)] = [model_to_dict(frequency) for frequency in getattr(obj, attr)]
                 return jsonify(
                     **data
                 )
@@ -36,17 +34,15 @@ def blueprint_frequency(model, blueprint, validations=[], field_formatters={}):
                 ), 500
         
         if request.method in ['PUT', 'PATCH']:
-            result = check_data_fields(
+            result, data = check_data_fields(
                 request,
-                (field.replace('_set', '') for field in model_fields)
+                (unset_field_name(field) for field in model_fields)
             )
 
-            if not result[0]:
+            if not result:
                 return jsonify(
-                    message=f'Missing {result[1]}'
+                    message=f'Missing {data}'
                 ), 400
-
-            data = result[1]
 
             for field, value in data.items():
                 field = f"{field}_set"
@@ -68,17 +64,44 @@ def blueprint_frequency(model, blueprint, validations=[], field_formatters={}):
 
             return jsonify(message='Opa')
 
+    @blueprint.route('/<int:pk>/stats')
+    def stats(pk):
+        obj = model.get_or_none(id=pk)
+        if not obj:
+            return jsonify(message='Id not found'), 404
 
-    def create_obj_from_dict(model, data):
-        try:
-            obj = model.create(**data)
-            return True, obj
-        except IntegrityError:
-            fields = tuple(get_model_class_fields(model))
-            return False, f'Missing one field of {fields}'
-        except Exception as e:
-            return False, e
-        
-                
+        return get_model_frequency_statistics(
+            obj,
+            model_fields,
+            ref_models
+        )
 
-    
+
+def get_model_frequency_statistics(obj, model_set_fields, ref_models):
+    data = {}
+    for field in model_set_fields:
+        attrs = get_model_class_fields(ref_models[field])
+        frequency = getattr(obj, field)
+        total = 0
+        # Getting the related model count
+        if len(frequency):
+            first = frequency[0]
+            ref_attr_list = (attr for attr in attrs if isinstance(getattr(first, attr), Model) and getattr(first, attr) != obj)
+            ref_attr_name = tuple(ref_attr_list)[0]
+            total = len(getattr(first, ref_attr_name).select())
+
+        participated = len(tuple(filter(lambda x: not x.justificado, frequency)))
+        justified = len(tuple(filter(lambda x: x.justificado, frequency)))
+        missed = total - len(frequency)
+
+        data[unset_field_name(field)] = {
+            'participated': participated,
+            'justified': justified,
+            'missed': missed,
+            'total': total,
+            'participation_rate': round(participated/total * 100, 2) if total else 0,
+            'miss_rate': round(missed/total * 100, 2) if total else 0,
+            'justify_rate': round(justified/total * 100, 2) if total else 0,
+        }
+
+    return data

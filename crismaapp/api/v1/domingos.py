@@ -4,6 +4,7 @@ from flask import Blueprint
 from models import Domingo
 from crismaapp.api.v1.blueprint_crud import blueprint_model_crud
 from crismaapp.api.v1.blueprint_frequency import blueprint_frequency
+from crismaapp.api.v1.blueprint_data import blueprint_data
 from crismaapp.api.utils import DATE_PATTERN
 
 def check_data(data):
@@ -29,7 +30,6 @@ blueprint_model_crud(
     }
 )
 
-blueprint_frequency(
-    Domingo,
-    domingos
-)
+blueprint_frequency(Domingo, domingos)
+
+blueprint_data(Domingo, domingos)
