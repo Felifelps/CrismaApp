@@ -24,7 +24,7 @@
                 
                 {% for crismando in crismandos %}
                 <tr>
-                    <td> <a href="/adm/crismando/edit/{{crismando.id}}">{{crismando.nome}}</a></td>
+                    <td> <a href="/crismandos/edit/{{crismando.id}}">{{crismando.nome}}</a></td>
                     {% with test=frequencia.get(crismando, None) %}
                     <td>
                         <input type="radio" name="{{crismando.id}}" value="0"
@@ -50,7 +50,7 @@
     <script>
         function checkForDelete() {
             if (window.confirm('Deseja deletar esse domingo?')) {
-                window.location.replace("/adm/domingo/del/{{ domingo.id }}");
+                window.location.replace("/domingos/del/{{ domingo.id }}");
             }
         }
     </script>

@@ -7,7 +7,7 @@
 {% block content %}
 
 <main>
-    <h1>Domingos <a href="/adm/domingo/novo"><i class="fa-solid fa-plus"></i></a></h1>
+    <h1>Domingos <a href="/domingos/new"><i class="fa-solid fa-plus"></i></a></h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -35,7 +35,7 @@
                             </select>
                             Presentes: {{ frequencia|length }}
                         </td>
-                        <td><a href="/adm/domingo/edit/{{ domingo.id }}"><span id="icon" class="fa-solid fa-pen-to-square"></span></a>
+                        <td><a href="/domingos/edit/{{ domingo.id }}"><span id="icon" class="fa-solid fa-pen-to-square"></span></a>
                     </tr>
                 {% endfor %}
             </tbody>

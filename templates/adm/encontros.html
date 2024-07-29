@@ -7,7 +7,7 @@
 {% block content %}
 
 <main>
-    <h1>Encontros <a href="/adm/encontro/novo"><i class="fa-solid fa-plus"></i></a></h1>
+    <h1>Encontros <a href="/encontros/new"><i class="fa-solid fa-plus"></i></a></h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -37,7 +37,7 @@
                                 {% endfor %}
                             </select>
                         </td>
-                        <td><a href="/adm/encontro/edit/{{ encontro.id }}"><span id="icon" class="fa-solid fa-pen-to-square"></span></a></td>
+                        <td><a href="/encontros/edit/{{ encontro.id }}"><span id="icon" class="fa-solid fa-pen-to-square"></span></a></td>
                     </tr>
                 {% endfor %}
             </tbody>

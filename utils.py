@@ -2,6 +2,7 @@ import os
 
 from bcrypt import checkpw
 from dotenv import load_dotenv
+from peewee import FieldAccessor
 
 load_dotenv()
 
@@ -25,3 +26,10 @@ def check_admin_password(password: str) -> bool:
 
 def model_to_dict(model):
     return model.__dict__['__data__']
+
+def get_model_class_fields(model_class, set_fields=False, not_set_fields=True):
+    for attr, attr_obj in model_class.__dict__.items():
+        if not_set_fields and isinstance(attr_obj, FieldAccessor) and attr != 'id':
+            yield attr
+        if set_fields and '_set' in attr:
+            yield attr

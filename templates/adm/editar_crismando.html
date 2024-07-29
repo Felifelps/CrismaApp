@@ -29,7 +29,7 @@
                 </tr>
                 {% for encontro in encontros %}
                     <tr>
-                        <td> <a href="/adm/encontro/edit/{{encontro.id}}"> {{encontro.tema}} </a> </td>
+                        <td> <a href="/encontros/edit/{{encontro.id}}"> {{encontro.tema}} </a> </td>
                         {% with test=frequencia_encontro.get(encontro, None) %}
                         <td>
                             <input type="radio" name="e-{{encontro.id}}" value="0"
@@ -64,7 +64,7 @@
                 </tr>
                 {% for domingo in domingos %}
                     <tr>
-                        <td> <a href="/adm/domingo/edit/{{domingo.id}}"> {{domingo.data}} </a> </td>
+                        <td> <a href="/domingos/edit/{{domingo.id}}"> {{domingo.data}} </a> </td>
                         {% with test=frequencia_domingo.get(domingo, None) %}
                         <td>
                             <input type="radio" name="d-{{domingo.id}}" value="0"
@@ -97,7 +97,7 @@
     <script>
         function checkForDelete() {
             if (window.confirm('Deseja deletar esse crismando?')) {
-                window.location.replace("/adm/crismando/del/{{ crismando.id }}");
+                window.location.replace("/crismandos/del/{{ crismando.id }}");
             }
         }
     </script>

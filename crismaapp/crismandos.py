@@ -40,8 +40,9 @@ def registrar_crismando():
     if request.method == 'POST':
         data = request.form.to_dict()
 
+        crismandos = Crismando.select()
         Crismando.create(
-            id=max(Crismando.select(), key=lambda c: c.id).id + 1,
+            id=max(crismandos, key=lambda c: c.id).id + 1 if len(crismandos) else 1,
             nome=data.get('nome'),
             data_nasc=datetime.date.fromisoformat(
                 data.get('data')
@@ -51,7 +52,7 @@ def registrar_crismando():
 
         flash('Crismando criado com sucesso', 'green')
 
-        return redirect('/adm')
+        return redirect('/crismandos')
 
     return render_template(
         '/adm/registrar_crismando.html'
@@ -70,7 +71,7 @@ def editar_crismando(crismando_id):
 
     if not crismando:
         flash('Crismando não encontrado', 'red')
-        return redirect('/adm')
+        return redirect('/crismandos')
 
     enc = Encontro.select().order_by(Encontro.data)
     dom = Domingo.select().order_by(Domingo.data)
@@ -91,8 +92,9 @@ def editar_crismando(crismando_id):
         for encontro in list(enc):
             value = int(data.get(f'e-{encontro.id}', False))
             if value:
+                frequenciaencontro = FrequenciaEncontro.select()
                 FrequenciaEncontro.create(
-                    id=max(FrequenciaEncontro.select(), key=lambda c: c.id).id + 1,
+                    id=max(frequenciaencontro, key=lambda c: c.id).id + 1 if len(frequenciaencontro) else 1,
                     encontro=encontro,
                     crismando=crismando,
                     justificado=value == 1
@@ -105,8 +107,9 @@ def editar_crismando(crismando_id):
         for domingo in list(dom):
             value = int(data.get(f'd-{domingo.id}', False))
             if value:
+                frequenciadomingo = FrequenciaDomingo.select()
                 FrequenciaDomingo.create(
-                    id=max(FrequenciaDomingo.select(), key=lambda c: c.id).id + 1,
+                    id=max(frequenciadomingo, key=lambda c: c.id).id + 1 if len(frequenciadomingo) else 1,
                     domingo=domingo,
                     crismando=crismando,
                     justificado=value == 1
@@ -114,7 +117,7 @@ def editar_crismando(crismando_id):
 
         flash('Crismando atualizado com sucesso', 'green')
 
-        return redirect('/adm')
+        return redirect('/crismandos')
 
     fe = {e.encontro: e.justificado for e in FrequenciaEncontro.filter(
     crismando=crismando)}
@@ -144,7 +147,7 @@ def deletar_crismando(crismando_id):
     crismando = Crismando.get_or_none(id=crismando_id)
     if not crismando:
         flash('Crismando não encontrado', 'red')
-        return redirect('/adm')
+        return redirect('/crismandos')
 
     for f in FrequenciaEncontro.filter(crismando=crismando):
         f.delete_instance()
@@ -156,4 +159,4 @@ def deletar_crismando(crismando_id):
 
     flash('Crismando excluido com sucesso', 'green')
 
-    return redirect('/adm')
+    return redirect('/crismandos')

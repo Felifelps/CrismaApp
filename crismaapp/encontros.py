@@ -32,15 +32,16 @@ def registrar_encontro():
         return redirect('/login')
 
     crismandos = list(sorted(
-        Crismando.select(), 
+        Crismando.select(),
         key=lambda crismando: crismando.nome
     ))
 
     if request.method == 'POST':
         data = request.form.to_dict()
 
+        encontros = Encontro.select()
         encontro = Encontro.create(
-            id=max(Encontro.select(), key=lambda c: c.id).id + 1,
+            id=max(tuple(encontros), key=lambda c: c.id).id + 1 if len(encontros) else 1,
             tema=data.get('tema'),
             data=datetime.date.fromisoformat(
                 data.get('data')
@@ -50,8 +51,9 @@ def registrar_encontro():
         for crismando in crismandos:
             value = int(data.get(f'{crismando.id}', False))
             if value:
+                frequenciaencontro = FrequenciaEncontro.select()
                 FrequenciaEncontro.create(
-                    id=max(FrequenciaEncontro.select(), key=lambda c: c.id).id + 1,
+                    id=max(frequenciaencontro, key=lambda c: c.id).id + 1 if len(frequenciaencontro) else 1,
                     encontro=encontro,
                     crismando=crismando,
                     justificado=value == 1
@@ -59,7 +61,7 @@ def registrar_encontro():
 
         flash('Encontro criado com sucesso', 'green')
 
-        return redirect('/')
+        return redirect('/encontros')
 
     return render_template(
         '/adm/registrar_encontro.html',
@@ -77,7 +79,7 @@ def editar_encontro(encontro_id):
     encontro = Encontro.get_or_none(id=encontro_id)
     if not encontro:
         flash('Encontro não encontrado', 'red')
-        return redirect('/')
+        return redirect('/encontros')
 
     crismandos = list(sorted(
         Crismando.select(),
@@ -100,8 +102,9 @@ def editar_encontro(encontro_id):
         for crismando in crismandos:
             value = int(data.get(f'{crismando.id}', False))
             if value:
+                frequenciaencontro = FrequenciaEncontro.select()
                 FrequenciaEncontro.create(
-                    id=max(FrequenciaEncontro.select(), key=lambda c: c.id).id + 1,
+                    id=max(frequenciaencontro, key=lambda c: c.id).id + 1 if len(frequenciaencontro) else 1,
                     encontro=encontro,
                     crismando=crismando,
                     justificado=value == 1
@@ -109,7 +112,7 @@ def editar_encontro(encontro_id):
 
         flash('Encontro atualizado com sucesso', 'green')
 
-        return redirect('/')
+        return redirect('/encontros')
 
     return render_template(
         '/adm/editar_encontro.html',
@@ -129,7 +132,7 @@ def deletar_encontro(encontro_id):
     encontro = Encontro.get_or_none(id=encontro_id)
     if not encontro:
         flash('Encontro não encontrado', 'red')
-        return redirect('/')
+        return redirect('/encontros')
 
     for f in FrequenciaEncontro.filter(encontro=encontro):
         f.delete_instance()
@@ -137,4 +140,4 @@ def deletar_encontro(encontro_id):
 
     flash('Encontro deletado com sucesso', 'green')
 
-    return redirect('/')
+    return redirect('/encontros')

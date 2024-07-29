@@ -38,9 +38,10 @@ def registrar_domingo():
 
     if request.method == 'POST':
         data = request.form.to_dict()
-
+        
+        domingos = Domingo.select()
         domingo = Domingo.create(
-            id=max(Domingo.select(), key=lambda c: c.id).id + 1,
+            id=max(domingos, key=lambda c: c.id).id + 1 if len(domingos) else 1,
             data=datetime.date.fromisoformat(
                 data.get('data')
             )
@@ -49,8 +50,9 @@ def registrar_domingo():
         for crismando in crismandos:
             value = int(data.get(f'{crismando.id}', False))
             if value:
+                frequenciadomingo = FrequenciaDomingo.select()
                 FrequenciaDomingo.create(
-                    id=max(FrequenciaDomingo.select(), key=lambda c: c.id).id + 1,
+                    id=max(frequenciadomingo, key=lambda c: c.id).id + 1 if len(frequenciadomingo) else 1,
                     domingo=domingo,
                     crismando=crismando,
                     justificado=value == 1
@@ -58,7 +60,7 @@ def registrar_domingo():
 
         flash('Domingo criado sucesso', 'green')
 
-        return redirect('/')
+        return redirect('/domingos')
 
     return render_template(
         '/adm/registrar_domingo.html',
@@ -81,7 +83,7 @@ def editar_domingo(domingo_id):
     domingo = Domingo.get_or_none(id=domingo_id)
     if not domingo:
         flash('Domingo não encontrado', 'red')
-        return redirect('/')
+        return redirect('/domingos')
 
     if request.method == 'POST':
         data = request.form.to_dict()
@@ -98,8 +100,9 @@ def editar_domingo(domingo_id):
         for crismando in crismandos:
             value = int(data.get(f'{crismando.id}', False))
             if value:
+                frequenciadomingo = FrequenciaDomingo.select()
                 FrequenciaDomingo.create(
-                    id=max(FrequenciaDomingo.select(), key=lambda c: c.id).id + 1,
+                    id=max(frequenciadomingo, key=lambda c: c.id).id + 1 if len(frequenciadomingo) else 1,
                     domingo=domingo,
                     crismando=crismando,
                     justificado=value == 1
@@ -107,7 +110,7 @@ def editar_domingo(domingo_id):
 
         flash('Domingo atualizado com sucesso', 'green')
 
-        return redirect('/')
+        return redirect('/domingos')
 
     return render_template(
         '/adm/editar_domingo.html',
@@ -127,7 +130,7 @@ def deletar_domingo(domingo_id):
     domingo = Domingo.get_or_none(id=domingo_id)
     if not domingo:
         flash('Domingo não encontrado', 'red')
-        return redirect('/')
+        return redirect('/domingos')
 
     for f in FrequenciaDomingo.filter(domingo=domingo):
         f.delete_instance()
@@ -135,4 +138,4 @@ def deletar_domingo(domingo_id):
 
     flash('Domingo deletado com sucesso', 'green')
 
-    return redirect('/')
+    return redirect('/domingos')
