@@ -3,11 +3,12 @@ import React from "react";
 import '../assets/styles/Pages.css'
 
 import Main from "../components/Main";
+import App from "../App";
 
-export default function Home() {
+export default function Admin() {
     return (
         <Main>
-            <h1>Home Page</h1>
+            <h1>Admin Page</h1>
         </Main>
     )
 }

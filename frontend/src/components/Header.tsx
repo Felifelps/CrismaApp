@@ -1,14 +1,18 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import '../assets/styles/Header.css';
 
-export default function Header(props: any) {
-    let links = props.links;
+import {adminLinks, commonLinks} from '../utils/constants'
+import { getIsLogged } from '../utils/auth';
+
+export default function Header() {
+    let links = getIsLogged() ? adminLinks : commonLinks;
     let linkObjects = Object.keys(links).map((linkName, index) => {
         return (
-            <li key={index}><a href={links[linkName]}>{linkName}</a></li>
+            <li key={index}><Link to={links[linkName]}>{linkName}</Link></li>
         );
     })
-    console.log(linkObjects)
     return (
         <header>
             <div>
@@ -20,22 +24,5 @@ export default function Header(props: any) {
                 </ul>
             </nav>
         </header>
-    )
-}
-
-export function CommonHeader() {
-    return <Header links={{
-        'Login': '/login',
-        'Minha Frequência': '/freq'
-    }} />
-}
-
-export function AdminHeader() {
-    return <Header links={{
-        'Crismandos': '/crismandos',
-        'Encontros': '/Encontros',
-        'Domingos': '/domingos',
-        'Baixar Dados': '/data',
-        'Sair': '/logout'
-    }} />
+    );
 }

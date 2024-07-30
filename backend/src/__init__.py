@@ -1,5 +1,6 @@
 from flask import Flask, session, redirect
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 from src.models import db
 from src.utils import SECRET_KEY
@@ -7,6 +8,9 @@ from src.utils import SECRET_KEY
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
 
+CORS(app, resources={
+    r'/api/*': {'origins': '*'}
+})
 JWTManager(app)
 
 from .crismandos import crismandos
