@@ -1,8 +1,11 @@
-import pandas as pd
+import os
 
 from flask import request, render_template, send_file, redirect, session, flash, Blueprint
+import pandas as pd
 
 from src.models import Crismando, FrequenciaDomingo, FrequenciaEncontro, Encontro, Domingo
+
+DATA_FILE_PATH = os.path.join(os.getcwd(), 'dados.xlsx')
 
 frequency = Blueprint('frequency', __name__)
 
@@ -86,6 +89,5 @@ def general():
             data[i].append(j)
 
     df = pd.DataFrame(data=data)
-    df.to_excel('dados.xlsx', index=True)
-    return send_file('dados.xlsx', as_attachment=False)
-
+    df.to_excel(DATA_FILE_PATH, index=True)
+    return send_file(DATA_FILE_PATH, as_attachment=False)
