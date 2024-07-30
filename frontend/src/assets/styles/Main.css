@@ -1,0 +1,15 @@
+main {
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    vertical-align: middle;
+    margin: 45px auto;
+    max-width: 800px;
+}
+
+main div {
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 10px;
+}

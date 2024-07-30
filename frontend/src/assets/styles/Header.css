@@ -1,0 +1,40 @@
+.app-title {
+    margin: 0%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 15px;
+    background-color: #4CAF50;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    width: 100%;
+}
+
+nav {
+    padding: 10px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding-left: 15px;
+    margin: 0px;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #fff;
+    font-size: medium;
+    font-weight: bold;
+    height: 100%;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}

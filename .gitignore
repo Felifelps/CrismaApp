@@ -1,0 +1,8 @@
+**/.venv
+**/.vscode
+**/__pychache__
+**/.env
+**/**.db
+**/**.csv
+**/**.bat
+**/__pychache__
