@@ -3,7 +3,7 @@ import datetime
 import peewee
 from bcrypt import checkpw
 
-import src.utils as utils
+from src import utils
 
 if utils.ONLINE_DB:
     db = peewee.PostgresqlDatabase(
