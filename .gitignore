@@ -6,3 +6,5 @@
 **/**.csv
 **/**.bat
 **/__pychache__
+# Local Netlify folder
+.netlify
