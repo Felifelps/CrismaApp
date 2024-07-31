@@ -10,6 +10,7 @@ export const adminLinks: any = {
     'Crismandos': '/crismandos',
     'Encontros': '/encontros',
     'Domingos': '/domingos',
-    'Baixar Dados': '/data',
     'Sair': '/logout'
 }
+
+export const VarNameBase = 'CrismaApp.';

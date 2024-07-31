@@ -4,15 +4,12 @@ import { Link } from 'react-router-dom';
 import '../assets/styles/Header.css';
 
 import {adminLinks, commonLinks} from '../utils/constants'
-import { getIsLogged } from '../utils/auth';
+
+import { useToken } from '../contexts/Token';
 
 export default function Header() {
-    let links = getIsLogged() ? adminLinks : commonLinks;
-    let linkObjects = Object.keys(links).map((linkName, index) => {
-        return (
-            <li key={index}><Link to={links[linkName]}>{linkName}</Link></li>
-        );
-    })
+    const token = useToken().token;
+    let links = token ? adminLinks : commonLinks;
     return (
         <header>
             <div>
@@ -20,7 +17,9 @@ export default function Header() {
             </div>
             <nav>
                 <ul>
-                    {linkObjects}
+                    {Object.keys(links).map((linkName, index) => (
+                        <li key={index}><Link to={links[linkName]}>{linkName}</Link></li>
+                    ))}
                 </ul>
             </nav>
         </header>

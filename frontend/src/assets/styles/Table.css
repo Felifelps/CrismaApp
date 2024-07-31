@@ -1,0 +1,20 @@
+.table-container {
+    padding: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    max-height: min-content;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    color: white;
+    background-color: #4CAF50;
+}

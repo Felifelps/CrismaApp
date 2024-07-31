@@ -1,6 +1,5 @@
 form {
     margin: 0px;
-    padding: 5px;
 }
 
 label {
@@ -20,6 +19,7 @@ input[type='submit'] {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-weight: bold;
 }
 
 input[type='submit']:hover {

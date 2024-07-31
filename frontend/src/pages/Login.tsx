@@ -1,20 +1,34 @@
 import React, { useState } from "react";
+import { Navigate } from "react-router-dom";
 
 import '../assets/styles/Pages.css';
 import '../assets/styles/Form.css';
 
-import Main from "../components/Main";
+import Page from "./Page";
+import Loading from "../components/Loading";
 
 import { apiUrl } from "../utils/constants";
+import { setToken as setLocalToken} from "../utils/localStorage";
+
+import { useToken } from "../contexts/Token";
 
 export default function Login() {
-    const [username, setUsername] = useState(' ');
-    const [password, setPassword] = useState(' ');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const [iconOn, seticonOn] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const {token, setToken} = useToken();
 
     function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
+        e.preventDefault()
+        if (isLoading) {
+            return;
+        }
+
+        setIsLoading((value) => !value);
+
         let responseStatus = 0;
+
         fetch(apiUrl + '/auth/login', {
             method: 'POST',
             headers: {
@@ -23,20 +37,27 @@ export default function Login() {
             body: JSON.stringify({
                 username: username.trim(),
                 password: password.trim()
-            }),
+            })
         }).then(response => {
             responseStatus = response.status;
             return response.json();
         }).then(data => {
             if (responseStatus === 200) {
-                console.log(data)
+                setToken(data.token);
+                setLocalToken(data.token);
             }
+            setIsLoading((value) => !value);
         });
     }
+
     return (
-        <Main>
-            <form onSubmit={handleSubmit}>
+        <Page>
+            {token ? <Navigate to='/crismandos' replace/>: <></>}
+
+            <form onSubmit={handleSubmit} action='/crismandos'>
                 <h1>Login</h1>
+
+                <Loading active={isLoading}/>
                 
                 <label>Username: </label>
                 <input
@@ -48,7 +69,8 @@ export default function Login() {
                     }}
                     required
                 />
-                    <label>Password: </label>
+
+                <label>Password: </label>
                 <div className="input-group">
                     <input
                         type={iconOn ? 'text' : 'password'}
@@ -70,10 +92,10 @@ export default function Login() {
 
                 <input
                     type='submit'
-                    value='Entrar'
+                    className={isLoading ? 'loading-button' : ''}
+                    value={isLoading ? 'Entrando...' : 'Entrar'}
                 />
-
             </form>
-        </Main>
+        </Page>
     )
 }
