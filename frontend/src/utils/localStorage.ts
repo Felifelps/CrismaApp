@@ -12,3 +12,4 @@ export const { get: getToken, set: setToken, remove: removeToken } = localStorag
 export const { get: getCrismandos, set: setCrismandos, remove: removeCrismandos } = localStorageHandler(VarNameBase + "Crismandos");
 export const { get: getEncontros, set: setEncontros, remove: removeEncontros } = localStorageHandler(VarNameBase + "Encontros");
 export const { get: getDomingos, set: setDomingos, remove: removeDomingos } = localStorageHandler(VarNameBase + "Domingos");
+export const { get: getCurrentObject, set: setCurrentObject, remove: removeCurrentObject } = localStorageHandler(VarNameBase + "CurrentObject");

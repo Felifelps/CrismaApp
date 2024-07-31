@@ -1,10 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import { TablePage } from "./TablePage";
 
 import { apiUrl } from "../utils/constants";
 import { formatDate } from "../utils/format";
-import { getDomingos, setDomingos } from "../utils/localStorage";
+import { getDomingos, setDomingos, setCurrentObject } from "../utils/localStorage";
 
 export default function Domingos() {
     function fetchDataFunction(token: any, setData: any, updateLoading: any) {
@@ -38,11 +39,21 @@ export default function Domingos() {
             title={"Domingos"}
             newFormPath={"/domingos/new"}
             fetchDataFunction={fetchDataFunction}
-            fields={["Data"]}
+            fields={["Data", "P", "J", "F"]}
             sortingFunction={(a: any, b: any) => a}
             mappingFunction={(item: any, index: number) => (
                 <tr key={index}>
-                    <td> {formatDate(item.data)} </td>
+                    <td> 
+                        <Link
+                            to='/domingos/edit'
+                            onClick={() => setCurrentObject(JSON.stringify(item))}
+                        >
+                            {formatDate(item.data)}
+                        </Link>
+                    </td>
+                    <td> {item.frequenciadomingo.participated} </td>
+                    <td> {item.frequenciadomingo.justified} </td>
+                    <td> {item.frequenciadomingo.missed} </td>
                 </tr>
             )}
         />
