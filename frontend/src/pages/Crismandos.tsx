@@ -53,7 +53,7 @@ export default function Crismandos() {
                     </td>
                     <td> {item.frequenciaencontro.missed} </td>
                     <td> {item.frequenciadomingo.missed} </td>
-                    <td> <a href={`https://wa.me/55${item.telefone}`.replaceAll(' ', '')} target="_blank">{item.telefone}</a> </td>
+                    <td> <a href={`https://wa.me/55${item.telefone}`.replaceAll(' ', '')} rel="noreferrer" target="_blank">{item.telefone}</a> </td>
                     <td> {formatDate(item.data_nasc)} </td>
                 </tr>
             )}
