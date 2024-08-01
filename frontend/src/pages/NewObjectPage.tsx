@@ -18,7 +18,7 @@ export default function NewObjectPage(props: any) {
     function redirectAndReload () {
         props.removeLocalDataFunction();
         updateLoading();
-        return <Navigate to='/crismandos' replace/>
+        window.location.href = props.returnToUrl;
     }
 
     function handleOnSubmit(e: React.FormEvent) {
@@ -38,6 +38,7 @@ export default function NewObjectPage(props: any) {
                         <input
                             type={field.type}
                             onChange={field.onChange}
+                            placeholder={field.placeholder}
                             required
                         />
                     </div>

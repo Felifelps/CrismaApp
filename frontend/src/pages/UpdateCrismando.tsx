@@ -1,14 +1,14 @@
 import React, {useState} from "react";
 import { Link } from "react-router-dom";
 
+import UpdateObjectPage from "./UpdateObjectPage";
 
+import { getEncontros, getDomingos, getCrismandos, removeCrismandos } from "../utils/localStorage";
+import { getEncontrosData, getDomingosData, getCrismandosData } from "../services/getData";
+import { updateCrismando } from "../services/updateObject";
+import { formatISODate } from "../utils/format";
 
-import NewObjectPage from "./NewObjectPage";
-
-import { getEncontros, getDomingos } from "../utils/localStorage";
-import { getEncontrosData, getDomingosData } from "../services/getData";
-
-export default function NewCrismando() {
+export default function UpdateCrismando() {
     const [name, setName] = useState('');
     const [date, setDate] = useState('');
     const [tel, setTel] = useState('');
@@ -60,25 +60,41 @@ export default function NewCrismando() {
     }
 
     return (
-        <NewObjectPage
+        <UpdateObjectPage
             title={"Crismando"}
-            getDataFunction={getBothData}
-            getLocalDataFunction={getFrequencyData}
+            returnToUrl='/crismandos'
+            getNonLocalDataFunction={getCrismandosData}
+            getLocalDataFunction={getCrismandos}
+            removeLocalDataFunction={removeCrismandos}
+            updateObjectFunction={(token: any, id: any, onDone: any) => updateCrismando(
+                token,
+                id,
+                name,
+                date,
+                tel,
+                onDone
+            )}
+            clear
             frequencyElementsFunction={createFrequencyElements}
             fields={[{
                     type: 'text',
                     onChange: (e: any) => setName(e.target.value),
-                    label: 'Nome'
+                    label: 'Nome',
+                    name: 'nome',
+                    placeholder: 'Ex: Fulano da Silva'
                 },
                 {
                     type: 'date',
                     onChange: (e: any) => setDate(e.target.value),
-                    label: 'Data de nascimento'
+                    label: 'Data de nascimento',
+                    name: 'data_nasc'
                 },
                 {
                     type: 'phone',
                     onChange: (e: any) => setTel(e.target.value),
-                    label: 'Número'
+                    label: 'Número',
+                    name: 'telefone',
+                    placeholder: 'Ex: 88 940028922'
                 },
             ]}
         />

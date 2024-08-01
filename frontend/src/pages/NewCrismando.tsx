@@ -14,6 +14,7 @@ export default function NewCrismando() {
     return (
         <NewObjectPage
             title={"Crismando"}
+            returnToUrl='/crismandos'
             removeLocalDataFunction={removeCrismandos}
             createObjectFunction={(token: any, onDone: any) => addCrismando(
                 token, name, date, tel, onDone
@@ -21,17 +22,19 @@ export default function NewCrismando() {
             fields={[{
                     type: 'text',
                     onChange: (e: any) => setName(e.target.value),
-                    label: 'Nome'
+                    label: 'Nome',
+                    placeholder: 'Ex: Fulano da Silva'
                 },
                 {
                     type: 'date',
                     onChange: (e: any) => setDate(e.target.value),
-                    label: 'Data de nascimento'
+                    label: 'Data de nascimento',
                 },
                 {
                     type: 'phone',
                     onChange: (e: any) => setTel(e.target.value),
-                    label: 'Número'
+                    label: 'Número',
+                    placeholder: 'Ex: 88 940028922'
                 },
             ]}
         />

@@ -11,8 +11,11 @@ import Login from './pages/Login';
 import Logout from './pages/Logout';
 import Crismandos from './pages/Crismandos';
 import NewCrismando from './pages/NewCrismando';
+import UpdateCrismando from './pages/UpdateCrismando';
 import Encontros from './pages/Encontros';
+import NewEncontro from './pages/NewEncontro';
 import Domingos from './pages/Domingos';
+import NewDomingo from './pages/NewDomingo';
 import NotFound from './pages/NotFound';
 
 import { TokenProvider } from './contexts/Token';
@@ -27,8 +30,11 @@ function App() {
           <Route path="/logout" element={<Logout />} />
           <Route path="/crismandos" element={<Crismandos />} />
           <Route path="/crismandos/new" element={<NewCrismando />} />
+          <Route path="/crismandos/:id" element={<UpdateCrismando />} />
           <Route path="/encontros" element={<Encontros />} />
+          <Route path="/encontros/new" element={<NewEncontro />} />
           <Route path="/domingos" element={<Domingos />} />
+          <Route path="/domingos/new" element={<NewDomingo />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </TokenProvider>

@@ -20,7 +20,7 @@ export default function Crismandos() {
                 <tr key={index}>
                     <td> 
                         <Link
-                            to='/crismandos/edit'
+                            to={`/crismandos/${item.id}`}
                             onClick={() => setCurrentObject(JSON.stringify(item))}
                         >
                             {item.nome}
