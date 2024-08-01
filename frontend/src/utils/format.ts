@@ -1,9 +1,12 @@
 export function formatDate(dateString: any){
     const dateISO = new Date(dateString);
-    return dateISO.toLocaleDateString();
+    return dateISO.toLocaleString().split(',')[0];
 }
 
-export function formatISODate(dateString: any){
+export function formatISODate(dateString: string): string{
     const dateISO = new Date(dateString);
-    return dateISO.toISOString().slice(0, 10);
+    if (isNaN(dateISO.getTime())) {
+        return dateString;
+    }
+    return dateISO.toISOString().split('T')[0];
 }

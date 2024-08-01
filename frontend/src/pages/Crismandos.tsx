@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { TablePage } from "./TablePage";
 
 import { formatDate } from "../utils/format";
-import { getCrismandos, setCurrentObject } from "../utils/localStorage";
+import { getCrismandos } from "../utils/localStorage";
 import { getCrismandosData } from "../services/getData";
 
 export default function Crismandos() {
@@ -12,17 +12,14 @@ export default function Crismandos() {
         <TablePage
             title={"Crismandos"}
             newFormPath={"/crismandos/new"}
-            fields={["Nome", "FE", "FD", "Telefone", "Data Nascimento"]}
+            fields={["Nome", "Presenças Encontros", "Presenças Domingos", "Telefone", "Data Nascimento"]}
             getLocalDataFunc={getCrismandos}
             getNonLocalDataFunc={getCrismandosData}
             sortingFunction={(a: any, b: any) => a.nome.localeCompare(b.nome)}
             mappingFunction={(item: any, index: number) => (
-                <tr key={index}>
+                <tr key={index} >
                     <td> 
-                        <Link
-                            to={`/crismandos/${item.id}`}
-                            onClick={() => setCurrentObject(JSON.stringify(item))}
-                        >
+                        <Link to={`/crismandos/${item.id}`}>
                             {item.nome}
                         </Link>
                     </td>

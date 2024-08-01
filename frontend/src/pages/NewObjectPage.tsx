@@ -44,6 +44,7 @@ export default function NewObjectPage(props: any) {
                     </div>
                 ))}
                 <input
+                    className='button'
                     type='submit'
                     value='Registrar'
                 />

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { TablePage } from "./TablePage";
 
 import { formatDate } from "../utils/format";
-import { getEncontros, setCurrentObject } from "../utils/localStorage";
+import { getEncontros } from "../utils/localStorage";
 import { getEncontrosData } from "../services/getData";
 
 export default function Encontros() {
@@ -14,15 +14,12 @@ export default function Encontros() {
             newFormPath={"/encontros/new"}
             getLocalDataFunc={getEncontros}
             getNonLocalDataFunc={getEncontrosData}
-            fields={["Tema", "Data", "P", "J", "F"]}
+            fields={["Tema", "Data", "Presenças", "Justificativas", "Faltas"]}
             sortingFunction={(a: any, b: any) => a}
             mappingFunction={(item: any, index: number) => (
                 <tr key={index}>
                     <td> 
-                        <Link
-                            to='/encontros/edit'
-                            onClick={() => setCurrentObject(JSON.stringify(item))}
-                        >
+                        <Link to={`/encontros/${item.id}`}>
                             {item.tema}
                         </Link>
                     </td>

@@ -9,10 +9,6 @@ import { updateCrismando } from "../services/updateObject";
 import { formatISODate } from "../utils/format";
 
 export default function UpdateCrismando() {
-    const [name, setName] = useState('');
-    const [date, setDate] = useState('');
-    const [tel, setTel] = useState('');
-
     let domDone = false;
     let encDone = false; 
     const partialOnDone = (dom: any, enc: any, onDone: any) => {
@@ -66,32 +62,29 @@ export default function UpdateCrismando() {
             getNonLocalDataFunction={getCrismandosData}
             getLocalDataFunction={getCrismandos}
             removeLocalDataFunction={removeCrismandos}
-            updateObjectFunction={(token: any, id: any, onDone: any) => updateCrismando(
+            updateObjectFunction={(token: any, id: any, object:any, onDone: any) => updateCrismando(
                 token,
                 id,
-                name,
-                date,
-                tel,
+                object.nome.trim(),
+                formatISODate(object.data_nasc),
+                object.telefone.trim(),
                 onDone
             )}
             clear
             frequencyElementsFunction={createFrequencyElements}
             fields={[{
                     type: 'text',
-                    onChange: (e: any) => setName(e.target.value),
                     label: 'Nome',
                     name: 'nome',
                     placeholder: 'Ex: Fulano da Silva'
                 },
                 {
                     type: 'date',
-                    onChange: (e: any) => setDate(e.target.value),
                     label: 'Data de nascimento',
                     name: 'data_nasc'
                 },
                 {
                     type: 'phone',
-                    onChange: (e: any) => setTel(e.target.value),
                     label: 'Número',
                     name: 'telefone',
                     placeholder: 'Ex: 88 940028922'

@@ -92,7 +92,7 @@ export default function Login() {
 
                 <input
                     type='submit'
-                    className={isLoading ? 'loading-button' : ''}
+                    className='button'
                     value={isLoading ? 'Entrando...' : 'Entrar'}
                 />
             </form>

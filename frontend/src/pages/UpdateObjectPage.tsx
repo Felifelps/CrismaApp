@@ -12,21 +12,31 @@ import { useToken } from "../contexts/Token";
 
 import { formatISODate } from "../utils/format";
 
+interface ObjectType {
+    [key: string]: string | number | undefined; // ou outros tipos conforme necessário
+}
+
 export default function UpdateObjectPage(props: any) {
     const { id } = useParams();
     const [isLoading, setIsLoading] = useState(true);
-    const [object, setObject] = useState({});
+    const [object, setObject] = useState<ObjectType>({});
     const token = useToken().token;
 
     const updateLoading = () => setIsLoading((value) => !value);
 
-    function getObjectValue(obj: any, name: string, type: string): any {
-        for (let field in obj) {
-            if (field === name) {
-                return type === 'date' ? formatISODate(obj[field]) : obj[field];
-            }
+    function updateObject(field: string, value: any) {
+        setObject(prevObject => ({
+            ...prevObject,
+            [field]: value, // Atualiza o valor do campo específico
+        })); // Não refletirá a atualização imediata; use `prevObject` no lugar
+    }
+
+    function getDefaultValue(name: string, type: string) {
+        const value = object[name];
+        if (type === 'date' && typeof value === 'string' && value.trim() !== '') {
+            return formatISODate(value)
         }
-        return '';
+        return value;
     }
 
     function redirectAndReload () {
@@ -37,10 +47,11 @@ export default function UpdateObjectPage(props: any) {
 
     function handleOnSubmit(e: React.FormEvent) {
         e.preventDefault();
-        props.updateObjectFunction(token, id, redirectAndReload);
+        updateLoading();
+        props.updateObjectFunction(token, id, object, redirectAndReload);
     }
 
-    const serveData = () => {
+    function serveData() {
         const localData = JSON.parse(props.getLocalDataFunction());
         for (let obj in localData) {
             if (obj === id) {
@@ -58,24 +69,34 @@ export default function UpdateObjectPage(props: any) {
     return (
         <AdminOnlyPage>
             <h1> Editar {props.title} </h1>
+            <Loading active={isLoading} />
             <form onSubmit={handleOnSubmit}>
                 {props.fields.map((field: any, index: number) => (
                     <div key={index} className='form-group'>
                         <label> {field.label}: </label>
                         <input
                             type={field.type}
-                            onChange={field.onChange}
-                            defaultValue={getObjectValue(object, field.name, field.type)}
+                            onChange={(e: any) => updateObject(
+                                field.name,
+                                e.target.value
+                            )}
+                            defaultValue={getDefaultValue(field.name, field.type)}
                             placeholder={field.placeholder}
                             required
                         />
                     </div>
                 ))}
                 <Loading active={isLoading} />
-                <input
-                    type='submit'
-                    value='Registrar'
-                />
+                <div className='buttons-container'>
+                    <button className="button danger">
+                        Excluir registro
+                    </button>
+                    <input
+                        className="button safe"
+                        type='submit'
+                        value={isLoading ? 'Alterando...' : 'Alterar'}
+                    />
+                </div>
             </form>
         </AdminOnlyPage>
     )

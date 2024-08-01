@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { TablePage } from "./TablePage";
 
 import { formatDate } from "../utils/format";
-import { getDomingos, setCurrentObject } from "../utils/localStorage";
+import { getDomingos} from "../utils/localStorage";
 import { getDomingosData } from "../services/getData";
 
 export default function Domingos() {
@@ -14,15 +14,12 @@ export default function Domingos() {
             newFormPath={"/domingos/new"}
             getLocalDataFunc={getDomingos}
             getNonLocalDataFunc={getDomingosData}
-            fields={["Data", "P", "J", "F"]}
+            fields={["Data", "Presenças", "Justificativas", "Faltas"]}
             sortingFunction={(a: any, b: any) => a}
             mappingFunction={(item: any, index: number) => (
                 <tr key={index}>
-                    <td> 
-                        <Link
-                            to='/domingos/edit'
-                            onClick={() => setCurrentObject(JSON.stringify(item))}
-                        >
+                    <td>
+                        <Link to={`/domingos/${item.id}`}>
                             {formatDate(item.data)}
                         </Link>
                     </td>

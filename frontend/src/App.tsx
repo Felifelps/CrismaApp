@@ -14,8 +14,10 @@ import NewCrismando from './pages/NewCrismando';
 import UpdateCrismando from './pages/UpdateCrismando';
 import Encontros from './pages/Encontros';
 import NewEncontro from './pages/NewEncontro';
+import UpdateEncontro from './pages/UpdateEncontro';
 import Domingos from './pages/Domingos';
 import NewDomingo from './pages/NewDomingo';
+import UpdateDomingo from './pages/UpdateDomingo';
 import NotFound from './pages/NotFound';
 
 import { TokenProvider } from './contexts/Token';
@@ -28,14 +30,19 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
+          <Route path="*" element={<NotFound />} />
+
           <Route path="/crismandos" element={<Crismandos />} />
           <Route path="/crismandos/new" element={<NewCrismando />} />
           <Route path="/crismandos/:id" element={<UpdateCrismando />} />
+          
           <Route path="/encontros" element={<Encontros />} />
           <Route path="/encontros/new" element={<NewEncontro />} />
+          <Route path="/encontros/:id" element={<UpdateEncontro />} />
+          
           <Route path="/domingos" element={<Domingos />} />
           <Route path="/domingos/new" element={<NewDomingo />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path="/domingos/:id" element={<UpdateDomingo />} />
         </Routes>
       </TokenProvider>
       <Footer />
