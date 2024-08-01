@@ -10,6 +10,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Logout from './pages/Logout';
 import Crismandos from './pages/Crismandos';
+import NewCrismando from './pages/NewCrismando';
 import Encontros from './pages/Encontros';
 import Domingos from './pages/Domingos';
 import NotFound from './pages/NotFound';
@@ -25,6 +26,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/crismandos" element={<Crismandos />} />
+          <Route path="/crismandos/new" element={<NewCrismando />} />
           <Route path="/encontros" element={<Encontros />} />
           <Route path="/domingos" element={<Domingos />} />
           <Route path="*" element={<NotFound />} />

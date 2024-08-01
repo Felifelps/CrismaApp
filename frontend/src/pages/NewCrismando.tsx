@@ -1,0 +1,39 @@
+import React, {useState} from "react";
+
+import NewObjectPage from "./NewObjectPage";
+
+import { addCrismando } from "../services/addObject";
+
+import { removeCrismandos } from "../utils/localStorage";
+
+export default function NewCrismando() {
+    const [name, setName] = useState('');
+    const [date, setDate] = useState('');
+    const [tel, setTel] = useState('');
+
+    return (
+        <NewObjectPage
+            title={"Crismando"}
+            removeLocalDataFunction={removeCrismandos}
+            createObjectFunction={(token: any, onDone: any) => addCrismando(
+                token, name, date, tel, onDone
+            )}
+            fields={[{
+                    type: 'text',
+                    onChange: (e: any) => setName(e.target.value),
+                    label: 'Nome'
+                },
+                {
+                    type: 'date',
+                    onChange: (e: any) => setDate(e.target.value),
+                    label: 'Data de nascimento'
+                },
+                {
+                    type: 'phone',
+                    onChange: (e: any) => setTel(e.target.value),
+                    label: 'Número'
+                },
+            ]}
+        />
+    )
+}

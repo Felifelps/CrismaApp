@@ -3,43 +3,18 @@ import { Link } from "react-router-dom";
 
 import { TablePage } from "./TablePage";
 
-import { apiUrl } from "../utils/constants";
 import { formatDate } from "../utils/format";
-import { getCrismandos, setCrismandos, setCurrentObject } from "../utils/localStorage";
+import { getCrismandos, setCurrentObject } from "../utils/localStorage";
+import { getCrismandosData } from "../services/getData";
 
 export default function Crismandos() {
-    function fetchDataFunction(token: any, setData: any, updateLoading: any) {
-        const localData = getCrismandos();
-        if (localData) {
-            setData(JSON.parse(localData));
-            return updateLoading();
-        }
-
-        let responseStatus = 0;
-        fetch(apiUrl + '/crismandos/', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        }).then(response => {
-            responseStatus = response.status;
-            return response.json();
-        }).then(data => {
-            if (responseStatus === 200) {
-                setData(data);
-                setCrismandos(JSON.stringify(data));
-            }
-            updateLoading();
-        });
-    }
-
     return (
         <TablePage
             title={"Crismandos"}
             newFormPath={"/crismandos/new"}
-            fetchDataFunction={fetchDataFunction}
             fields={["Nome", "FE", "FD", "Telefone", "Data Nascimento"]}
+            getLocalDataFunc={getCrismandos}
+            getNonLocalDataFunc={getCrismandosData}
             sortingFunction={(a: any, b: any) => a.nome.localeCompare(b.nome)}
             mappingFunction={(item: any, index: number) => (
                 <tr key={index}>

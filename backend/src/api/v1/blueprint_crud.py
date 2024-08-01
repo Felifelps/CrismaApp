@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required
+from peewee import IntegrityError
 
 from src.api.v1.blueprint_frequency import get_model_frequency_statistics
 from src.api.utils import check_data_fields
@@ -40,8 +41,10 @@ def blueprint_model_crud(model, blueprint, validations=[], field_formatters={}):
             data[attr] = formatter(data[attr])
 
         model.create(
+            id=len(model.select()) + 1,
             **data
         )
+
         return jsonify(message='Created successfully!'), 201
     
     @blueprint.route('/<int:pk>', methods=['GET', 'PUT', 'DELETE'])

@@ -7,9 +7,9 @@ label {
 }
 
 input {
-    width: 100%;
+    width: 95%;
     margin: 5px 0px;
-    padding: 2px;
+    padding: 5px;
 }
 
 input[type='submit'] {

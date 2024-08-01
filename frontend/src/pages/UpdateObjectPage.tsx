@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import { Navigate } from "react-router-dom";
 
 import '../assets/styles/Form.css'
 
@@ -9,28 +8,30 @@ import { AdminOnlyPage } from "./Page";
 
 import { useToken } from "../contexts/Token";
 
-export default function NewObjectPage(props: any) {
-    const [isLoading, setIsLoading] = useState(false);
+export default function UpdateObjectPage(props: any) {
+    const [isLoading, setIsLoading] = useState(true);
+    const [data, setData] = useState({});
     const token = useToken().token;
 
     const updateLoading = () => setIsLoading((value) => !value);
 
-    function redirectAndReload () {
-        props.removeLocalDataFunction();
-        updateLoading();
-        return <Navigate to='/crismandos' replace/>
+    function handleOnSubmit(e: React.FormEvent) {
+        console.log(e.currentTarget.tagName);
     }
 
-    function handleOnSubmit(e: React.FormEvent) {
-        e.preventDefault();
+    const serveData = () => {
+        const frequency = props.getLocalDataFunction();
+        setData(frequency);
         updateLoading();
-        props.createObjectFunction(token, redirectAndReload);
+    }
+
+    if (isLoading) {
+        props.getDataFunction(token, serveData);
     }
 
     return (
         <AdminOnlyPage>
             <h1> Registrar {props.title} </h1>
-            <Loading active={isLoading} />
             <form onSubmit={handleOnSubmit}>
                 {props.fields.map((field: any, index: number) => (
                     <div key={index} className='form-group'>
@@ -42,6 +43,8 @@ export default function NewObjectPage(props: any) {
                         />
                     </div>
                 ))}
+                <Loading active={isLoading} />
+                {props.frequencyElementsFunction(data)}
                 <input
                     type='submit'
                     value='Registrar'

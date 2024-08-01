@@ -4,7 +4,8 @@ main {
     justify-items: center;
     vertical-align: middle;
     margin: 45px auto;
-    max-width: 80%;
+    max-width: 500px;
+    padding: 45px;
 }
 
 .main {

@@ -17,17 +17,19 @@ export function TablePage(props: any) {
 
     const updateLoading = () => setIsLoading((value) => !value);
 
+    const serveData = () => {
+        const localData = props.getLocalDataFunc();
+        setData(JSON.parse(localData));
+        updateLoading();
+    }
+
     if (isLoading) {
-        props.fetchDataFunction(
-            token,
-            setData,
-            updateLoading
-        );
+        props.getNonLocalDataFunc(token, serveData);
     }
 
     return (
         <AdminOnlyPage>
-            <h1> {props.title} <Link to={props.newFormPath}> + </Link> </h1>
+            <h1> {props.title} <Link to={props.newFormPath}> + </Link></h1>
             <Loading active={isLoading}/>
             <div className='table-container' style={{"display": tableDisplay}}>
                 <table>
