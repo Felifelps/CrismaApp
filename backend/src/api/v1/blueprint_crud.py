@@ -1,6 +1,6 @@
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required
-from peewee import IntegrityError
+from peewee import fn
 
 from src.api.v1.blueprint_frequency import get_model_frequency_statistics
 from src.api.utils import check_data_fields
@@ -41,7 +41,7 @@ def blueprint_model_crud(model, blueprint, validations=[], field_formatters={}):
             data[attr] = formatter(data[attr])
 
         model.create(
-            id=len(model.select()) + 1,
+            id=model.select(fn.MAX(model.id)).scalar() + 1,
             **data
         )
 
