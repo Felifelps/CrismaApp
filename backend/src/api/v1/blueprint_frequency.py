@@ -32,7 +32,7 @@ def blueprint_frequency(model, blueprint):
                 )
             except Exception as e:
                 return jsonify(
-                    error=f'An error ocurred: {e}'
+                    message=f'An error ocurred: {e}'
                 ), 500
         
         if request.method in ['PUT', 'PATCH']:
@@ -64,7 +64,7 @@ def blueprint_frequency(model, blueprint):
                             error=f'An error ocurred: {result[1]}'
                         )
 
-            return jsonify(message='Opa')
+            return jsonify(message='Frequency updated succesfully!')
 
     @blueprint.route('/<int:pk>/stats')
     @jwt_required()
