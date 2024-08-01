@@ -9,7 +9,7 @@ from src.api.utils import DATE_PATTERN
 
 def check_data(data):
     data_attr = data.get('data')
-    if not data_attr:
+    if data_attr is None:
         return True, None
     try:
         datetime.datetime.strptime(

@@ -11,7 +11,7 @@ DATE_PATTERN = '%Y-%m-%d'
 
 def check_data_nasc(data):
     data_nasc = data.get('data_nasc')
-    if not data_nasc:
+    if data_nasc is None:
         return True, None
     try:
         datetime.datetime.strptime(
