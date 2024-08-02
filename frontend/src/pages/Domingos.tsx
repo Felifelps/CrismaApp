@@ -1,11 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 import { TablePage } from "./TablePage";
 
 import { formatDate } from "../utils/format";
 import { getDomingos} from "../utils/localStorage";
 import { getDomingosData } from "../services/getData";
+import { sortByDateStringsDesc } from "../utils/sort";
 
 export default function Domingos() {
     return (
@@ -15,9 +15,9 @@ export default function Domingos() {
             getLocalDataFunc={getDomingos}
             getNonLocalDataFunc={getDomingosData}
             fields={["Data", "Presenças", "Justificativas", "Faltas"]}
-            sortingFunction={(a: any, b: any) => a}
+            sortingFunction={(a: any, b: any) => sortByDateStringsDesc(a.data, b.data)}
             mappingFunction={(item: any, index: number) => (
-                <tr key={index} onClick={() => {window.location.href = `/domingos/${item.id}`}}>
+                <tr key={index} className="clickable" onClick={() => {window.location.href = `/domingos/${item.id}`}}>
                     <td> {formatDate(item.data)} </td>
                     <td> {item.frequenciadomingo.participated} </td>
                     <td> {item.frequenciadomingo.justified} </td>

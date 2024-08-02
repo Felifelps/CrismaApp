@@ -2,19 +2,38 @@ import React from "react";
 
 import UpdateObjectPage from "./UpdateObjectPage";
 
-import { getEncontros, removeEncontros } from "../utils/localStorage";
+import { getCrismandos, getCurrentObjFreq, getEncontros } from "../utils/localStorage";
 import { getEncontrosData } from "../services/getData";
 import { updateEncontro } from "../services/updateObject";
 import { formatISODate } from "../utils/format";
+import { getEncontroFrequency } from "../services/getFrequency";
+import { updateEncontroFrequency } from "../services/updateFrequency";
 
 export default function UpdateEncontro() {
+    function getFrequencyList() {
+        let crismandos = getCrismandos();
+        return {
+            'frequenciadomingo': crismandos ? JSON.parse(crismandos) : {}
+        }
+    }
     return (
         <UpdateObjectPage
             title={"Encontro"}
             returnToUrl='/encontros'
+            propertyName='encontro'
             getNonLocalDataFunction={getEncontrosData}
             getLocalDataFunction={getEncontros}
-            removeLocalDataFunction={removeEncontros}
+            getLocalObjectFreq={getCurrentObjFreq}
+            fetchObjectFreqFunction={getEncontroFrequency}
+            getFrequencyListsFunction={getFrequencyList}
+            updateObjectFreqFunction={updateEncontroFrequency}
+            freqDataOptions={{
+                "frequenciaencontro": {
+                    listName: "Crismandos",
+                    refAttr: "nome",
+                    freqRefName: "crismando"
+                },
+            }}
             updateObjectFunction={(token: any, id: any, object:any, onDone: any) => updateEncontro(
                 token,
                 id,

@@ -11,11 +11,14 @@ table {
 
 table tr {
     background-color: #fff;
-    cursor: pointer;
 }
 
 table tr:hover {
     background-color: #eee;
+}
+
+.clickable {
+    cursor: pointer;
 }
 
 table th, table td {

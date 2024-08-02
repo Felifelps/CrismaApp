@@ -22,6 +22,8 @@ import NotFound from './pages/NotFound';
 
 import { TokenProvider } from './contexts/Token';
 
+import './services/keepBackendActive';
+
 function App() {
   return (
     <BrowserRouter>

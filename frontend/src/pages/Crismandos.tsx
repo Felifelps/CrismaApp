@@ -5,18 +5,19 @@ import { TablePage } from "./TablePage";
 import { formatDate } from "../utils/format";
 import { getCrismandos } from "../utils/localStorage";
 import { getCrismandosData } from "../services/getData";
+import { sortByText } from "../utils/sort";
 
 export default function Crismandos() {
     return (
         <TablePage
             title={"Crismandos"}
             newFormPath={"/crismandos/new"}
-            fields={["Nome", "Presenças Encontros", "Presenças Domingos", "Telefone", "Data Nascimento"]}
+            fields={["Nome", "Faltas Encontros", "Faltas Domingos", "Telefone", "Data Nascimento"]}
             getLocalDataFunc={getCrismandos}
             getNonLocalDataFunc={getCrismandosData}
-            sortingFunction={(a: any, b: any) => a.nome.localeCompare(b.nome)}
+            sortingFunction={(a: any, b: any) => sortByText(a.nome, b.nome)}
             mappingFunction={(item: any, index: number) => (
-                <tr key={index} onClick={() => {window.location.href = `/crismandos/${item.id}`}}>
+                <tr key={index} className="clickable" onClick={() => {window.location.href = `/crismandos/${item.id}`}}>
                     <td> {item.nome} </td>
                     <td> {item.frequenciaencontro.missed} </td>
                     <td> {item.frequenciadomingo.missed} </td>

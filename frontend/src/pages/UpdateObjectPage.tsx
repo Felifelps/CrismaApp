@@ -10,50 +10,154 @@ import { AdminOnlyPage } from "./Page";
 
 import { useToken } from "../contexts/Token";
 
-import { formatISODate } from "../utils/format";
+import { formatISODate, formatDate } from "../utils/format";
 import { ensureAllDataIsLocal } from "../services/getData";
-import { removeCrismandos, removeDomingos, removeEncontros } from "../utils/localStorage";
+import { removeCrismandos, removeCurrentObjFreq, removeDomingos, removeEncontros } from "../utils/localStorage";
 
 interface ObjectType {
     [key: string]: string | number | undefined; // ou outros tipos conforme necessário
 }
 
+interface FreqSimpleList {
+    id: string | number,
+    justified: boolean
+}
+
 export default function UpdateObjectPage(props: any) {
     const { id } = useParams();
     const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingFreq, setIsLoadingFreq] = useState(true);
     const [object, setObject] = useState<ObjectType>({});
-    const [frequencyObjects, setfrequencyObjects] = useState([]);
+    const [frequencyTable, setFrequencyTable] = useState([]);
+    const [frequencyData, setFrequencyData] = useState<ObjectType>({});
     const token = useToken().token;
-
-    const updateLoading = () => setIsLoading((value) => !value);
 
     function updateObject(field: string, value: any) {
         setObject(prevObject => ({
             ...prevObject,
             [field]: value, // Atualiza o valor do campo específico
-        })); // Não refletirá a atualização imediata; use `prevObject` no lugar
+        }));
+    }
+
+    function updateFreqData(field: string, value: any) {
+        setFrequencyData(prevData => ({
+            ...prevData,
+            [field]: value
+        }));
     }
 
     function getDefaultValue(name: string, type: string) {
         const value = object[name];
         if (type === 'date' && typeof value === 'string' && value.trim() !== '') {
-            return formatISODate(value)
+            return formatISODate(value);
         }
-        return value;
+        return value || '';
     }
 
     function redirectAndReload () {
         removeCrismandos();
         removeEncontros();
         removeDomingos();
-        updateLoading();
+        removeCurrentObjFreq();
+        setIsLoading(true);
         window.location.href = props.returnToUrl;
+    }
+
+    function formatFrequencyData() {
+        const formattedData: any = {};
+        for (let key of Object.keys(frequencyData)) {
+            const [group, refObjId] = key.split('-')
+            if (!(group in Object.keys(formattedData))) {
+                formattedData[group] = [];
+            }
+            const value = frequencyData[key];
+            if (value !== 0) {   
+                formattedData[group].push({
+                    [props.propertyName]: id,
+                    [props.freqDataOptions[group].freqRefName]: refObjId,
+                    justificado: value === 1
+                })
+            }
+        }
+        return formattedData;
     }
 
     function handleOnSubmit(e: React.FormEvent) {
         e.preventDefault();
-        updateLoading();
-        props.updateObjectFunction(token, id, object, redirectAndReload);
+        setIsLoading(true);
+
+        formatFrequencyData();
+
+        //props.updateObjectFunction(token, id, object, redirectAndReload);
+        props.updateObjectFreqFunction(token, id, formatFrequencyData(), redirectAndReload);
+    }
+
+    function serveFrequency() {
+        const finalData: any = [];
+        const frequencyDataMount: any = {};
+        const frequencyLists = props.getFrequencyListsFunction();
+        const objectFreq = JSON.parse(props.getLocalObjectFreq());
+
+
+        for (let listName in frequencyLists) {
+            const freqRefName = props.freqDataOptions[listName].freqRefName;
+            const refAttr = props.freqDataOptions[listName].refAttr;
+            const list = frequencyLists[listName];
+            const objectFreqList: FreqSimpleList[] = objectFreq[listName].map((value: any) => ({
+                id: value[freqRefName],
+                justified: value.justificado
+            }));
+
+            let data = [];
+            for (let objId in list) {
+                const objReference = list[objId][refAttr];
+                const freq = objectFreqList.find((item) => item.id.toString() === objId) || { justified: false };
+
+                const missed = !objectFreqList.some((item) => item.id.toString() === objId);
+                const participated = !missed && !freq.justified;
+                const justified = !missed && freq.justified;
+
+                const groupName = `${listName}-${objId}`;
+                frequencyDataMount[groupName] = missed ? 0 : (justified ? 1 : 2)
+
+                data.push(
+                    <tr key={objId}>
+                        <td>{formatDate(objReference)}</td>
+                        {[missed, justified, participated].map((value, index) => (
+                            <td key={index}>
+                                <input
+                                    type="radio"
+                                    name={groupName}
+                                    defaultChecked={value}
+                                    value={index}  // 0 = missed, 1 = justified, 2 = participated
+                                    onChange={() => updateFreqData(groupName, index)}
+                                />
+                            </td>
+                        ))}
+                    </tr>
+                );
+            }
+
+            finalData.push(
+                <div key={listName}>  
+                    <h2>{props.freqDataOptions[listName].listName}</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>{refAttr.charAt(0).toUpperCase() + refAttr.slice(1)}</th>
+                                <th>F</th>
+                                <th>J</th>
+                                <th>P</th>
+                            </tr>
+                        </thead>
+                        <tbody>{data}</tbody>
+                    </table>
+                </div>
+            );
+        }
+        setFrequencyTable(finalData);
+        setFrequencyData(frequencyDataMount);
+        setIsLoadingFreq(false);
     }
 
     function serveData() {
@@ -63,40 +167,16 @@ export default function UpdateObjectPage(props: any) {
                 setObject(localData[id])
             }
         }
-    }
-
-    function serveFrequency() {
-        const data: any = [];
-        const frequencyLists = props.getFrequencyListsFunction();
-        const objectFrequencyList = props.getLocalObjectFreq();
-        for (let listName in frequencyLists) {
-            const list = frequencyLists[listName]
-            data.push((<h2>{props.freqDataOptions[listName].listName}</h2>))
-            for (let objId in list) {
-                const objReference = list[objId][props.freqDataOptions[listName].refAttr]
-                const participated = objId in objectFrequencyList && !objectFrequencyList[objId].justificado;
-                const justified = objId in objectFrequencyList && objectFrequencyList[objId].justificado;
-                const missed = !(objId in objectFrequencyList);
-                data.push((
-                    <>
-                        <p> {objReference} </p>
-                        <p> P: {participated}</p>
-                        <p> J: {justified}</p>
-                        <p> F: {missed}</p>
-                    </>
-                ));
-            }
+        setIsLoading(false);
+        if (isLoadingFreq) {
+            props.fetchObjectFreqFunction(token, id, serveFrequency);
         }
-        setfrequencyObjects(data);
-        updateLoading();
     }
 
     if (isLoading && Object.keys(object).length === 0) {
         ensureAllDataIsLocal(token, serveData);
-        props.fetchObjectFreqFunction(token, id, serveFrequency);
     }
-    
-    /*{props.frequencyElementsFunction(data)}*/
+
     return (
         <AdminOnlyPage>
             <h1> Editar {props.title} </h1>
@@ -117,8 +197,10 @@ export default function UpdateObjectPage(props: any) {
                         />
                     </div>
                 ))}
-                <Loading active={isLoading} />
-                {frequencyObjects.map((value: any) => (<p>{value}</p>))}
+
+                <Loading active={isLoadingFreq} />
+                {frequencyTable}
+
                 <div className='buttons-container'>
                     <button className="button danger">
                         Excluir registro

@@ -2,21 +2,20 @@ import React from "react";
 
 import UpdateObjectPage from "./UpdateObjectPage";
 
-import { getEncontros, getDomingos, getCrismandos, removeCrismandos, getCurrentObjFreq } from "../utils/localStorage";
-import { getEncontrosData, getDomingosData, getCrismandosData } from "../services/getData";
+import { getEncontros, getDomingos, getCrismandos, getCurrentObjFreq } from "../utils/localStorage";
+import { getCrismandosData } from "../services/getData";
 import { updateCrismando } from "../services/updateObject";
 import { formatISODate } from "../utils/format";
 import { getCrismandoFrequency } from "../services/getFrequency";
+import { updateCrismandoFrequency } from "../services/updateFrequency";
 
 export default function UpdateCrismando() {
-    
-
     function getFrequencyData () {
         let encData = getEncontros();
         let domData = getDomingos();
         return {
             "frequenciaencontro": encData ? JSON.parse(encData) : {},
-            "frequenciadomingo": domData = domData ? JSON.parse(domData) : {}
+            "frequenciadomingo": domData ? JSON.parse(domData) : {}
         };
     }
 
@@ -24,19 +23,23 @@ export default function UpdateCrismando() {
         <UpdateObjectPage
             title={"Crismando"}
             returnToUrl='/crismandos'
+            propertyName='crismando'
             getNonLocalDataFunction={getCrismandosData}
             getLocalDataFunction={getCrismandos}
             getLocalObjectFreq={getCurrentObjFreq}
             fetchObjectFreqFunction={getCrismandoFrequency}
             getFrequencyListsFunction={getFrequencyData}
+            updateObjectFreqFunction={updateCrismandoFrequency}
             freqDataOptions={{
                 "frequenciaencontro": {
                     listName: "Encontros",
-                    refAttr: "tema"
+                    refAttr: "tema",
+                    freqRefName: "encontro"
                 },
                 "frequenciadomingo": {
                     listName: "Domingos",
-                    refAttr: "data"
+                    refAttr: "data",
+                    freqRefName: "domingo"
                 },
             }}
             updateObjectFunction={(token: any, id: any, object:any, onDone: any) => updateCrismando(
