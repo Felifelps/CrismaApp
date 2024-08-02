@@ -9,11 +9,21 @@ table {
     max-height: min-content;
 }
 
+table tr {
+    background-color: #fff;
+    cursor: pointer;
+}
+
+table tr:hover {
+    background-color: #eee;
+}
+
 table th, table td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
 }
+
 
 table th {
     color: white;

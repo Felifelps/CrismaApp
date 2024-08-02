@@ -17,12 +17,8 @@ export default function Encontros() {
             fields={["Tema", "Data", "Presenças", "Justificativas", "Faltas"]}
             sortingFunction={(a: any, b: any) => a}
             mappingFunction={(item: any, index: number) => (
-                <tr key={index}>
-                    <td> 
-                        <Link to={`/encontros/${item.id}`}>
-                            {item.tema}
-                        </Link>
-                    </td>
+                <tr key={index} onClick={() => {window.location.href = `/encontros/${item.id}`}}>
+                    <td> {item.tema} </td>
                     <td> {formatDate(item.data)} </td>
                     <td> {item.frequenciaencontro.participated} </td>
                     <td> {item.frequenciaencontro.justified} </td>

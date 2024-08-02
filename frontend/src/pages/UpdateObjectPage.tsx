@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 
-import { useParams, Navigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import '../assets/styles/Form.css'
 
@@ -11,6 +11,8 @@ import { AdminOnlyPage } from "./Page";
 import { useToken } from "../contexts/Token";
 
 import { formatISODate } from "../utils/format";
+import { ensureAllDataIsLocal } from "../services/getData";
+import { removeCrismandos, removeDomingos, removeEncontros } from "../utils/localStorage";
 
 interface ObjectType {
     [key: string]: string | number | undefined; // ou outros tipos conforme necessário
@@ -20,6 +22,7 @@ export default function UpdateObjectPage(props: any) {
     const { id } = useParams();
     const [isLoading, setIsLoading] = useState(true);
     const [object, setObject] = useState<ObjectType>({});
+    const [frequencyObjects, setfrequencyObjects] = useState([]);
     const token = useToken().token;
 
     const updateLoading = () => setIsLoading((value) => !value);
@@ -40,7 +43,9 @@ export default function UpdateObjectPage(props: any) {
     }
 
     function redirectAndReload () {
-        props.removeLocalDataFunction();
+        removeCrismandos();
+        removeEncontros();
+        removeDomingos();
         updateLoading();
         window.location.href = props.returnToUrl;
     }
@@ -58,11 +63,37 @@ export default function UpdateObjectPage(props: any) {
                 setObject(localData[id])
             }
         }
+    }
+
+    function serveFrequency() {
+        const data: any = [];
+        const frequencyLists = props.getFrequencyListsFunction();
+        const objectFrequencyList = props.getLocalObjectFreq();
+        for (let listName in frequencyLists) {
+            const list = frequencyLists[listName]
+            data.push((<h2>{props.freqDataOptions[listName].listName}</h2>))
+            for (let objId in list) {
+                const objReference = list[objId][props.freqDataOptions[listName].refAttr]
+                const participated = objId in objectFrequencyList && !objectFrequencyList[objId].justificado;
+                const justified = objId in objectFrequencyList && objectFrequencyList[objId].justificado;
+                const missed = !(objId in objectFrequencyList);
+                data.push((
+                    <>
+                        <p> {objReference} </p>
+                        <p> P: {participated}</p>
+                        <p> J: {justified}</p>
+                        <p> F: {missed}</p>
+                    </>
+                ));
+            }
+        }
+        setfrequencyObjects(data);
         updateLoading();
     }
 
-    if (isLoading) {
-        props.getNonLocalDataFunction(token, serveData)
+    if (isLoading && Object.keys(object).length === 0) {
+        ensureAllDataIsLocal(token, serveData);
+        props.fetchObjectFreqFunction(token, id, serveFrequency);
     }
     
     /*{props.frequencyElementsFunction(data)}*/
@@ -87,6 +118,7 @@ export default function UpdateObjectPage(props: any) {
                     </div>
                 ))}
                 <Loading active={isLoading} />
+                {frequencyObjects.map((value: any) => (<p>{value}</p>))}
                 <div className='buttons-container'>
                     <button className="button danger">
                         Excluir registro

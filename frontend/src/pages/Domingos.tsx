@@ -17,12 +17,8 @@ export default function Domingos() {
             fields={["Data", "Presenças", "Justificativas", "Faltas"]}
             sortingFunction={(a: any, b: any) => a}
             mappingFunction={(item: any, index: number) => (
-                <tr key={index}>
-                    <td>
-                        <Link to={`/domingos/${item.id}`}>
-                            {formatDate(item.data)}
-                        </Link>
-                    </td>
+                <tr key={index} onClick={() => {window.location.href = `/domingos/${item.id}`}}>
+                    <td> {formatDate(item.data)} </td>
                     <td> {item.frequenciadomingo.participated} </td>
                     <td> {item.frequenciadomingo.justified} </td>
                     <td> {item.frequenciadomingo.missed} </td>

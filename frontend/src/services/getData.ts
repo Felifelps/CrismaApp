@@ -65,3 +65,21 @@ export const getDomingosData = (
     ls.setDomingos,
     onDone
 )
+
+export function ensureAllDataIsLocal(token: any, onDone: any) {
+    let domDone = false;
+    let crisDone = false;
+    let encDone = false;
+    const partialOnDone = (dom: any, enc: any, cris: any) => {
+        domDone = dom ? dom : domDone;
+        encDone = enc ? enc : encDone;
+        crisDone = cris ? cris : crisDone;
+        if (domDone && encDone && crisDone) {
+            console.log('All data got');
+            onDone();
+        }
+    }
+    getCrismandosData(token, () => partialOnDone(false, false, true))
+    getEncontrosData(token, () => partialOnDone(false, true, false))
+    getDomingosData(token, () => partialOnDone(true, false, false))
+}

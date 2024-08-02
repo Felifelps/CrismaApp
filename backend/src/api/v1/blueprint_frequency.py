@@ -26,7 +26,8 @@ def blueprint_frequency(model, blueprint):
             try:
                 data = {}
                 for attr in model_fields:
-                    data[unset_field_name(attr)] = [model_to_dict(frequency) for frequency in getattr(obj, attr)]
+                    dict_data = [model_to_dict(frequency) for frequency in getattr(obj, attr)]
+                    data[unset_field_name(attr)] = {frequency.pop('id'): frequency for frequency in dict_data}
                 return jsonify(
                     **data
                 )

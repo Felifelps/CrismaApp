@@ -1,5 +1,4 @@
-import React, {useState} from "react";
-import { Link } from "react-router-dom";
+import React from "react";
 
 import UpdateObjectPage from "./UpdateObjectPage";
 
@@ -12,7 +11,7 @@ export default function UpdateDomingo() {
     return (
         <UpdateObjectPage
             title={"Domingo"}
-            returnToUrl='/Domingos'
+            returnToUrl='/domingos'
             getNonLocalDataFunction={getDomingosData}
             getLocalDataFunction={getDomingos}
             removeLocalDataFunction={removeDomingos}
