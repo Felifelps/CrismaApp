@@ -48,16 +48,14 @@ def blueprint_frequency(model, blueprint):
 
             for field, value in data.items():
                 field = f"{field}_set"
-                ref_model = ref_models[field]
+                if field not in ref_models:
+                    return jsonify(error=f'Invalid field: {field[:-4]}'), 400
 
-                ref_name = obj_reference_names[field]
-
-                ref_model.delete().where(
-                    getattr(ref_model, ref_name)==obj
-                ).execute()
+                for freq_obj in getattr(obj, field, []):
+                    freq_obj.delete_instance()
 
                 for obj_data in value:
-                    result = create_obj_from_dict(ref_model,
+                    result = create_obj_from_dict(ref_models[field],
                                                   obj_data)
                     if not result[0]:
                         return jsonify(

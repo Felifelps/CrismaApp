@@ -2,7 +2,7 @@ import os
 
 from bcrypt import checkpw
 from dotenv import load_dotenv
-from peewee import FieldAccessor, IntegrityError
+from peewee import FieldAccessor, fn
 
 load_dotenv()
 
@@ -48,10 +48,10 @@ def get_model_class_fields(model_class, set_fields=False, not_set_fields=True):
 
 def create_obj_from_dict(model, data):
     try:
-        obj = model.create(**data)
+        obj = model.create(
+            id=model.select(fn.MAX(model.id)).scalar() + 1,
+            **data
+        )
         return True, obj
-    except IntegrityError:
-        fields = tuple(get_model_class_fields(model))
-        return False, f'Missing one field of {fields}'
     except Exception as e:
-        return False, e
+        return False, str(e)

@@ -12,17 +12,18 @@ export default function NewObjectPage(props: any) {
     const [isLoading, setIsLoading] = useState(false);
     const token = useToken().token;
 
-    const updateLoading = () => setIsLoading((value) => !value);
-
     function redirectAndReload () {
         props.removeLocalDataFunction();
-        updateLoading();
+        setIsLoading(false);
         window.location.href = props.returnToUrl;
     }
 
     function handleOnSubmit(e: React.FormEvent) {
         e.preventDefault();
-        updateLoading();
+        if (isLoading) {
+            return;
+        }
+        setIsLoading(true);
         props.createObjectFunction(token, redirectAndReload);
     }
 

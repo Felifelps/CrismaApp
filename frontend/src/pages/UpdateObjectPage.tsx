@@ -59,8 +59,8 @@ export default function UpdateObjectPage(props: any) {
         removeEncontros();
         removeDomingos();
         removeCurrentObjFreq();
-        setIsLoading(true);
-        window.location.href = props.returnToUrl;
+        setIsLoading(false);
+        //window.location.href = props.returnToUrl;
     }
 
     function formatFrequencyData() {
@@ -84,17 +84,21 @@ export default function UpdateObjectPage(props: any) {
 
     function handleOnSubmit(e: React.FormEvent) {
         e.preventDefault();
+        if (isLoading) {
+            return;
+        }
         setIsLoading(true);
 
         formatFrequencyData();
-
         props.updateObjectFreqFunction(token, id, formatFrequencyData(), redirectAndReload);
     }
 
     function handleDeleteOnClick(e: any) {
         e.preventDefault();
+        if (isLoading) {
+            return;
+        }
         setIsLoading(true);
-
         props.deleteObjectFunction(token, id, redirectAndReload);
     }
 
