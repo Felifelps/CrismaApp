@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 
-import { useParams } from "react-router-dom";
+import { redirect, useParams } from "react-router-dom";
 
 import '../assets/styles/Form.css'
 
@@ -88,8 +88,14 @@ export default function UpdateObjectPage(props: any) {
 
         formatFrequencyData();
 
-        //props.updateObjectFunction(token, id, object, redirectAndReload);
         props.updateObjectFreqFunction(token, id, formatFrequencyData(), redirectAndReload);
+    }
+
+    function handleDeleteOnClick(e: any) {
+        e.preventDefault();
+        setIsLoading(true);
+
+        props.deleteObjectFunction(token, id, redirectAndReload);
     }
 
     function serveFrequency() {
@@ -97,9 +103,8 @@ export default function UpdateObjectPage(props: any) {
         const frequencyDataMount: any = {};
         const frequencyLists = props.getFrequencyListsFunction();
         const objectFreq = JSON.parse(props.getLocalObjectFreq());
-
-
         for (let listName in frequencyLists) {
+            console.log(listName);
             const freqRefName = props.freqDataOptions[listName].freqRefName;
             const refAttr = props.freqDataOptions[listName].refAttr;
             const list = frequencyLists[listName];
@@ -202,7 +207,7 @@ export default function UpdateObjectPage(props: any) {
                 {frequencyTable}
 
                 <div className='buttons-container'>
-                    <button className="button danger">
+                    <button className="button danger" onClick={handleDeleteOnClick}>
                         Excluir registro
                     </button>
                     <input

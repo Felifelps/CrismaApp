@@ -1,6 +1,5 @@
-
-import * as ls from "../utils/localStorage";
 import { apiUrl } from "../utils/constants";
+import { handleFetchResponse } from "./handleFetchResponse";
 
 function addObject(
         url: string,
@@ -8,7 +7,6 @@ function addObject(
         objectData: any,
         onDone: any
     ) {
-    let responseStatus = 0;
     fetch(apiUrl + url, {
         method: 'POST',
         headers: {
@@ -17,11 +15,7 @@ function addObject(
         },
         body: JSON.stringify(objectData)
     }).then(response => {
-        responseStatus = response.status;
-        return response.json();
-    }).then(data => {
-        ls.setMessage(`${responseStatus.toString()} : ${data.message}`);
-        onDone();
+        handleFetchResponse(response, onDone);
     });
 
 }

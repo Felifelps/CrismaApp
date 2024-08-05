@@ -8,12 +8,13 @@ import { updateEncontro } from "../services/updateObject";
 import { formatISODate } from "../utils/format";
 import { getEncontroFrequency } from "../services/getFrequency";
 import { updateEncontroFrequency } from "../services/updateFrequency";
+import { deleteEncontro } from "../services/deleteObject";
 
 export default function UpdateEncontro() {
     function getFrequencyList() {
         let crismandos = getCrismandos();
         return {
-            'frequenciadomingo': crismandos ? JSON.parse(crismandos) : {}
+            'frequenciaencontro': crismandos ? JSON.parse(crismandos) : {}
         }
     }
     return (
@@ -27,6 +28,7 @@ export default function UpdateEncontro() {
             fetchObjectFreqFunction={getEncontroFrequency}
             getFrequencyListsFunction={getFrequencyList}
             updateObjectFreqFunction={updateEncontroFrequency}
+            deleteObjectFunction={deleteEncontro}
             freqDataOptions={{
                 "frequenciaencontro": {
                     listName: "Crismandos",

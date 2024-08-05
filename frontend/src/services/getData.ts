@@ -1,6 +1,7 @@
 
 import * as ls from "../utils/localStorage";
 import { apiUrl } from "../utils/constants";
+import { handleFetchResponse } from "./handleFetchResponse";
 
 function getAllData(
         url: string,
@@ -13,7 +14,6 @@ function getAllData(
     if (localData) {
         return onDone();
     }
-    let responseStatus = 0;
     fetch(apiUrl + url, {
         method: 'GET',
         headers: {
@@ -21,16 +21,8 @@ function getAllData(
             'Authorization': `Bearer ${token}`
         },
     }).then(response => {
-        responseStatus = response.status;
-        return response.json();
-    }).then(data => {
-        if (responseStatus === 200) {
-            savingLocalFunc(JSON.stringify(data));
-        }
-        ls.setMessage(responseStatus.toString());
-        onDone();
+        handleFetchResponse(response, onDone, savingLocalFunc);
     });
-
 }
 
 export const getCrismandosData = (

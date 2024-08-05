@@ -111,6 +111,7 @@ models = (
     User
 )
 
+
 db.connect()
 
 db.create_tables(models, safe=True)

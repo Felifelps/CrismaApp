@@ -1,6 +1,7 @@
 
 import * as ls from "../utils/localStorage";
 import { apiUrl } from "../utils/constants";
+import { handleFetchResponse } from "./handleFetchResponse";
 
 function deleteObject(
         url: string,
@@ -8,7 +9,6 @@ function deleteObject(
         objectId: any,
         onDone: any
     ) {
-    let responseStatus = 0;
     fetch(apiUrl + url + objectId, {
         method: 'DELETE',
         headers: {
@@ -16,13 +16,8 @@ function deleteObject(
             'Authorization': `Bearer ${token}`
         }
     }).then(response => {
-        responseStatus = response.status;
-        return response.json();
-    }).then(data => {
-        ls.setMessage(`${responseStatus.toString()} : ${data.message}`);
-        onDone();
+        handleFetchResponse(response, onDone);
     });
-
 }
 
 export const deleteCrismando = (

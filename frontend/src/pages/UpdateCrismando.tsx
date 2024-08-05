@@ -8,6 +8,7 @@ import { updateCrismando } from "../services/updateObject";
 import { formatISODate } from "../utils/format";
 import { getCrismandoFrequency } from "../services/getFrequency";
 import { updateCrismandoFrequency } from "../services/updateFrequency";
+import { deleteCrismando } from "../services/deleteObject";
 
 export default function UpdateCrismando() {
     function getFrequencyData () {
@@ -30,6 +31,7 @@ export default function UpdateCrismando() {
             fetchObjectFreqFunction={getCrismandoFrequency}
             getFrequencyListsFunction={getFrequencyData}
             updateObjectFreqFunction={updateCrismandoFrequency}
+            deleteObjectFunction={deleteCrismando}
             freqDataOptions={{
                 "frequenciaencontro": {
                     listName: "Encontros",

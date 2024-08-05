@@ -4,7 +4,6 @@ setInterval(() => {
     loginAndSaveToken(
         'none',
         'none',
-        () => console.log('Requested to backend'),
-        false
+        () => console.log('Requested to backend')
     );
 }, 300000);

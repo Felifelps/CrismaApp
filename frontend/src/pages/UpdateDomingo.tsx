@@ -8,6 +8,7 @@ import { updateDomingo } from "../services/updateObject";
 import { formatISODate } from "../utils/format";
 import { getDomingoFrequency } from "../services/getFrequency";
 import { updateDomingoFrequency } from "../services/updateFrequency";
+import { deleteDomingo } from "../services/deleteObject";
 
 
 export default function UpdateDomingo() {
@@ -28,6 +29,7 @@ export default function UpdateDomingo() {
             fetchObjectFreqFunction={getDomingoFrequency}
             getFrequencyListsFunction={getFrequencyList}
             updateObjectFreqFunction={updateDomingoFrequency}
+            deleteObjectFunction={deleteDomingo}
             freqDataOptions={{
                 "frequenciadomingo": {
                     listName: "Crismandos",

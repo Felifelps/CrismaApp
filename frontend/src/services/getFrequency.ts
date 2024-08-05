@@ -1,6 +1,7 @@
 
 import * as ls from "../utils/localStorage";
 import { apiUrl } from "../utils/constants";
+import { handleFetchResponse } from "./handleFetchResponse";
 
 function getObjectFrequency(
         baseUrl: string,
@@ -8,7 +9,6 @@ function getObjectFrequency(
         objectId: any,
         onDone: any
     ) {
-    let responseStatus = 0;
     fetch(apiUrl + baseUrl + objectId + '/freq', {
         method: 'GET',
         headers: {
@@ -16,14 +16,8 @@ function getObjectFrequency(
             'Authorization': `Bearer ${token}`
         }
     }).then(response => {
-        responseStatus = response.status;
-        return response.json();
-    }).then(data => {
-        ls.setCurrentObjFreq(JSON.stringify(data));
-        ls.setMessage(`${responseStatus.toString()} : ${data.message}`);
-        onDone();
+        handleFetchResponse(response, onDone, ls.setCurrentObjFreq);
     });
-
 }
 
 export const getCrismandoFrequency = (

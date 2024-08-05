@@ -85,6 +85,9 @@ def blueprint_model_crud(model, blueprint, validations=[], field_formatters={}):
         
         # DELETE = delete
         if request.method == 'DELETE':
+            for set_field in model_set_fields:
+                for frequency_obj in getattr(obj, set_field):
+                    frequency_obj.delete_instance()
             obj.delete_instance()
             return jsonify(
                 message='Deleted successfully!'

@@ -1,13 +1,12 @@
 import * as ls from "../utils/localStorage";
 import { apiUrl } from "../utils/constants";
+import { handleFetchResponse } from "./handleFetchResponse";
 
 export function loginAndSaveToken(
         username: any,
         password: any,
-        onDone: any = () => console.log('Data got'),
-        saveResponse: boolean = true
+        onDone: any = () => console.log('Data got')
     ) {
-    let responseStatus = 0;
     fetch(apiUrl + '/auth/login', {
         method: 'POST',
         headers: {
@@ -18,15 +17,8 @@ export function loginAndSaveToken(
             password: password.trim()
         })
     }).then(response => {
-        responseStatus = response.status;
-        return response.json();
-    }).then(data => {
-        if (responseStatus === 200) {
-            ls.setToken(data.token);
-        }
-        if (saveResponse) {
-            ls.setMessage(responseStatus.toString());
-        }
-        onDone();
-    });
+        handleFetchResponse(response, onDone, (stringData: any) => ls.setToken(
+            JSON.parse(stringData).token
+        ));
+    })
 }

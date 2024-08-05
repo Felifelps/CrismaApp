@@ -1,6 +1,5 @@
-
-import * as ls from "../utils/localStorage";
 import { apiUrl } from "../utils/constants";
+import { handleFetchResponse } from "./handleFetchResponse";
 
 function updateObject(
         url: string,
@@ -9,7 +8,6 @@ function updateObject(
         objectData: any,
         onDone: any
     ) {
-    let responseStatus = 0;
     fetch(apiUrl + url + objectId, {
         method: 'PUT',
         headers: {
@@ -18,13 +16,8 @@ function updateObject(
         },
         body: JSON.stringify(objectData)
     }).then(response => {
-        responseStatus = response.status;
-        return response.json();
-    }).then(data => {
-        ls.setMessage(`${responseStatus.toString()} : ${data.message}`);
-        onDone();
+        handleFetchResponse(response, onDone);
     });
-
 }
 
 export const updateCrismando = (
