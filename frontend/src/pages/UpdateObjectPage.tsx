@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 
-import { redirect, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import '../assets/styles/Form.css'
 
@@ -14,6 +14,8 @@ import { useFlashMessage } from "../contexts/FlashMessages";
 import { formatISODate, formatDate } from "../utils/format";
 import { ensureAllDataIsLocal } from "../services/getData";
 import { getFlashMessage } from "../utils/getFlashMessages";
+import { getFreq } from "../utils/localStorage";
+import { emptyFreq } from "../utils/manageLocalData";
 
 interface ObjectType {
     [key: string]: string | number | undefined; // ou outros tipos conforme necessário
@@ -66,7 +68,7 @@ export default function UpdateObjectPage(props: any) {
         const formattedData: any = {};
         for (let key of Object.keys(frequencyData)) {
             const [group, refObjId] = key.split('-')
-            if (!(group in Object.keys(formattedData))) {
+            if (!(Object.keys(formattedData).includes(group))) {
                 formattedData[group] = [];
             }
             const value = frequencyData[key];
@@ -89,8 +91,9 @@ export default function UpdateObjectPage(props: any) {
         setIsLoading(true);
 
         formatFrequencyData();
-        props.updateObjectFunction(token, id, object, redirectAndReload);
+        // freq MUST come first to allow updates on object stats
         props.updateObjectFreqFunction(token, id, formatFrequencyData(), redirectAndReload);
+        props.updateObjectFunction(token, id, object, redirectAndReload);
     }
 
     function handleDeleteOnClick(e: any) {
@@ -103,20 +106,28 @@ export default function UpdateObjectPage(props: any) {
     }
 
     function serveFrequency() {
-        return null;
         const finalData: any = [];
         const frequencyDataMount: any = {};
         const frequencyLists = props.getFrequencyListsFunction();
-        const objectFreq = JSON.parse(props.getLocalObjectFreq());
+        const freq = getFreq();
+        const objectFreq = freq ? JSON.parse(freq) : emptyFreq;
         for (let listName in frequencyLists) {
-            console.log(listName);
             const freqRefName = props.freqDataOptions[listName].freqRefName;
             const refAttr = props.freqDataOptions[listName].refAttr;
             const list = frequencyLists[listName];
-            const objectFreqList: FreqSimpleList[] = objectFreq[listName].map((value: any) => ({
-                id: value[freqRefName],
-                justified: value.justificado
-            }));
+
+            const objectFreqList: FreqSimpleList[] = [];
+            const values: any[] = Object.values(objectFreq[listName]); 
+            for (let i = 0; i < values.length; i ++) {
+                let value = values[i];
+                if (value[props.propertyName].toString() !== id) {
+                    continue
+                }
+                objectFreqList.push({
+                    id: value[freqRefName],
+                    justified: value.justificado
+                })
+            };
 
             let data = [];
             for (let objId in list) {

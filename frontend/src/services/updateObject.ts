@@ -2,6 +2,7 @@ import { apiUrl } from "../utils/constants";
 import * as ls from '../utils/localStorage';
 import { updateObjectOnData } from "../utils/manageLocalData";
 import { handleFetchResponse } from "./handleFetchResponse";
+import * as stats from "./getObjectStats";
 
 function updateObject(
         url: string,
@@ -10,9 +11,9 @@ function updateObject(
         objectData: any,
         onDone: any,
         getDataFunc: any,
-        setDataFunc: any
+        setDataFunc: any,
+        statsFunc: any
     ) {
-    console.log(objectData);
     fetch(apiUrl + url + objectId, {
         method: 'PUT',
         headers: {
@@ -28,7 +29,8 @@ function updateObject(
                 objectId,
                 objectData,
                 getDataFunc,
-                setDataFunc
+                setDataFunc,
+                (savingFunc: any) => console.log('In') !== statsFunc(token, objectId, savingFunc)
             ),
             {
                 '200': 'Atualizado com sucesso!:1',
@@ -52,7 +54,8 @@ export const updateCrismando = (
     {nome: name, data_nasc: dataNasc, telefone: telefone},
     onDone,
     ls.getCrismandos,
-    ls.setCrismandos
+    ls.setCrismandos,
+    stats.getCrismandoStats
 )
 
 export const updateEncontro = (
@@ -68,7 +71,8 @@ export const updateEncontro = (
     {tema: tema, data: data},
     onDone,
     ls.getEncontros,
-    ls.setEncontros
+    ls.setEncontros,
+    stats.getEncontroStats
 )
 
 export const updateDomingo = (
@@ -83,5 +87,6 @@ export const updateDomingo = (
     {data: data},
     onDone,
     ls.getDomingos,
-    ls.setDomingos
+    ls.setDomingos,
+    stats.getDomingoStats
 )

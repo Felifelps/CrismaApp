@@ -21,7 +21,7 @@ const emptyFrequencyData = {
     }
 }
 
-const emptyFreq = {
+export const emptyFreq = {
     frequenciadomingo: {},
     frequenciaencontro: {}
 }
@@ -52,28 +52,51 @@ export function deleteObjectFromData(id: any, getDataFunc: any, saveDataFunc: an
     saveDataFunc(JSON.stringify(data));
 }
 
-export function updateObjectOnData(id: any, object: any, getDataFunc: any, saveDataFunc: any) {
+export function updateObjectOnData(id: any, object: any, getDataFunc: any, saveDataFunc: any, statsFunc: any) {
     let data = getDataFunc();
     if (!data) return;
-    data = JSON.parse(data);
-    
-    data[id] = object;
+    statsFunc((stats: any) => {
+        data = JSON.parse(data);
+        
+        data[id] = {
+            id: id,
+            ...object,
+            ...JSON.parse(stats)
+        };
 
-    saveDataFunc(JSON.stringify(data));
+        saveDataFunc(JSON.stringify(data));
+    })
 }
 
-export function UpdateFreqData(freqData: any) {
+export function UpdateFreqData(freqData: any, objectField: any, objectId: any) {
     let data: any = getFreq();
     if (!data) {
         data = JSON.stringify(emptyFreq);
     }
+
     data = JSON.parse(data);
+
+    if (data.hasOwnProperty('message')) {
+        delete data.message
+    }
+
     freqData = JSON.parse(freqData);
 
-    for (let freq of Object.keys(freqData)) {
-        data[freq] = {
-            ...data[freq],
-            ...freqData[freq]
+    for (let freqList of Object.keys(data)) {
+        let values: any[] = Object.values(data[freqList]);
+        for (let i = 0; i < values.length; i++) {
+            let obj: any = values[i];
+            console.log(objectId)
+            if (obj[objectField].toString() !== objectId) {
+                delete data[freqList][obj.id]
+            }
+        }
+    }
+
+    for (let freqList of Object.keys(freqData)) {
+        data[freqList] = {
+            ...data[freqList],
+            ...freqData[freqList]
         }
     }
 

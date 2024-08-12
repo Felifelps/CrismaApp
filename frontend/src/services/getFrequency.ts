@@ -19,7 +19,11 @@ function getObjectFrequency(
         handleFetchResponse(
             response,
             onDone,
-            (data: any) => UpdateFreqData(data)
+            (data: any) => UpdateFreqData(
+                data,
+                baseUrl.slice(1, baseUrl.length - 2),
+                objectId
+            )
         );
     });
 }
