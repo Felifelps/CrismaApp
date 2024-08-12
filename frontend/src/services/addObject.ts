@@ -1,11 +1,15 @@
 import { apiUrl } from "../utils/constants";
+import * as ls from '../utils/localStorage';
+import { addObjectIntoData } from "../utils/manageLocalData";
 import { handleFetchResponse } from "./handleFetchResponse";
 
 function addObject(
         url: string,
         token: any,
         objectData: any,
-        onDone: any
+        onDone: any,
+        getDataFunc: any,
+        saveDataFunc: any
     ) {
     fetch(apiUrl + url, {
         method: 'POST',
@@ -15,7 +19,15 @@ function addObject(
         },
         body: JSON.stringify(objectData)
     }).then(response => {
-        handleFetchResponse(response, onDone);
+        handleFetchResponse(
+            response,
+            onDone,
+            (data: any) => addObjectIntoData(
+                objectData,
+                getDataFunc,
+                saveDataFunc
+            )
+        );
     });
 
 }
@@ -30,7 +42,10 @@ export const addCrismando = (
     '/crismandos/',
     token,
     {nome: name, data_nasc: dataNasc, telefone: telefone},
-    onDone
+    onDone,
+    ls.getCrismandos,
+    ls.setCrismandos
+    
 )
 
 export const addEncontro = (
@@ -42,7 +57,9 @@ export const addEncontro = (
     '/encontros/',
     token,
     {tema: tema, data: data},
-    onDone
+    onDone,
+    ls.getEncontros,
+    ls.setEncontros
 )
 
 export const addDomingo = (
@@ -53,5 +70,7 @@ export const addDomingo = (
     '/domingos/',
     token,
     {data: data},
-    onDone
+    onDone,
+    ls.getDomingos,
+    ls.setDomingos
 )

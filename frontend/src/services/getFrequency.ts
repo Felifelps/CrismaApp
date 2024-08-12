@@ -1,4 +1,3 @@
-
 import * as ls from "../utils/localStorage";
 import { apiUrl } from "../utils/constants";
 import { handleFetchResponse } from "./handleFetchResponse";
@@ -16,7 +15,11 @@ function getObjectFrequency(
             'Authorization': `Bearer ${token}`
         }
     }).then(response => {
-        handleFetchResponse(response, onDone, ls.setCurrentObjFreq);
+        handleFetchResponse(
+            response,
+            onDone,
+            (data: any) => console.log(data)
+        );
     });
 }
 

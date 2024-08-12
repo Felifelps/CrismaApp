@@ -13,7 +13,7 @@ export default function NewEncontro() {
     return (
         <NewObjectPage
             title={"Encontro"}
-            returnToUrl='/enctontros'
+            returnToUrl='/encontros'
             removeLocalDataFunction={removeEncontros}
             createObjectFunction={(token: any, onDone: any) => addEncontro(
                 token, tema, date, onDone

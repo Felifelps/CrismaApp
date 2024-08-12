@@ -7,5 +7,5 @@ export default function Loading(props: any) {
         <div className='loading-container'>
             <div className='loading'></div>
         </div>
-    ) : <></>;
+    ) : null;
 }

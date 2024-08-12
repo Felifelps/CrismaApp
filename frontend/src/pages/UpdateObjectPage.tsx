@@ -9,10 +9,11 @@ import Loading from "../components/Loading";
 import { AdminOnlyPage } from "./Page";
 
 import { useToken } from "../contexts/Token";
+import { useFlashMessage } from "../contexts/FlashMessages";
 
 import { formatISODate, formatDate } from "../utils/format";
 import { ensureAllDataIsLocal } from "../services/getData";
-import { removeCrismandos, removeCurrentObjFreq, removeDomingos, removeEncontros } from "../utils/localStorage";
+import { getFlashMessage } from "../utils/getFlashMessages";
 
 interface ObjectType {
     [key: string]: string | number | undefined; // ou outros tipos conforme necessário
@@ -31,6 +32,7 @@ export default function UpdateObjectPage(props: any) {
     const [frequencyTable, setFrequencyTable] = useState([]);
     const [frequencyData, setFrequencyData] = useState<ObjectType>({});
     const token = useToken().token;
+    const setFlashMessage = useFlashMessage().setFlashMessage;
 
     function updateObject(field: string, value: any) {
         setObject(prevObject => ({
@@ -55,11 +57,8 @@ export default function UpdateObjectPage(props: any) {
     }
 
     function redirectAndReload () {
-        removeCrismandos();
-        removeEncontros();
-        removeDomingos();
-        removeCurrentObjFreq();
         setIsLoading(false);
+        setFlashMessage(getFlashMessage());
         //window.location.href = props.returnToUrl;
     }
 
@@ -71,7 +70,7 @@ export default function UpdateObjectPage(props: any) {
                 formattedData[group] = [];
             }
             const value = frequencyData[key];
-            if (value !== 0) {   
+            if (value !== 0) {
                 formattedData[group].push({
                     [props.propertyName]: id,
                     [props.freqDataOptions[group].freqRefName]: refObjId,
@@ -90,6 +89,7 @@ export default function UpdateObjectPage(props: any) {
         setIsLoading(true);
 
         formatFrequencyData();
+        props.updateObjectFunction(token, id, object, redirectAndReload);
         props.updateObjectFreqFunction(token, id, formatFrequencyData(), redirectAndReload);
     }
 
@@ -211,14 +211,14 @@ export default function UpdateObjectPage(props: any) {
                 {frequencyTable}
 
                 <div className='buttons-container'>
-                    <button className="button danger" onClick={handleDeleteOnClick}>
-                        Excluir registro
-                    </button>
                     <input
                         className="button safe"
                         type='submit'
                         value={isLoading ? 'Alterando...' : 'Alterar'}
                     />
+                    <button className="button danger" onClick={handleDeleteOnClick}>
+                        Excluir registro
+                    </button>
                 </div>
             </form>
         </AdminOnlyPage>

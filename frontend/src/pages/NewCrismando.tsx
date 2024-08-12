@@ -15,7 +15,6 @@ export default function NewCrismando() {
         <NewObjectPage
             title={"Crismando"}
             returnToUrl='/crismandos'
-            removeLocalDataFunction={removeCrismandos}
             createObjectFunction={(token: any, onDone: any) => addCrismando(
                 token, name, date, tel, onDone
             )}

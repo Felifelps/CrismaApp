@@ -2,7 +2,7 @@ import React from "react";
 
 import UpdateObjectPage from "./UpdateObjectPage";
 
-import { getCrismandos, getCurrentObjFreq, getEncontros } from "../utils/localStorage";
+import { getCrismandos, getEncontros } from "../utils/localStorage";
 import { getEncontrosData } from "../services/getData";
 import { updateEncontro } from "../services/updateObject";
 import { formatISODate } from "../utils/format";
@@ -24,7 +24,7 @@ export default function UpdateEncontro() {
             propertyName='encontro'
             getNonLocalDataFunction={getEncontrosData}
             getLocalDataFunction={getEncontros}
-            getLocalObjectFreq={getCurrentObjFreq}
+            getLocalObjectFreq={() => {}}
             fetchObjectFreqFunction={getEncontroFrequency}
             getFrequencyListsFunction={getFrequencyList}
             updateObjectFreqFunction={updateEncontroFrequency}

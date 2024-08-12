@@ -1,4 +1,6 @@
 import { apiUrl } from "../utils/constants";
+import * as ls from '../utils/localStorage';
+import { updateObjectOnData } from "../utils/manageLocalData";
 import { handleFetchResponse } from "./handleFetchResponse";
 
 function updateObject(
@@ -6,8 +8,11 @@ function updateObject(
         token: any,
         objectId: any,
         objectData: any,
-        onDone: any
+        onDone: any,
+        getDataFunc: any,
+        setDataFunc: any
     ) {
+    console.log(objectData);
     fetch(apiUrl + url + objectId, {
         method: 'PUT',
         headers: {
@@ -16,7 +21,20 @@ function updateObject(
         },
         body: JSON.stringify(objectData)
     }).then(response => {
-        handleFetchResponse(response, onDone);
+        handleFetchResponse(
+            response,
+            onDone,
+            (data: any) => updateObjectOnData(
+                objectId,
+                objectData,
+                getDataFunc,
+                setDataFunc
+            ),
+            {
+                '200': 'Atualizado com sucesso!:1',
+                '400': 'Informações inválidas:0'
+            }
+        );
     });
 }
 
@@ -32,7 +50,9 @@ export const updateCrismando = (
     token,
     id,
     {nome: name, data_nasc: dataNasc, telefone: telefone},
-    onDone
+    onDone,
+    ls.getCrismandos,
+    ls.setCrismandos
 )
 
 export const updateEncontro = (
@@ -46,7 +66,9 @@ export const updateEncontro = (
     token,
     id,
     {tema: tema, data: data},
-    onDone
+    onDone,
+    ls.getEncontros,
+    ls.setEncontros
 )
 
 export const updateDomingo = (
@@ -59,5 +81,7 @@ export const updateDomingo = (
     token,
     id,
     {data: data},
-    onDone
+    onDone,
+    ls.getDomingos,
+    ls.setDomingos
 )

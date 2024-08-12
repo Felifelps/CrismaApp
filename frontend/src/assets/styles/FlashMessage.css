@@ -1,0 +1,14 @@
+.flash-messsage {
+    padding: 10px;
+    color: white;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.success {
+    background-color: #3f8f41;
+}
+
+.error {
+    background-color: #e04444;
+}

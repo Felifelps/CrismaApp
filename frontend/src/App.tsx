@@ -21,12 +21,14 @@ import UpdateDomingo from './pages/UpdateDomingo';
 import NotFound from './pages/NotFound';
 
 import { TokenProvider } from './contexts/Token';
+import { FlashMessageProvider } from './contexts/FlashMessages';
 
 import './services/keepBackendActive';
 
 function App() {
   return (
     <BrowserRouter>
+      <FlashMessageProvider>
       <TokenProvider>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -47,6 +49,7 @@ function App() {
           <Route path="/domingos/:id" element={<UpdateDomingo />} />
         </Routes>
       </TokenProvider>
+      </FlashMessageProvider>
       <Footer />
     </BrowserRouter>
   );

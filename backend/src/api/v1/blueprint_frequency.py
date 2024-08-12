@@ -26,7 +26,7 @@ def blueprint_frequency(model, blueprint):
             try:
                 data = {}
                 for attr in model_fields:
-                    data[unset_field_name(attr)] = [model_to_dict(frequency) for frequency in getattr(obj, attr)]
+                    data[unset_field_name(attr)] = {frequency.id: model_to_dict(frequency) for frequency in getattr(obj, attr)}
                 return jsonify(
                     **data
                 )
@@ -93,7 +93,7 @@ def get_model_frequency_statistics(obj, model_set_fields, ref_models):
 
         participated = len(tuple(filter(lambda x: not x.justificado, frequency)))
         justified = len(tuple(filter(lambda x: x.justificado, frequency)))
-        missed = total - len(frequency)
+        missed = total - (participated + justified)
 
         data[unset_field_name(field)] = {
             'participated': participated,

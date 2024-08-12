@@ -1,13 +1,15 @@
-
-import * as ls from "../utils/localStorage";
 import { apiUrl } from "../utils/constants";
+import * as ls from '../utils/localStorage';
+import { deleteObjectFromData } from "../utils/manageLocalData";
 import { handleFetchResponse } from "./handleFetchResponse";
 
 function deleteObject(
         url: string,
         token: any,
         objectId: any,
-        onDone: any
+        onDone: any,
+        getDataFunc: any,
+        setDataFunc: any
     ) {
     fetch(apiUrl + url + objectId, {
         method: 'DELETE',
@@ -16,19 +18,29 @@ function deleteObject(
             'Authorization': `Bearer ${token}`
         }
     }).then(response => {
-        handleFetchResponse(response, onDone);
+        handleFetchResponse(
+            response,
+            onDone,
+            (data: any) => deleteObjectFromData(
+                objectId,
+                getDataFunc,
+                setDataFunc
+            )
+        );
     });
 }
 
 export const deleteCrismando = (
     token: any,
     id: any,
-    onDone: any
+    onDone: any,
 ) => deleteObject(
     '/crismandos/',
     token,
     id,
-    onDone
+    onDone,
+    ls.getCrismandos,
+    ls.setCrismandos
 )
 
 export const deleteEncontro = (
@@ -39,7 +51,9 @@ export const deleteEncontro = (
     '/encontros/',
     token,
     id,
-    onDone
+    onDone,
+    ls.getEncontros,
+    ls.setEncontros
 )
 
 export const deleteDomingo = (
@@ -50,5 +64,7 @@ export const deleteDomingo = (
     '/domingos/',
     token,
     id,
-    onDone
+    onDone,
+    ls.getDomingos,
+    ls.setDomingos
 )

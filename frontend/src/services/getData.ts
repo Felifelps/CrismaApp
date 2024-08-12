@@ -1,4 +1,3 @@
-
 import * as ls from "../utils/localStorage";
 import { apiUrl } from "../utils/constants";
 import { handleFetchResponse } from "./handleFetchResponse";
@@ -21,7 +20,14 @@ function getAllData(
             'Authorization': `Bearer ${token}`
         },
     }).then(response => {
-        handleFetchResponse(response, onDone, savingLocalFunc);
+        handleFetchResponse(
+            response,
+            onDone,
+            savingLocalFunc,
+            {
+                '200': 'Dados carregados com sucesso:1'
+            }
+        );
     });
 }
 
