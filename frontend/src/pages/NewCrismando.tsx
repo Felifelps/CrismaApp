@@ -1,10 +1,8 @@
-import React, {useState} from "react";
+import { useState } from "react";
 
 import NewObjectPage from "./NewObjectPage";
 
 import { addCrismando } from "../services/addObject";
-
-import { removeCrismandos } from "../utils/localStorage";
 
 export default function NewCrismando() {
     const [name, setName] = useState('');

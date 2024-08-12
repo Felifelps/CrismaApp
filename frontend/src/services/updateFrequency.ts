@@ -16,8 +16,6 @@ function updateObjectFrequency(
         },
         body: JSON.stringify(frequencyList)
     }).then(response => {
-        console.log('frequencylist')
-        console.log(frequencyList)
         handleFetchResponse(
             response,
             onDone,

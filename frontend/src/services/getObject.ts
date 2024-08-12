@@ -5,6 +5,7 @@ export function getObject(
         url: string,
         token: any,
         objectId: any,
+        onDone: any,
         savingData: any
     ) {
     fetch(apiUrl + url + objectId, {
@@ -16,7 +17,7 @@ export function getObject(
     }).then(response => {
         handleFetchResponse(
             response,
-            () => null,
+            onDone,
             savingData,
         );
     });
@@ -25,32 +26,38 @@ export function getObject(
 export const getCrismando = (
     token: any,
     id: any,
+    onDone: any,
     savingFunc: any
 ) => getObject(
     '/crismandos/',
     token,
     id,
+    onDone,
     savingFunc
 )
 
 export const getEncontro = (
     token: any,
     id: any,
+    onDone: any,
     savingFunc: any
 ) => getObject(
     '/encontros/',
     token,
     id,
+    onDone,
     savingFunc
 )
 
 export const getDomingo = (
     token: any,
     id: any,
+    onDone: any,
     savingFunc: any
 ) => getObject(
     '/domingos/',
     token,
     id,
+    onDone,
     savingFunc
 )

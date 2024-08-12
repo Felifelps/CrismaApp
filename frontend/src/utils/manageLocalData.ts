@@ -51,7 +51,7 @@ export function updateObjectOnData(id: any, getDataFunc: any, saveDataFunc: any,
     getUpdatedDataFunc((object: any) => {
         data = JSON.parse(data);
 
-        console.log(object)
+        console.log(object);
         
         data[id] = {
             id: id,

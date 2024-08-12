@@ -16,7 +16,6 @@ function getAllData(
     fetch(apiUrl + url, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         },
     }).then(response => {
@@ -73,7 +72,6 @@ export function ensureAllDataIsLocal(token: any, onDone: any) {
         encDone = enc ? enc : encDone;
         crisDone = cris ? cris : crisDone;
         if (domDone && encDone && crisDone) {
-            console.log('All data got');
             onDone();
         }
     }

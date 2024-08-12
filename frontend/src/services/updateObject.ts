@@ -27,12 +27,17 @@ function updateObject(
                 objectId,
                 getDataFunc,
                 setDataFunc,
-                (callbackFunc: any) => getObjectDataFunc(token, objectId, callbackFunc)
+                (callbackFunc: any) => getObjectDataFunc(
+                    token,
+                    objectId,
+                    onDone,
+                    callbackFunc
+                )
             )
         }
         handleFetchResponse(
             response,
-            onDone,
+            () => null, // the real callback is loaded on getObjectDataFunc
             (data: any) => null,
             {
                 '200': 'Atualizado com sucesso!:1',

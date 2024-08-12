@@ -9,15 +9,17 @@ export function downloadData(
     fetch(apiUrl + resource + '/data', {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         },
-    }).then(response => handleFetchResponse(
-        response,
-        onDone,
-        (data: any) => downloadCSV(data, resource.replace('/', '') + '.csv'),
-        true
-    ))
+    }).then(response => {
+        handleFetchResponse(
+            response,
+            onDone,
+            (data: any) => downloadCSV(data, resource.replace('/', '') + '.csv'),
+            {'200': 'Dados baixados com sucesso!:1'},
+            true
+        )
+    })
 }
 
 const downloadCSV = (csv: string, filename: string) => {

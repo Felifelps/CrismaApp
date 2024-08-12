@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import '../assets/styles/Table.css'
@@ -28,9 +28,12 @@ export function TablePage(props: any) {
         setIsLoading(false);
     }
 
-    if (isLoading) {
-        props.getNonLocalDataFunc(token, serveData);
-    }
+    // useEffect para carregar os dados apenas uma vez quando o componente é montado
+    useEffect(() => {
+        if (isLoading) {
+            props.getNonLocalDataFunc(token, serveData);
+        }
+    }, []); // O array vazio [] garante que o efeito rode apenas uma vez após o primeiro render
 
     return (
         <AdminOnlyPage>
@@ -43,7 +46,10 @@ export function TablePage(props: any) {
                         downloadData(
                             props.newFormPath.replace('/new', ''),
                             token,
-                            () => {console.log('callback'); setIsLoading(false)}
+                            () => {
+                                setIsLoading(false);
+                                setFlashMessage(getFlashMessage());
+                            }
                         )
                     }}
                     style={{cursor: 'pointer'}}

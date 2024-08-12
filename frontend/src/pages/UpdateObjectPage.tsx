@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import '../assets/styles/Form.css'
 
 import Loading from "../components/Loading";
+import raiseDeleteModal from "../components/DeleteModal";
 
 import { AdminOnlyPage } from "./Page";
 
@@ -29,6 +30,7 @@ export default function UpdateObjectPage(props: any) {
     const { id } = useParams();
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingFreq, setIsLoadingFreq] = useState(true);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [object, setObject] = useState<ObjectType>({});
     const [frequencyTable, setFrequencyTable] = useState([]);
     const [frequencyData, setFrequencyData] = useState<ObjectType>({});
@@ -59,8 +61,9 @@ export default function UpdateObjectPage(props: any) {
 
     function redirectAndReload () {
         setIsLoading(false);
+        setIsDeleting(false);
         setFlashMessage(getFlashMessage());
-        //window.location.href = props.returnToUrl;
+        window.location.href = props.returnToUrl;
     }
 
     function formatFrequencyData() {
@@ -79,7 +82,6 @@ export default function UpdateObjectPage(props: any) {
                 })
             }
         }
-        console.log(formattedData)
         return formattedData;
     }
 
@@ -91,16 +93,19 @@ export default function UpdateObjectPage(props: any) {
         setIsLoading(true);
 
         props.updateObjectFunction(token, id, object, redirectAndReload);
-        props.updateObjectFreqFunction(token, id, formatFrequencyData(), redirectAndReload);
+        props.updateObjectFreqFunction(token, id, formatFrequencyData(), () => null);
     }
 
     function handleDeleteOnClick(e: any) {
         e.preventDefault();
-        if (isLoading) {
-            return;
-        }
-        setIsLoading(true);
-        props.deleteObjectFunction(token, id, redirectAndReload);
+        raiseDeleteModal(() => {
+            if (isLoading) {
+                return;
+            }
+            setIsLoading(true);
+            setIsDeleting(true);
+            props.deleteObjectFunction(token, id, redirectAndReload);
+        })
     }
 
     function serveFrequency() {
@@ -234,10 +239,10 @@ export default function UpdateObjectPage(props: any) {
                     <input
                         className="button safe"
                         type='submit'
-                        value={isLoading ? 'Alterando...' : 'Alterar'}
+                        value={isLoading && !isDeleting? 'Alterando...' : 'Alterar'}
                     />
                     <button className="button danger" onClick={handleDeleteOnClick}>
-                        Excluir registro
+                        {isLoading && isDeleting ? 'Excluindo...' : 'Excluir'}
                     </button>
                 </div>
             </form>

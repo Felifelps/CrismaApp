@@ -52,7 +52,7 @@ export default function NewObjectPage(props: any) {
                 <input
                     className='button'
                     type='submit'
-                    value='Registrar'
+                    value={isLoading ? 'Registrando...' : 'Registrar'}
                 />
             </form>
         </AdminOnlyPage>

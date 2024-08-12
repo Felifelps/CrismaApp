@@ -26,7 +26,10 @@ function addObject(
                 objectData,
                 getDataFunc,
                 saveDataFunc
-            )
+            ),
+            {
+                '201': 'Criado com sucesso!:1'
+            }
         );
     });
 
