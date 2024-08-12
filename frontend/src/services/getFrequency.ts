@@ -1,6 +1,7 @@
 import * as ls from "../utils/localStorage";
 import { apiUrl } from "../utils/constants";
 import { handleFetchResponse } from "./handleFetchResponse";
+import { UpdateFreqData } from "../utils/manageLocalData";
 
 function getObjectFrequency(
         baseUrl: string,
@@ -18,7 +19,7 @@ function getObjectFrequency(
         handleFetchResponse(
             response,
             onDone,
-            (data: any) => console.log(data)
+            (data: any) => UpdateFreqData(data)
         );
     });
 }

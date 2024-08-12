@@ -1,5 +1,6 @@
 import { apiUrl } from "../utils/constants";
 import { handleFetchResponse } from "./handleFetchResponse";
+import { UpdateFreqData } from "../utils/manageLocalData";
 
 function updateObjectFrequency(
         baseUrl: string,
@@ -16,7 +17,11 @@ function updateObjectFrequency(
         },
         body: JSON.stringify(frequencyList)
     }).then(response => {
-        handleFetchResponse(response, onDone);
+        handleFetchResponse(
+            response,
+            onDone,
+            (data: any) => UpdateFreqData(data)
+        );
     });
 }
 

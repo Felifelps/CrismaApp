@@ -103,6 +103,7 @@ export default function UpdateObjectPage(props: any) {
     }
 
     function serveFrequency() {
+        return null;
         const finalData: any = [];
         const frequencyDataMount: any = {};
         const frequencyLists = props.getFrequencyListsFunction();

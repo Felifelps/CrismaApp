@@ -22,18 +22,7 @@ def blueprint_frequency(model, blueprint):
         if not obj:
             return jsonify(message='Id not found'), 404
 
-        if request.method == 'GET':
-            try:
-                data = {}
-                for attr in model_fields:
-                    data[unset_field_name(attr)] = {frequency.id: model_to_dict(frequency) for frequency in getattr(obj, attr)}
-                return jsonify(
-                    **data
-                )
-            except Exception as e:
-                return jsonify(
-                    message=f'An error ocurred: {e}'
-                ), 500
+        data = {}
         
         if request.method in ['PUT', 'PATCH']:
             result, data = check_data_fields(
@@ -62,7 +51,18 @@ def blueprint_frequency(model, blueprint):
                             error=f'An error ocurred: {result[1]}'
                         )
 
-            return jsonify(message='Frequency updated succesfully!')
+            data['message'] = 'Frequency updated succesfully!'
+
+        try:
+            for attr in model_fields:
+                data[unset_field_name(attr)] = {frequency.id: model_to_dict(frequency) for frequency in getattr(obj, attr)}
+            return jsonify(
+                **data
+            )
+        except Exception as e:
+            return jsonify(
+                message=f'An error ocurred: {e}'
+            ), 500
 
     @blueprint.route('/<int:pk>/stats')
     @jwt_required()

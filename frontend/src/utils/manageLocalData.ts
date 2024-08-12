@@ -1,3 +1,5 @@
+import { getFreq, setFreq } from "./localStorage";
+
 const emptyFrequencyData = {
     frequenciadomingo: {
         justified: 0,
@@ -17,6 +19,11 @@ const emptyFrequencyData = {
         participation_rate: 0,
         total: 0,
     }
+}
+
+const emptyFreq = {
+    frequenciadomingo: {},
+    frequenciaencontro: {}
 }
 
 export function addObjectIntoData(object: any, getDataFunc: any, saveDataFunc: any) {
@@ -39,7 +46,7 @@ export function addObjectIntoData(object: any, getDataFunc: any, saveDataFunc: a
 
 export function deleteObjectFromData(id: any, getDataFunc: any, saveDataFunc: any) {
     let data = getDataFunc();
-    if (!data) return
+    if (!data) return;
     data = JSON.parse(data);
     delete data[id];
     saveDataFunc(JSON.stringify(data));
@@ -47,7 +54,7 @@ export function deleteObjectFromData(id: any, getDataFunc: any, saveDataFunc: an
 
 export function updateObjectOnData(id: any, object: any, getDataFunc: any, saveDataFunc: any) {
     let data = getDataFunc();
-    if (!data) return
+    if (!data) return;
     data = JSON.parse(data);
     
     data[id] = object;
@@ -55,8 +62,20 @@ export function updateObjectOnData(id: any, object: any, getDataFunc: any, saveD
     saveDataFunc(JSON.stringify(data));
 }
 
-export function addOrUpdateFreqData(freqData: any, getFreqFunc: any, setFreqFunc: any) {
-    let data = getFreqFunc();
-    if (!data) return
+export function UpdateFreqData(freqData: any) {
+    let data: any = getFreq();
+    if (!data) {
+        data = JSON.stringify(emptyFreq);
+    }
     data = JSON.parse(data);
+    freqData = JSON.parse(freqData);
+
+    for (let freq of Object.keys(freqData)) {
+        data[freq] = {
+            ...data[freq],
+            ...freqData[freq]
+        }
+    }
+
+    setFreq(JSON.stringify(data));
 }
