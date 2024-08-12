@@ -62,14 +62,7 @@ def blueprint_frequency(model, blueprint):
                             error=f'An error ocurred: {result[1]}'
                         )
 
-            return jsonify(
-                message='Frequency updated succesfully!',
-                **get_model_frequency_statistics(
-                    obj,
-                    model_fields,
-                    ref_models
-                )
-            )
+            return jsonify(message='Frequency updated succesfully!')
 
     @blueprint.route('/<int:pk>/stats')
     @jwt_required()

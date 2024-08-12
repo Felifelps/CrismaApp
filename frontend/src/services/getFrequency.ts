@@ -1,7 +1,6 @@
-import * as ls from "../utils/localStorage";
 import { apiUrl } from "../utils/constants";
+import { setFreq } from "../utils/localStorage";
 import { handleFetchResponse } from "./handleFetchResponse";
-import { UpdateFreqData } from "../utils/manageLocalData";
 
 function getObjectFrequency(
         baseUrl: string,
@@ -16,15 +15,7 @@ function getObjectFrequency(
             'Authorization': `Bearer ${token}`
         }
     }).then(response => {
-        handleFetchResponse(
-            response,
-            onDone,
-            (data: any) => UpdateFreqData(
-                data,
-                baseUrl.slice(1, baseUrl.length - 2),
-                objectId
-            )
-        );
+        handleFetchResponse(response, onDone, setFreq);
     });
 }
 

@@ -1,6 +1,5 @@
 import { apiUrl } from "../utils/constants";
 import { handleFetchResponse } from "./handleFetchResponse";
-import { UpdateFreqData } from "../utils/manageLocalData";
 
 function updateObjectFrequency(
         baseUrl: string,
@@ -17,14 +16,16 @@ function updateObjectFrequency(
         },
         body: JSON.stringify(frequencyList)
     }).then(response => {
+        console.log('frequencylist')
+        console.log(frequencyList)
         handleFetchResponse(
             response,
             onDone,
-            (data: any) => UpdateFreqData(
-                data,
-                baseUrl.slice(1, baseUrl.length - 2),
-                objectId
-            )
+            (data: any) => null,
+            {
+                '200': 'Atualizado com sucesso!:1',
+                '400': 'Informações inválidas:0'
+            }
         );
     });
 }

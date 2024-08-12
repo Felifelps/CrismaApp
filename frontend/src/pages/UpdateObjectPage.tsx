@@ -15,7 +15,6 @@ import { formatISODate, formatDate } from "../utils/format";
 import { ensureAllDataIsLocal } from "../services/getData";
 import { getFlashMessage } from "../utils/getFlashMessages";
 import { getFreq } from "../utils/localStorage";
-import { emptyFreq } from "../utils/manageLocalData";
 
 interface ObjectType {
     [key: string]: string | number | undefined; // ou outros tipos conforme necessário
@@ -80,6 +79,7 @@ export default function UpdateObjectPage(props: any) {
                 })
             }
         }
+        console.log(formattedData)
         return formattedData;
     }
 
@@ -90,10 +90,8 @@ export default function UpdateObjectPage(props: any) {
         }
         setIsLoading(true);
 
-        formatFrequencyData();
-        // freq MUST come first to allow updates on object stats
-        props.updateObjectFreqFunction(token, id, formatFrequencyData(), redirectAndReload);
         props.updateObjectFunction(token, id, object, redirectAndReload);
+        props.updateObjectFreqFunction(token, id, formatFrequencyData(), redirectAndReload);
     }
 
     function handleDeleteOnClick(e: any) {
@@ -106,11 +104,23 @@ export default function UpdateObjectPage(props: any) {
     }
 
     function serveFrequency() {
-        const finalData: any = [];
+        function finish() {
+            setFrequencyTable(finalData);
+            setFrequencyData(frequencyDataMount);
+            setIsLoadingFreq(false);
+        }
+        
+        const finalData: any = [<p>Nenhum dado encontrado :(</p>];
         const frequencyDataMount: any = {};
-        const frequencyLists = props.getFrequencyListsFunction();
         const freq = getFreq();
-        const objectFreq = freq ? JSON.parse(freq) : emptyFreq;
+
+        if (!freq) return finish();
+
+        finalData.pop();
+
+        const frequencyLists = props.getFrequencyListsFunction();
+
+        const objectFreq = freq ? JSON.parse(freq) : {};
         for (let listName in frequencyLists) {
             const freqRefName = props.freqDataOptions[listName].freqRefName;
             const refAttr = props.freqDataOptions[listName].refAttr;
@@ -176,9 +186,7 @@ export default function UpdateObjectPage(props: any) {
                 </div>
             );
         }
-        setFrequencyTable(finalData);
-        setFrequencyData(frequencyDataMount);
-        setIsLoadingFreq(false);
+        finish();
     }
 
     function serveData() {

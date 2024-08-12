@@ -1,13 +1,13 @@
 import { apiUrl } from "../utils/constants";
 import { handleFetchResponse } from "./handleFetchResponse";
 
-export function getObjectStats(
+export function getObject(
         url: string,
         token: any,
         objectId: any,
         savingData: any
     ) {
-    fetch(apiUrl + url + objectId + '/stats', {
+    fetch(apiUrl + url + objectId, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -22,33 +22,33 @@ export function getObjectStats(
     });
 }
 
-export const getCrismandoStats = (
+export const getCrismando = (
     token: any,
     id: any,
     savingFunc: any
-) => getObjectStats(
+) => getObject(
     '/crismandos/',
     token,
     id,
     savingFunc
 )
 
-export const getEncontroStats = (
+export const getEncontro = (
     token: any,
     id: any,
     savingFunc: any
-) => getObjectStats(
+) => getObject(
     '/encontros/',
     token,
     id,
     savingFunc
 )
 
-export const getDomingoStats = (
+export const getDomingo = (
     token: any,
     id: any,
     savingFunc: any
-) => getObjectStats(
+) => getObject(
     '/domingos/',
     token,
     id,

@@ -2,7 +2,7 @@ import { apiUrl } from "../utils/constants";
 import * as ls from '../utils/localStorage';
 import { updateObjectOnData } from "../utils/manageLocalData";
 import { handleFetchResponse } from "./handleFetchResponse";
-import * as stats from "./getObjectStats";
+import * as getObject from "./getObject";
 
 function updateObject(
         url: string,
@@ -12,7 +12,7 @@ function updateObject(
         onDone: any,
         getDataFunc: any,
         setDataFunc: any,
-        statsFunc: any
+        getObjectDataFunc: any
     ) {
     fetch(apiUrl + url + objectId, {
         method: 'PUT',
@@ -22,16 +22,18 @@ function updateObject(
         },
         body: JSON.stringify(objectData)
     }).then(response => {
+        if (response.status === 200) {
+            updateObjectOnData(
+                objectId,
+                getDataFunc,
+                setDataFunc,
+                (callbackFunc: any) => getObjectDataFunc(token, objectId, callbackFunc)
+            )
+        }
         handleFetchResponse(
             response,
             onDone,
-            (data: any) => updateObjectOnData(
-                objectId,
-                objectData,
-                getDataFunc,
-                setDataFunc,
-                (savingFunc: any) => console.log('In') !== statsFunc(token, objectId, savingFunc)
-            ),
+            (data: any) => null,
             {
                 '200': 'Atualizado com sucesso!:1',
                 '400': 'Informações inválidas:0'
@@ -55,7 +57,7 @@ export const updateCrismando = (
     onDone,
     ls.getCrismandos,
     ls.setCrismandos,
-    stats.getCrismandoStats
+    getObject.getCrismando
 )
 
 export const updateEncontro = (
@@ -72,7 +74,7 @@ export const updateEncontro = (
     onDone,
     ls.getEncontros,
     ls.setEncontros,
-    stats.getEncontroStats
+    getObject.getEncontro
 )
 
 export const updateDomingo = (
@@ -88,5 +90,5 @@ export const updateDomingo = (
     onDone,
     ls.getDomingos,
     ls.setDomingos,
-    stats.getDomingoStats
+    getObject.getDomingo
 )

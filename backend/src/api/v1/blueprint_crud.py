@@ -56,7 +56,12 @@ def blueprint_model_crud(model, blueprint, validations=[], field_formatters={}):
         
         # GET = Retrieve
         if request.method == 'GET':
-            return jsonify(**model_to_dict(obj))
+            return jsonify(
+                **model_to_dict(obj),
+                **get_model_frequency_statistics(
+                    obj, model_set_fields, ref_models
+                )
+            )
 
         # PUT = Update
         if request.method == 'PUT':
