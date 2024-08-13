@@ -4,6 +4,7 @@ main {
     justify-items: center;
     vertical-align: middle;
     margin: 45px auto;
+    margin-top: 0px;
     max-width: 650px;
     padding: 45px;
 }

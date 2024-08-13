@@ -6,6 +6,10 @@ label {
     color: #333;
 }
 
+form p {
+    text-align: justify;
+}
+
 .button, input {
     width: 97.5%;
     margin: 5px 0px;
@@ -50,16 +54,18 @@ label {
     align-items: center;
 }
 
-.input-group {
-    display: flex;
+form input {
+    width: 95%;
 }
 
-.input-group input {
-    width: 95%;
+.input-group {
+    display: flex;
 }
 
 .input-group span {
     margin: 5px 10px;
     cursor: pointer;
-    vertical-align: middle;
+    font-size: 20px;
+    align-content: center;
+    align-items: center;
 }

@@ -60,6 +60,8 @@ export default function UpdateObjectPage(props: any) {
     }
 
     function redirectAndReload () {
+        props.removeAsideDataFunction();
+        ensureAllDataIsLocal(token, () => null);
         setIsLoading(false);
         setIsDeleting(false);
         setFlashMessage(getFlashMessage());

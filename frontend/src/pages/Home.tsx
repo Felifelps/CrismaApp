@@ -14,7 +14,7 @@ import Loading from "../components/Loading";
 
 import { getFlashMessage } from "../utils/getFlashMessages";
 import { getFrequencyByName } from "../services/getFrequencyByName";
-import { getFreq } from "../utils/localStorage";
+import { getFreq, removeFreq } from "../utils/localStorage";
 
 export default function Home() {
     const token = useToken().token;
@@ -24,17 +24,27 @@ export default function Home() {
     const [encontroTable, setEncontroTable] = useState<any[]>([]);
     //const [domingoTable, setDomingoTable] = useState([]);
 
+    function frequencyIcon(value: any) {
+        return <i className={'fa' + (value ? 's' : 'r') + ' fa-circle'}></i>
+    }
+
     function mountFrequencyTable() {
-        const data: any[] = [];
-        const localData = getFreq();
+        const dataEncontros: any[] = [];
+        let localData: any = getFreq();
         if (!localData) {
             return setEncontroTable([]);
         }
+        localData = JSON.parse(localData);
 
-        
-
-        for (let encontro of Object.values(localData)) {
-
+        for (let encontro of localData['frequenciaencontro']) {
+            dataEncontros.push(
+                <tr>
+                    <td> {encontro.tema} </td>
+                    <td> {frequencyIcon(encontro.missed)} </td>
+                    <td> {frequencyIcon(encontro.justified)} </td>
+                    <td> {frequencyIcon(!encontro.missed && !encontro.justified)} </td>
+                </tr>
+            )
         }
 
         setEncontroTable([
@@ -49,7 +59,7 @@ export default function Home() {
                     </tr>
                 </thead>
                 <tbody>
-                    {data}
+                    {dataEncontros}
                 </tbody>
             </table>
         ]);
@@ -63,6 +73,7 @@ export default function Home() {
         setIsLoading(true);
         getFrequencyByName(name, () => {
             mountFrequencyTable();
+            removeFreq();
             setIsLoading(false);
             setFlashMessage(getFlashMessage());
         })
@@ -74,12 +85,14 @@ export default function Home() {
             {token ? <Navigate to='/crismandos' replace/> : <></>}
             <form onSubmit={handleSubmit} action='/'>
                 <h1> Minha frequência </h1>
-                <Loading active={isLoading} />
+                
                 <FlashMessage />
+                
                 <p>
                     Para ver sua frequência, digite seu nome completo no campo abaixo
                     (não esqueça os acentos).
                 </p>
+                
                 <label>Nome: </label>
                 <input
                     type="text"
@@ -98,7 +111,9 @@ export default function Home() {
                 />
             </form>
                     
-            {encontroTable}
+            {!isLoading ? encontroTable : null}
+            
+            <Loading active={isLoading} />
             
         </Page>
     )

@@ -25,7 +25,11 @@ function deleteObject(
                 objectId,
                 getDataFunc,
                 setDataFunc
-            )
+            ),
+            {
+                '200': 'Deletado com sucesso!:1',
+                '404': 'Erro:0'
+            }
         );
     });
 }

@@ -1,6 +1,6 @@
 import UpdateObjectPage from "./UpdateObjectPage";
 
-import { getCrismandos, getEncontros } from "../utils/localStorage";
+import { getCrismandos, getEncontros, removeCrismandos } from "../utils/localStorage";
 import { getEncontrosData } from "../services/getData";
 import { updateEncontro } from "../services/updateObject";
 import { formatISODate } from "../utils/format";
@@ -29,6 +29,7 @@ export default function UpdateEncontro() {
             updateObjectFreqFunction={updateEncontroFrequency}
             deleteObjectFunction={deleteEncontro}
             sortingFunction={sortByDateStringsAsc}
+            removeAsideDataFunction={removeCrismandos}
             freqDataOptions={{
                 "frequenciaencontro": {
                     listName: "Crismandos",

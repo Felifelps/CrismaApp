@@ -8,6 +8,7 @@ import { getDomingoFrequency } from "../services/getFrequency";
 import { updateDomingoFrequency } from "../services/updateFrequency";
 import { deleteDomingo } from "../services/deleteObject";
 import { sortByDateStringsAsc } from "../utils/sort";
+import { removeCrismandos } from "../utils/localStorage";
 
 
 export default function UpdateDomingo() {
@@ -30,6 +31,7 @@ export default function UpdateDomingo() {
             updateObjectFreqFunction={updateDomingoFrequency}
             deleteObjectFunction={deleteDomingo}
             sortingFunction={sortByDateStringsAsc}
+            removeAsideDataFunction={removeCrismandos}
             freqDataOptions={{
                 "frequenciadomingo": {
                     listName: "Crismandos",
