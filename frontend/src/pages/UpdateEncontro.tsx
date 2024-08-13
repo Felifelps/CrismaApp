@@ -1,5 +1,3 @@
-import React from "react";
-
 import UpdateObjectPage from "./UpdateObjectPage";
 
 import { getCrismandos, getEncontros } from "../utils/localStorage";
@@ -9,6 +7,7 @@ import { formatISODate } from "../utils/format";
 import { getEncontroFrequency } from "../services/getFrequency";
 import { updateEncontroFrequency } from "../services/updateFrequency";
 import { deleteEncontro } from "../services/deleteObject";
+import { sortByDateStringsAsc } from "../utils/sort";
 
 export default function UpdateEncontro() {
     function getFrequencyList() {
@@ -29,6 +28,7 @@ export default function UpdateEncontro() {
             getFrequencyListsFunction={getFrequencyList}
             updateObjectFreqFunction={updateEncontroFrequency}
             deleteObjectFunction={deleteEncontro}
+            sortingFunction={sortByDateStringsAsc}
             freqDataOptions={{
                 "frequenciaencontro": {
                     listName: "Crismandos",

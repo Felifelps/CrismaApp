@@ -129,6 +129,7 @@ export default function UpdateObjectPage(props: any) {
         for (let listName in frequencyLists) {
             const freqRefName = props.freqDataOptions[listName].freqRefName;
             const refAttr = props.freqDataOptions[listName].refAttr;
+            const sortingField = props.freqDataOptions[listName].sortingField;
             const list = frequencyLists[listName];
 
             const objectFreqList: FreqSimpleList[] = [];
@@ -159,6 +160,7 @@ export default function UpdateObjectPage(props: any) {
                 data.push(
                     <tr key={objId}>
                         <td>{formatDate(objReference)}</td>
+                        {sortingField ? <td style={{display: 'none'}}>{ formatDate(list[objId][sortingField]) }</td> : <></>}
                         {[missed, justified, participated].map((value, index) => (
                             <td key={index}>
                                 <input
@@ -173,6 +175,14 @@ export default function UpdateObjectPage(props: any) {
                     </tr>
                 );
             }
+
+            data.sort((a: any, b: any) => {
+                const elementIndex = sortingField ? 1 : 0;
+                return props.sortingFunction(
+                    a.props.children[elementIndex].props.children,
+                    b.props.children[elementIndex].props.children,
+                )
+            });
 
             finalData.push(
                 <div key={listName}>  
@@ -191,6 +201,7 @@ export default function UpdateObjectPage(props: any) {
                 </div>
             );
         }
+        finalData.sort()
         finish();
     }
 

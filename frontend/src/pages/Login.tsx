@@ -47,6 +47,14 @@ export default function Login() {
                 
                 <FlashMessage/>
 
+                <p> 
+                    Esta área é destinada aos administradores do sistema. Caso deseje ver sua frequência, 
+                    siga as instruções disponibilizadas <a href='/' style={{textDecoration: 'underline'}}>
+                        neste link
+                    </a>.
+                </p>
+                
+
                 <Loading active={isLoading}/>
                 
                 <label>Username: </label>
@@ -54,6 +62,7 @@ export default function Login() {
                     type="text"
                     id="username"
                     value={username}
+                    placeholder="Ex: fulaninho123"
                     onChange={(e) =>{
                         setUsername(e.target.value)
                     }}
@@ -65,6 +74,7 @@ export default function Login() {
                     <input
                         type={iconOn ? 'text' : 'password'}
                         id="password"
+                        placeholder="Ex: senhasegura123"
                         value={password}
                         onChange={(e) =>{
                             setPassword(e.target.value)

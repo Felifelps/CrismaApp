@@ -1,5 +1,3 @@
-import React from "react";
-
 import { TablePage } from "./TablePage";
 
 import { formatDate } from "../utils/format";

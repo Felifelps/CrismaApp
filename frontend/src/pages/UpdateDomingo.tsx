@@ -1,5 +1,3 @@
-import React from "react";
-
 import UpdateObjectPage from "./UpdateObjectPage";
 
 import { getCrismandos, getDomingos } from "../utils/localStorage";
@@ -9,6 +7,7 @@ import { formatISODate } from "../utils/format";
 import { getDomingoFrequency } from "../services/getFrequency";
 import { updateDomingoFrequency } from "../services/updateFrequency";
 import { deleteDomingo } from "../services/deleteObject";
+import { sortByDateStringsAsc } from "../utils/sort";
 
 
 export default function UpdateDomingo() {
@@ -30,6 +29,7 @@ export default function UpdateDomingo() {
             getFrequencyListsFunction={getFrequencyList}
             updateObjectFreqFunction={updateDomingoFrequency}
             deleteObjectFunction={deleteDomingo}
+            sortingFunction={sortByDateStringsAsc}
             freqDataOptions={{
                 "frequenciadomingo": {
                     listName: "Crismandos",

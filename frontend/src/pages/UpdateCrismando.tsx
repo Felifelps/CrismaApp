@@ -1,5 +1,3 @@
-import React from "react";
-
 import UpdateObjectPage from "./UpdateObjectPage";
 
 import { getEncontros, getDomingos, getCrismandos } from "../utils/localStorage";
@@ -9,6 +7,7 @@ import { formatISODate } from "../utils/format";
 import { getCrismandoFrequency } from "../services/getFrequency";
 import { updateCrismandoFrequency } from "../services/updateFrequency";
 import { deleteCrismando } from "../services/deleteObject";
+import { sortByDateStringsAsc } from "../utils/sort";
 
 export default function UpdateCrismando() {
     function getFrequencyData () {
@@ -32,11 +31,13 @@ export default function UpdateCrismando() {
             getFrequencyListsFunction={getFrequencyData}
             updateObjectFreqFunction={updateCrismandoFrequency}
             deleteObjectFunction={deleteCrismando}
+            sortingFunction={sortByDateStringsAsc}
             freqDataOptions={{
                 "frequenciaencontro": {
                     listName: "Encontros",
                     refAttr: "tema",
-                    freqRefName: "encontro"
+                    freqRefName: "encontro",
+                    sortingField: "data"
                 },
                 "frequenciadomingo": {
                     listName: "Domingos",

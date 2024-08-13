@@ -5,7 +5,7 @@ from src.utils import model_to_dict
 
 frequency = Blueprint('frequency', __name__)
 
-@frequency.route('/')
+@frequency.route('/', methods=['POST'])
 def get_frequency():
     search = request.get_json().get('search')
     if not search:
