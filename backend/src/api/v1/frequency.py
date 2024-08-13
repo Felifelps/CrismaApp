@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify
-from src.models import Crismando, FrequenciaDomingo, FrequenciaEncontro
-from src.utils import model_to_dict
+from src.models import Crismando, FrequenciaDomingo, FrequenciaEncontro, Encontro, Domingo
 
 
 frequency = Blueprint('frequency', __name__)
@@ -13,9 +12,26 @@ def get_frequency():
 
     for crismando in Crismando.select():
         if crismando.nome.lower() == search.lower():
+            encontros = [{
+                'justificado': f.justificado,
+                'data': f.encontro.data,
+                'tema': f.encontro.tema,
+                'id': f.id
+            } for f in FrequenciaEncontro.filter(crismando=crismando)]
+
+            encontros.sort(key=lambda x: x['data'])
+
+            domingos = [{
+                'justificado': f.justificado,
+                'data': f.domingo.data,
+                'id': f.id
+            } for f in FrequenciaDomingo.filter(crismando=crismando)]
+
+            domingos.sort(key=lambda x: x['data'])
+
             return {
-                'frequenciaencontro': {f.id: model_to_dict(f) for f in FrequenciaEncontro.filter(crismando=crismando)},
-                'frequenciadomingo': {f.id: model_to_dict(f) for f in FrequenciaDomingo.filter(crismando=crismando)},
+                'frequenciaencontro': encontros,
+                'frequenciadomingo': domingos
             }
     
     return jsonify(message='Name not found'), 404

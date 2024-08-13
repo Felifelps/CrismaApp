@@ -10,15 +10,46 @@ import { useToken } from "../contexts/Token";
 import { useFlashMessage } from "../contexts/FlashMessages";
 
 import FlashMessage from "../components/FlashMessage";
+import Loading from "../components/Loading";
+
 import { getFlashMessage } from "../utils/getFlashMessages";
 import { getFrequencyByName } from "../services/getFrequencyByName";
+import { getFreq } from "../utils/localStorage";
 
 export default function Home() {
     const token = useToken().token;
     const setFlashMessage = useFlashMessage().setFlashMessage;
     const [name, setName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [frequencyTable, setFrequencyTable] = useState([])
+    const [encontroTable, setEncontroTable] = useState<any[]>([]);
+    //const [domingoTable, setDomingoTable] = useState([]);
+
+    function mountFrequencyTable() {
+        const data: any[] = [];
+        const localData = getFreq();
+        if (!localData) {
+            return setEncontroTable([]);
+        }
+
+        
+
+        setEncontroTable([
+            <h2> Encontros </h2>,
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tema</th>
+                        <th>F</th>
+                        <th>J</th>
+                        <th>P</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data}
+                </tbody>
+            </table>
+        ]);
+    }
 
     function handleSubmit(e: any) {
         e.preventDefault();
@@ -27,6 +58,7 @@ export default function Home() {
         }
         setIsLoading(true);
         getFrequencyByName(name, () => {
+            mountFrequencyTable();
             setIsLoading(false);
             setFlashMessage(getFlashMessage());
         })
@@ -38,6 +70,7 @@ export default function Home() {
             {token ? <Navigate to='/crismandos' replace/> : <></>}
             <form onSubmit={handleSubmit} action='/'>
                 <h1> Minha frequência </h1>
+                <Loading active={isLoading} />
                 <FlashMessage />
                 <p>
                     Para ver sua frequência, digite seu nome completo no campo abaixo
@@ -60,7 +93,9 @@ export default function Home() {
                     value={isLoading ? 'Buscando...' : 'Buscar'}
                 />
             </form>
-            {frequencyTable}
+                    
+            {encontroTable}
+            
         </Page>
     )
 }

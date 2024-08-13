@@ -26,7 +26,7 @@ export function getFrequencyByName(
         return response.json()
     }).then(data => {
         if (status === 200) {
-            ls.setFreq(data)
+            ls.setFreq(JSON.stringify(data))
         }
         onDone();
     })
