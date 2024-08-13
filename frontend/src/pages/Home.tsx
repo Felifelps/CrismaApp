@@ -33,6 +33,10 @@ export default function Home() {
 
         
 
+        for (let encontro of Object.values(localData)) {
+
+        }
+
         setEncontroTable([
             <h2> Encontros </h2>,
             <table>

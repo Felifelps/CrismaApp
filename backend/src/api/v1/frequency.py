@@ -12,22 +12,30 @@ def get_frequency():
 
     for crismando in Crismando.select():
         if crismando.nome.lower() == search.lower():
-            encontros = [{
-                'justificado': f.justificado,
-                'data': f.encontro.data,
-                'tema': f.encontro.tema,
-                'id': f.id
-            } for f in FrequenciaEncontro.filter(crismando=crismando)]
+            not_missed_enc = {f.encontro.id: f.justificado for f in FrequenciaEncontro.filter(crismando=crismando)}
 
-            encontros.sort(key=lambda x: x['data'])
+            encontros = [
+                {
+                    'missed': enc.id not in not_missed_enc,
+                    'justified': not_missed_enc.get(enc.id, False),
+                    'tema': enc.tema,
+                    'data': enc.data
+                } for enc in Encontro.select()
+            ]
 
-            domingos = [{
-                'justificado': f.justificado,
-                'data': f.domingo.data,
-                'id': f.id
-            } for f in FrequenciaDomingo.filter(crismando=crismando)]
+            encontros.sort(key=lambda x: x.pop('data'))
 
-            domingos.sort(key=lambda x: x['data'])
+            not_missed_dom = {f.domingo.id: f.justificado for f in FrequenciaDomingo.filter(crismando=crismando)}
+
+            domingos = [
+                {
+                    'missed': dom.id not in not_missed_dom,
+                    'justified': not_missed_dom.get(dom.id, False),
+                    'data': dom.data
+                } for dom in Domingo.select()
+            ]
+
+            domingos.sort(key=lambda x: x.get('data'))
 
             return {
                 'frequenciaencontro': encontros,
