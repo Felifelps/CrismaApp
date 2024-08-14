@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { TablePage } from "./TablePage";
-import { formatDate } from "../utils/format";
+import { formatDate, isDateInActualMonth } from "../utils/format";
 import { getCrismandos } from "../utils/localStorage";
 import { getCrismandosData } from "../services/getData";
 import { sortByText } from "../utils/sort";
@@ -26,9 +26,14 @@ export default function Crismandos() {
                             onClick={(e: any) => e.stopPropagation()}
                             rel="noreferrer"
                             target="_blank"
-                        > {item.telefone} 
+                        > {item.telefone}
                     </a> </td>
-                    <td> {formatDate(item.data_nasc)} </td>
+                    <td style={{
+                            color: isDateInActualMonth(item.data_nasc) ? 'green' : 'black',
+                            fontWeight: isDateInActualMonth(item.data_nasc) ? 'bold' : 'normal',
+                        }}>
+                        {formatDate(item.data_nasc)}
+                    </td>
                 </tr>
             )}
         />

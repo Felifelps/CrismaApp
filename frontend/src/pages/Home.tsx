@@ -36,10 +36,23 @@ export default function Home() {
         }
         localData = JSON.parse(localData);
 
+        let missed = 0;
+        let justified = 0;
+        let participated = 0;
+        let total = 0;
+
         for (let encontro of localData['frequenciaencontro']) {
+            total += 1;
+            if (encontro.missed) missed += 1
+            else {
+                if (encontro.justified) justified += 1
+                else participated += 1
+            }
+
             dataEncontros.push(
                 <tr>
                     <td> {encontro.tema} </td>
+                    <td> {encontro.data} </td>
                     <td> {frequencyIcon(encontro.missed)} </td>
                     <td> {frequencyIcon(encontro.justified)} </td>
                     <td> {frequencyIcon(!encontro.missed && !encontro.justified)} </td>
@@ -49,10 +62,17 @@ export default function Home() {
 
         setEncontroTable([
             <h2> Encontros </h2>,
+            <div>
+                <p>   Presenças: {participated}
+                <br/> Justificativas: {justified}
+                <br/> Faltas: {missed}
+                <br/> Total de encontros: {total} </p>
+            </div>,
             <table>
                 <thead>
                     <tr>
                         <th>Tema</th>
+                        <th>Data</th>
                         <th>F</th>
                         <th>J</th>
                         <th>P</th>

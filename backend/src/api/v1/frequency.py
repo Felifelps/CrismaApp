@@ -23,7 +23,7 @@ def get_frequency():
                 } for enc in Encontro.select()
             ]
 
-            encontros.sort(key=lambda x: x.pop('data'))
+            encontros.sort(key=lambda x: x.get('data'))
 
             not_missed_dom = {f.domingo.id: f.justificado for f in FrequenciaDomingo.filter(crismando=crismando)}
 
