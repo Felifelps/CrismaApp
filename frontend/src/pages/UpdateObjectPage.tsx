@@ -164,7 +164,7 @@ export default function UpdateObjectPage(props: any) {
                 data.push(
                     <tr key={objId}>
                         <td>{formatDate(objReference)}</td>
-                        {sortingField ? <td style={{display: 'none'}}>{ formatDate(list[objId][sortingField]) }</td> : <></>}
+                        {sortingField ? <td>{ formatDate(list[objId][sortingField]) }</td> : <></>}
                         {[missed, justified, participated].map((value, index) => (
                             <td key={index}>
                                 <input
@@ -195,6 +195,7 @@ export default function UpdateObjectPage(props: any) {
                         <thead>
                             <tr>
                                 <th>{refAttr.charAt(0).toUpperCase() + refAttr.slice(1)}</th>
+                                {sortingField ? <th>{ sortingField.charAt(0).toUpperCase() + sortingField.slice(1, sortingField.length) }</th> : <></>}
                                 <th>F</th>
                                 <th>J</th>
                                 <th>P</th>
