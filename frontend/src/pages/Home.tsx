@@ -15,6 +15,7 @@ import Loading from "../components/Loading";
 import { getFlashMessage } from "../utils/getFlashMessages";
 import { getFrequencyByName } from "../services/getFrequencyByName";
 import { getFreq, removeFreq } from "../utils/localStorage";
+import { formatDate } from "../utils/format";
 
 export default function Home() {
     const token = useToken().token;
@@ -52,7 +53,7 @@ export default function Home() {
             dataEncontros.push(
                 <tr>
                     <td> {encontro.tema} </td>
-                    <td> {encontro.data} </td>
+                    <td> {formatDate(encontro.data)} </td>
                     <td> {frequencyIcon(encontro.missed)} </td>
                     <td> {frequencyIcon(encontro.justified)} </td>
                     <td> {frequencyIcon(!encontro.missed && !encontro.justified)} </td>
