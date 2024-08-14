@@ -1,11 +1,13 @@
+import { useNavigate } from "react-router-dom";
 import { TablePage } from "./TablePage";
-
 import { formatDate } from "../utils/format";
 import { getCrismandos } from "../utils/localStorage";
 import { getCrismandosData } from "../services/getData";
 import { sortByText } from "../utils/sort";
 
 export default function Crismandos() {
+    const navigate = useNavigate();
+
     return (
         <TablePage
             title={"Crismandos"}
@@ -15,7 +17,7 @@ export default function Crismandos() {
             getNonLocalDataFunc={getCrismandosData}
             sortingFunction={(a: any, b: any) => sortByText(a.nome, b.nome)}
             mappingFunction={(item: any, index: number) => (
-                <tr key={index} className="clickable" onClick={() => {window.location.href = `/crismandos/${item.id}`}}>
+                <tr key={index} className="clickable" onClick={() => navigate(`/crismandos/${item.id}`)}>
                     <td> {item.nome} </td>
                     <td> {item.frequenciaencontro.missed} </td>
                     <td> {item.frequenciadomingo.missed} </td>
