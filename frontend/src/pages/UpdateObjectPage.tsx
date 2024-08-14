@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import '../assets/styles/Form.css'
 
@@ -37,6 +37,8 @@ export default function UpdateObjectPage(props: any) {
     const token = useToken().token;
     const setFlashMessage = useFlashMessage().setFlashMessage;
 
+    const navigate = useNavigate();
+
     function updateObject(field: string, value: any) {
         setObject(prevObject => ({
             ...prevObject,
@@ -65,7 +67,7 @@ export default function UpdateObjectPage(props: any) {
         setIsLoading(false);
         setIsDeleting(false);
         setFlashMessage(getFlashMessage());
-        window.location.href = props.returnToUrl;
+        navigate(props.returnToUrl);
     }
 
     function formatFrequencyData() {
