@@ -69,20 +69,22 @@ export default function Home() {
                 <br/> Faltas: {missed}
                 <br/> Total de encontros: {total} </p>
             </div>,
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tema</th>
-                        <th>Data</th>
-                        <th>F</th>
-                        <th>J</th>
-                        <th>P</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {dataEncontros}
-                </tbody>
-            </table>
+            <div className='table-container'>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tema</th>
+                            <th>Data</th>
+                            <th>F</th>
+                            <th>J</th>
+                            <th>P</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {dataEncontros}
+                    </tbody>
+                </table>
+            </div>
         ]);
     }
 

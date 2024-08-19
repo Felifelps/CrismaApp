@@ -52,7 +52,10 @@ export function TablePage(props: any) {
                             }
                         )
                     }}
-                    style={{cursor: 'pointer'}}
+                    style={{
+                        cursor: 'pointer',
+                        fontSize: '25px'
+                    }}
                     className="fa-solid fa-database" 
                 >
                 </i>

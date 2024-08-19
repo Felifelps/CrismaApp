@@ -28,7 +28,7 @@ function addObject(
                 saveDataFunc
             ),
             {
-                '201': 'Criado com sucesso!:1'
+                '201': 'Criado com sucesso!:1',
             }
         );
     });

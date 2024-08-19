@@ -3,10 +3,10 @@ main {
     justify-content: center;
     justify-items: center;
     vertical-align: middle;
-    margin: 45px auto;
-    margin-top: 0px;
-    max-width: 650px;
-    padding: 45px;
+    margin: 0px auto;
+    margin-top: 20px;
+    margin-bottom: 45px;
+    padding: 0px 27.5px;
 }
 
 .main {
@@ -14,7 +14,14 @@ main {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     padding: 15px;
-    width: 100%;
+    width: 40%; /* Largura padrão para computadores */
+}
+
+/* Para telas menores que 768px (celulares e tablets) */
+@media (max-width: 768px) {
+    .main {
+        width: 99%; /* Largura para celulares */
+    }
 }
 
 .main a {

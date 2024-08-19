@@ -11,7 +11,7 @@ export default function FlashMessage(){
         if (flashMessage && flashMessage.message) {
             const timer = setTimeout(() => {
                 setFlashMessage(null);
-            }, 5000); // Mensagem visível por 5 segundos
+            }, 3000); // Mensagem visível por 3 segundos
 
             return () => clearTimeout(timer);
         }
