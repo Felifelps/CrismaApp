@@ -10,8 +10,10 @@ def get_frequency():
     if not search:
         return jsonify(error='Missing search'), 400
 
+    search = search.strip().lower()
+
     for crismando in Crismando.select():
-        if crismando.nome.lower() == search.lower():
+        if crismando.nome.lower() == search:
             not_missed_enc = {f.encontro.id: f.justificado for f in FrequenciaEncontro.filter(crismando=crismando)}
 
             encontros = [
