@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { TablePage } from "./TablePage";
 import { formatDate, isDateInActualMonth } from "../utils/format";
-import { getCrismandos } from "../utils/localStorage";
+import { getCrismandos, removeCrismandos } from "../utils/localStorage";
 import { getCrismandosData } from "../services/getData";
 import { sortByText } from "../utils/sort";
 
@@ -14,6 +14,7 @@ export default function Crismandos() {
             newFormPath={"/crismandos/new"}
             fields={["Nome", "Faltas Encontros", "Faltas Domingos", "Telefone", "Data Nascimento"]}
             getLocalDataFunc={getCrismandos}
+            deleteLocalDataFunc={removeCrismandos}
             getNonLocalDataFunc={getCrismandosData}
             sortingFunction={(a: any, b: any) => sortByText(a.nome, b.nome)}
             mappingFunction={(item: any, index: number) => (

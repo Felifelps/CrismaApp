@@ -1,7 +1,7 @@
 import { TablePage } from "./TablePage";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../utils/format";
-import { getEncontros } from "../utils/localStorage";
+import { getEncontros, removeEncontros } from "../utils/localStorage";
 import { getEncontrosData } from "../services/getData";
 import { sortByDateStringsDesc } from "../utils/sort";
 
@@ -12,6 +12,7 @@ export default function Encontros() {
             title={"Encontros"}
             newFormPath={"/encontros/new"}
             getLocalDataFunc={getEncontros}
+            deleteLocalDataFunc={removeEncontros}
             getNonLocalDataFunc={getEncontrosData}
             fields={["Tema", "Data", "Presenças", "Justificativas", "Faltas"]}
             sortingFunction={(a: any, b: any) => sortByDateStringsDesc(a.data, b.data)}

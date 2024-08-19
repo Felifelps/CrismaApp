@@ -1,7 +1,7 @@
 import { TablePage } from "./TablePage";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../utils/format";
-import { getDomingos} from "../utils/localStorage";
+import { getDomingos, removeDomingos} from "../utils/localStorage";
 import { getDomingosData } from "../services/getData";
 import { sortByDateStringsDesc } from "../utils/sort";
 
@@ -12,6 +12,7 @@ export default function Domingos() {
             title={"Domingos"}
             newFormPath={"/domingos/new"}
             getLocalDataFunc={getDomingos}
+            deleteLocalDataFunc={removeDomingos}
             getNonLocalDataFunc={getDomingosData}
             fields={["Data", "Presenças", "Justificativas", "Faltas"]}
             sortingFunction={(a: any, b: any) => sortByDateStringsDesc(a.data, b.data)}

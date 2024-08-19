@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import '../assets/styles/Table.css'
 
@@ -20,6 +20,7 @@ export function TablePage(props: any) {
     const [data, setData] = useState({});
     const tableDisplay = isLoading ? "none" : "block";
     const setFlashMessage = useFlashMessage().setFlashMessage;
+    const navigate = useNavigate();
 
     const serveData = () => {
         setFlashMessage(getFlashMessage());
@@ -39,8 +40,13 @@ export function TablePage(props: any) {
         <AdminOnlyPage>
             <h1>
                 {props.title}
-                <Link to={props.newFormPath}> + </Link>
                 <i
+                    className="fa-solid fa-plus icon"
+                    onClick={() => navigate(props.newFormPath)}
+                >
+                </i>
+                <i
+                    className="fa-solid fa-database icon" 
                     onClick={() => {
                         setIsLoading(true);
                         downloadData(
@@ -52,11 +58,15 @@ export function TablePage(props: any) {
                             }
                         )
                     }}
-                    style={{
-                        cursor: 'pointer',
-                        fontSize: '25px'
+                >
+                </i>
+                <i
+                    className="fa-solid fa-rotate icon"
+                    onClick={() => {
+                        setIsLoading(true);
+                        props.deleteLocalDataFunc();
+                        props.getNonLocalDataFunc(token, serveData);
                     }}
-                    className="fa-solid fa-database" 
                 >
                 </i>
             </h1>
