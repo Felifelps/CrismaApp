@@ -27,7 +27,7 @@ export default function NewEncontro() {
                 {
                     type: 'date',
                     onChange: (e: any) => setDate(e.target.value),
-                    label: 'Data de nascimento'
+                    label: 'Data'
                 },
             ]}
         />
