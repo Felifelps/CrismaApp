@@ -7,7 +7,7 @@ import { formatISODate } from "../utils/format";
 import { getEncontroFrequency } from "../services/getFrequency";
 import { updateEncontroFrequency } from "../services/updateFrequency";
 import { deleteEncontro } from "../services/deleteObject";
-import { sortByDateStringsAsc } from "../utils/sort";
+import { sortByText } from "../utils/sort";
 
 export default function UpdateEncontro() {
     function getFrequencyList() {
@@ -28,7 +28,7 @@ export default function UpdateEncontro() {
             getFrequencyListsFunction={getFrequencyList}
             updateObjectFreqFunction={updateEncontroFrequency}
             deleteObjectFunction={deleteEncontro}
-            sortingFunction={sortByDateStringsAsc}
+            sortingFunction={sortByText}
             removeAsideDataFunction={removeCrismandos}
             freqDataOptions={{
                 "frequenciaencontro": {
