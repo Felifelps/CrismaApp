@@ -93,7 +93,7 @@ def get_model_frequency_statistics(obj, model_set_fields, ref_models):
 
         participated = len(tuple(filter(lambda x: not x.justificado, frequency)))
         justified = len(tuple(filter(lambda x: x.justificado, frequency)))
-        missed = total - (participated + justified)
+        missed = total - len(frequency)
 
         data[unset_field_name(field)] = {
             'participated': participated,
