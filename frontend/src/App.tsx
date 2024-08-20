@@ -23,7 +23,7 @@ import NotFound from './pages/NotFound';
 import { TokenProvider } from './contexts/Token';
 import { FlashMessageProvider } from './contexts/FlashMessages';
 
-import './services/keepBackendActive';
+import './services/checkToken';
 
 function App() {
   return (
