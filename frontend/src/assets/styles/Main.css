@@ -14,7 +14,7 @@ main {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     padding: 15px;
-    width: 40%; /* Largura padrão para computadores */
+    width: 700px; /* Largura padrão para computadores */
 }
 
 /* Para telas menores que 768px (celulares e tablets) */
