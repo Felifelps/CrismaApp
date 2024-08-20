@@ -29,5 +29,5 @@ export function handleFetchResponse(
 
 export const logoutUser = () => {
     ls.clearAll();
-    window.location.href = '/login';
+    window.location.href = '/';
 }
