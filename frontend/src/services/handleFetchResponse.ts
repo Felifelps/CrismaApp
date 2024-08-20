@@ -17,8 +17,7 @@ export function handleFetchResponse(
             data = text ? data : JSON.stringify(data);
             saveDataFunction(data);
         } else if (logoutReponseStatusCodes.includes(response.status)) {
-            ls.clearAll();
-            window.location.href = '/login';
+            logoutUser()
         }
         if (!ls.getFlash()) {
             const flash = flashes[response.status.toString()];
@@ -26,4 +25,9 @@ export function handleFetchResponse(
         }
         onDone();
     })
+}
+
+export const logoutUser = () => {
+    ls.clearAll();
+    window.location.href = '/login';
 }
