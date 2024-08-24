@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import html2canvas from 'html2canvas';
+import { saveAs } from 'file-saver';
 
 import { Navigate } from "react-router-dom";
 
@@ -17,6 +19,7 @@ import { getFrequencyByName } from "../services/getFrequencyByName";
 import { getFreq, removeFreq } from "../utils/localStorage";
 import { formatDate } from "../utils/format";
 
+
 export default function Home() {
     const token = useToken().token;
     const setFlashMessage = useFlashMessage().setFlashMessage;
@@ -24,6 +27,21 @@ export default function Home() {
     const [isLoading, setIsLoading] = useState(false);
     const [encontroTable, setEncontroTable] = useState<any[]>([]);
     //const [domingoTable, setDomingoTable] = useState([]);
+    const tableRef = useRef<HTMLTableElement>(null);
+
+    const handleDownload = async () => {
+        if (tableRef.current) {
+            // Captura a tela do elemento da tabela
+            const canvas = await html2canvas(tableRef.current);
+            // Converte o canvas em um blob
+            canvas.toBlob((blob) => {
+                if (blob) {
+                // Salva o blob como um arquivo de imagem
+                saveAs(blob, 'screenshot.png');
+            }
+        });
+        }
+    };
 
     function frequencyIcon(value: any) {
         return <i className={'fa' + (value ? 's' : 'r') + ' fa-circle'}></i>
@@ -62,7 +80,14 @@ export default function Home() {
         }
 
         setEncontroTable([
-            <h2> Encontros </h2>,
+            <h2> 
+                Encontros
+                <i
+                    className="fa-solid fa-image icon"
+                    onClick={handleDownload}
+                >
+                </i>
+            </h2>,
             <div>
                 <p>   Presenças: {participated}
                 <br/> Justificativas: {justified}
@@ -70,7 +95,7 @@ export default function Home() {
                 <br/> Total de encontros: {total} </p>
             </div>,
             <div className='table-container'>
-                <table>
+                <table ref={tableRef}>
                     <thead>
                         <tr>
                             <th>Tema</th>

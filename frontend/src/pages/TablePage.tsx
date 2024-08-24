@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import html2canvas from 'html2canvas';
+import { saveAs } from 'file-saver';
 
 import '../assets/styles/Table.css'
 
@@ -21,6 +23,21 @@ export function TablePage(props: any) {
     const tableDisplay = isLoading ? "none" : "block";
     const setFlashMessage = useFlashMessage().setFlashMessage;
     const navigate = useNavigate();
+    const tableRef = useRef<HTMLTableElement>(null);
+
+    const handleDownload = async () => {
+        if (tableRef.current) {
+            // Captura a tela do elemento da tabela
+            const canvas = await html2canvas(tableRef.current);
+            // Converte o canvas em um blob
+            canvas.toBlob((blob) => {
+                if (blob) {
+                // Salva o blob como um arquivo de imagem
+                saveAs(blob, 'screenshot.png');
+            }
+        });
+        }
+    };
 
     const serveData = () => {
         setFlashMessage(getFlashMessage());
@@ -69,11 +86,16 @@ export function TablePage(props: any) {
                     }}
                 >
                 </i>
+                <i
+                    className="fa-solid fa-image icon"
+                    onClick={handleDownload}
+                >
+                </i>
             </h1>
             <FlashMessage/>
             <Loading active={isLoading}/>
             <div className='table-container' style={{"display": tableDisplay}}>
-                <table>
+                <table ref={tableRef}>
                     <thead>
                         <tr>
                             {props.fields.map(((field: string, index: number) => (
