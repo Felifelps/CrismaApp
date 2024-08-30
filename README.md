@@ -99,9 +99,6 @@ To install this project, follow the steps below on this order.
 
 4. Access the backend old version with [this link](http://localhost:5000), and the frontend with [this link](http://localhost:3000) for the frontend.
 
-> [!NOTE]
-> Reload the page if necessary.
-
 ## Contribution
 
 Fork this repository, make your changes, and submit a pull request. I'll review it as soon as possible.
