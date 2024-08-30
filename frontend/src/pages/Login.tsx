@@ -18,15 +18,14 @@ import { getFlashMessage } from "../utils/getFlashMessages";
 export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [iconOn, seticonOn] = useState(false);
+    const [showPassword, setshowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const {token, setToken} = useToken();
     const setFlashMessage = useFlashMessage().setFlashMessage;
 
     function onLoginDone() {
-        let localToken = getToken();
+        setToken(getToken() || '');
         setFlashMessage(getFlashMessage());
-        setToken(localToken ? localToken : '');
         setIsLoading(false);
     }
 
@@ -36,12 +35,12 @@ export default function Login() {
             return;
         }
         setIsLoading(true);
-        loginAndSaveToken(username.trim(), password.trim(), onLoginDone)
+        loginAndSaveToken(username.trim(), password.trim(), onLoginDone);
     }
 
     return (
         <Page>
-            {token ? <Navigate to='/crismandos' replace/>: <></>}
+            {token && <Navigate to='/crismandos' replace/>}
             <form onSubmit={handleSubmit} action='/crismandos'>
                 <h1>Login</h1>
                 
@@ -72,7 +71,7 @@ export default function Login() {
                 <label>Password: </label>
                 <div className="input-group">
                     <input
-                        type={iconOn ? 'text' : 'password'}
+                        type={showPassword ? 'text' : 'password'}
                         id="password"
                         placeholder="Ex: senhasegura123"
                         value={password}
@@ -83,9 +82,10 @@ export default function Login() {
                     />
                     <span
                         id="icon"
-                        className={iconOn ? 'fas fa-eye-slash' : 'fas fa-eye'}
+                        className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}
+                        aria-label={showPassword ? 'Hide password' : 'Show password'}
                         onClick={() => {
-                            seticonOn((value) => !value)
+                            setshowPassword((value) => !value)
                         }}
                     ></span>
                 </div>

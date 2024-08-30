@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
 
@@ -26,41 +26,39 @@ export default function Home() {
     const [name, setName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [encontroTable, setEncontroTable] = useState<any[]>([]);
-    //const [domingoTable, setDomingoTable] = useState([]);
     const tableRef = useRef<HTMLTableElement>(null);
 
-    const handleDownload = async () => {
+    async function handleDownload () {
         if (tableRef.current) {
-            // Captura a tela do elemento da tabela
             const canvas = await html2canvas(tableRef.current);
-            // Converte o canvas em um blob
             canvas.toBlob((blob) => {
                 if (blob) {
-                // Salva o blob como um arquivo de imagem
-                saveAs(blob, 'screenshot.png');
+                    saveAs(blob, 'screenshot.png');
+                }
             }
-        });
+        );
         }
     };
 
-    function frequencyIcon(value: any) {
-        return <i className={'fa' + (value ? 's' : 'r') + ' fa-circle'}></i>
-    }
+    function renderFrequencyTable() {
+        function frequencyIcon(value: any) {
+            return <i className={'fa' + (value ? 's' : 'r') + ' fa-circle'}></i>
+        }
 
-    function mountFrequencyTable() {
-        const dataEncontros: any[] = [];
-        let localData: any = getFreq();
-        if (!localData) {
+        let localFreq: any = getFreq();
+        if (!localFreq) {
             return setEncontroTable([]);
         }
-        localData = JSON.parse(localData);
+
+        const encontrosRows: any[] = [];
+        localFreq = JSON.parse(localFreq);
 
         let missed = 0;
         let justified = 0;
         let participated = 0;
         let total = 0;
 
-        for (let encontro of localData['frequenciaencontro']) {
+        for (let encontro of localFreq['frequenciaencontro']) {
             total += 1;
             if (encontro.missed) missed += 1
             else {
@@ -68,8 +66,8 @@ export default function Home() {
                 else participated += 1
             }
 
-            dataEncontros.push(
-                <tr>
+            encontrosRows.push(
+                <tr key={encontro.tema + encontro.data}>
                     <td> {encontro.tema} </td>
                     <td> {formatDate(encontro.data)} </td>
                     <td> {frequencyIcon(encontro.missed)} </td>
@@ -106,7 +104,7 @@ export default function Home() {
                         </tr>
                     </thead>
                     <tbody>
-                        {dataEncontros}
+                        {encontrosRows}
                     </tbody>
                 </table>
             </div>
@@ -115,22 +113,20 @@ export default function Home() {
 
     function handleSubmit(e: any) {
         e.preventDefault();
-        if (isLoading) {
-            return;
+        if (!isLoading) {
+            setIsLoading(true);
+            getFrequencyByName(name, () => {
+                renderFrequencyTable();
+                removeFreq();
+                setIsLoading(false);
+                setFlashMessage(getFlashMessage());
+            })
         }
-        setIsLoading(true);
-        getFrequencyByName(name, () => {
-            mountFrequencyTable();
-            removeFreq();
-            setIsLoading(false);
-            setFlashMessage(getFlashMessage());
-        })
     }
-
 
     return (
         <Page>
-            {token ? <Navigate to='/crismandos' replace/> : <></>}
+            {token && <Navigate to='/crismandos' replace/>}
             <form onSubmit={handleSubmit} action='/'>
                 <h1> Minha frequência </h1>
                 

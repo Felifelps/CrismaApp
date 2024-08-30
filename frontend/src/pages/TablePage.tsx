@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import html2canvas from 'html2canvas';
-import { saveAs } from 'file-saver';
 
 import '../assets/styles/Table.css'
 
@@ -9,6 +7,7 @@ import { AdminOnlyPage } from "./Page";
 
 import Loading from "../components/Loading";
 import FlashMessage from "../components/FlashMessage";
+import DownloadImageIcon from "../components/DownloadImageIcon";
 
 import { useToken } from "../contexts/Token";
 import { useFlashMessage } from "../contexts/FlashMessages";
@@ -25,20 +24,6 @@ export function TablePage(props: any) {
     const navigate = useNavigate();
     const tableRef = useRef<HTMLTableElement>(null);
 
-    const handleDownload = async () => {
-        if (tableRef.current) {
-            // Captura a tela do elemento da tabela
-            const canvas = await html2canvas(tableRef.current);
-            // Converte o canvas em um blob
-            canvas.toBlob((blob) => {
-                if (blob) {
-                // Salva o blob como um arquivo de imagem
-                saveAs(blob, 'screenshot.png');
-            }
-        });
-        }
-    };
-
     const serveData = () => {
         setFlashMessage(getFlashMessage());
         const localData = props.getLocalDataFunc();
@@ -46,12 +31,13 @@ export function TablePage(props: any) {
         setIsLoading(false);
     }
 
-    // useEffect para carregar os dados apenas uma vez quando o componente é montado
     useEffect(() => {
         if (isLoading) {
-            props.getNonLocalDataFunc(token, serveData);
+            props.getNonLocalDataFunc(
+                token, serveData
+            );
         }
-    }, []); // O array vazio [] garante que o efeito rode apenas uma vez após o primeiro render
+    }, []);
 
     return (
         <AdminOnlyPage>
@@ -86,11 +72,8 @@ export function TablePage(props: any) {
                     }}
                 >
                 </i>
-                <i
-                    className="fa-solid fa-image icon"
-                    onClick={handleDownload}
-                >
-                </i>
+                <DownloadImageIcon tableRef={tableRef}/>
+
             </h1>
             <FlashMessage/>
             <Loading active={isLoading}/>
