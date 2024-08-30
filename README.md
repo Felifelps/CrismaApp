@@ -5,16 +5,16 @@ CrismaApp is an organizational web app designed to manage the attendance of the 
 ## Functionalities
 
 - Search frequency by name
-- Administration area protected with password
+- Administration area protected with username and password
 - CRUD operations for confirmation candidates
 - CRUD operations for meeting frequencies
 - Generation of Excel tables
-- Download photos from data tables
 - Export data in CSV format
+- Download photos from data tables
 
 ## Technologies
 
-### Backend
+### Backend (API REST and Server-Side Application)
 - Python
 - Flask
 - Bcrypt
@@ -33,7 +33,7 @@ CrismaApp is an organizational web app designed to manage the attendance of the 
 
 ## Installation
 
-To install this project:
+To install this project, follow the steps below on this order.
 
 1. Clone this project:
 
@@ -49,34 +49,36 @@ To install this project:
         cd CrismaApp/backend
         ```
 
-    - Generate your password with:
+    - Create and activate a virtual environment:
 
+        - On Windows:
         ```shell
-        python generate_env.py
+        python -m venv .venv
+        .venv\Scripts\Activate
         ```
 
-    - To run the backend server:
+        - On Linux/Mac:
+        ```shell
+        python3 -m venv .venv
+        source .venv/bin/activate
+        ```
 
-        - Using Docker Compose:
+    - Install the dependencies by running `pip install -r requirements.txt`
 
-            ```shell
-            docker-compose up -d
-            ```
+    - Setup the admin user and .env file by running:
 
-            To stop the server, run:
+        ```shell
+        python setup.py
+        ```
 
-            ```shell
-            docker-compose down
-            ```
-
-        - or run `python app.py`
+    - Run the server with `python app.py`
 
 3. Frontend setup:
 
     - Navigate to the `frontend` directory:
 
         ```shell
-        cd ../frontend
+        cd CrismaApp/frontend
         ```
 
     - Install dependencies:
@@ -91,7 +93,7 @@ To install this project:
         npm start
         ```
 
-4. Access [this link](http://localhost:8080) for the backend and [this link](http://localhost:3000) for the frontend.
+4. Access the backend old version with [this link](http://localhost:5000), and the frontend with [this link](http://localhost:3000) for the frontend.
 
 > [!NOTE]
 > Reload the page if necessary.

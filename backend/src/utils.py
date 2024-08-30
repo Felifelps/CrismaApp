@@ -6,6 +6,7 @@ from peewee import FieldAccessor, fn
 
 load_dotenv()
 
+
 SECRET_KEY = os.environ.get('SECRET_KEY')
 STATISTIC_FIELDS = (
     'participated',

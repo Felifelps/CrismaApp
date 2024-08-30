@@ -8,9 +8,7 @@ from src.utils import SECRET_KEY
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
 
-CORS(app, resources={
-    r'/api/*': {'origins': '*'}
-})
+CORS(app, resources={r"/*": {"origins": "*"}})
 JWTManager(app)
 
 from .crismandos import crismandos
