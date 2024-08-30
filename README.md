@@ -1,3 +1,7 @@
+<p align="center">
+    <img src="/frontend/public/icon.png" width="100px">
+</p>
+
 # CrismaApp
 
 CrismaApp is an organizational web app designed to manage the attendance of the Confirmation Group.
